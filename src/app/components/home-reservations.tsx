@@ -1,6 +1,6 @@
-import imagemAuditorio from '../assets/imagem-auditorio.png'
-import imagemQuadras from '../assets/imagem-quadras.png'
-import imagemSalas from '../assets/imagem-salas.png'
+import imgCampo from '../assets/imagem-campo.png'
+import imgQuadra from '../assets/imagem-quadra.png'
+import imgBeachTenis from '../assets/imagem-beachtenis.png'
 import { Button } from './button'
 
 export function Reservations() {
@@ -20,14 +20,12 @@ export function Reservations() {
       <div className="flex justify-center gap-20 px-[200px]">
         <div className="w-full max-w-[520px]">
           <img
-            src={imagemAuditorio}
-            alt="Imagem do auditório"
+            src={imgCampo}
+            alt="Imagem do campo"
             className="h-[773px] w-full rounded-t-xl object-cover"
           />
           <div className="h-auto rounded-b-xl bg-[#0080F5] py-4 text-center text-white">
-            <h1 className="p-4 font-league text-[2.5rem] font-bold">
-              Auditórios
-            </h1>
+            <h1 className="p-4 font-league text-[2.5rem] font-bold">Campo</h1>
             <p className="p-4 font-poppins text-[1.25rem]">
               O Reservation Mauá é o sistema de<br></br> reserva de salas do
               Instituto Mauá de<br></br> Tecnologia, projetado para facilitar o
@@ -41,12 +39,12 @@ export function Reservations() {
         </div>
         <div className="w-full max-w-[520px]">
           <img
-            src={imagemQuadras}
-            alt="Imagem das quadras"
+            src={imgQuadra}
+            alt="Imagem da quadra"
             className="h-[773px] w-full rounded-t-xl object-cover"
           />
           <div className="h-auto rounded-b-xl bg-[#0080F5] py-4 text-center text-white">
-            <h1 className="p-4 font-league text-[2.5rem] font-bold">Salas</h1>
+            <h1 className="p-4 font-league text-[2.5rem] font-bold">Quadra</h1>
             <p className="p-4 font-poppins text-[1.25rem]">
               O Reservation Mauá é o sistema de<br></br> reserva de salas do
               Instituto Mauá de<br></br> Tecnologia, projetado para facilitar o
@@ -60,13 +58,13 @@ export function Reservations() {
         </div>
         <div className="w-full max-w-[520px]">
           <img
-            src={imagemSalas}
-            alt="Imagem das salas"
+            src={imgBeachTenis}
+            alt="Imagem do Beach Tênis"
             className="h-[773px] w-full rounded-t-xl object-cover"
           />
           <div className="h-auto rounded-b-xl bg-[#0080F5] py-4 text-center text-white">
             <h1 className="p-4 font-league text-[2.5rem] font-bold">
-              CEAF - Esportes
+              Beach Tênis
             </h1>
             <p className="p-4 font-poppins text-[1.25rem]">
               O Reservation Mauá é o sistema de<br></br> reserva de salas do
