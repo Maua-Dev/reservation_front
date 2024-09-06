@@ -32,7 +32,7 @@ export function HomeDev() {
             Acesse nosso portfolio aqui!
           </Button>
         </div>
-        <div className="z-50 order-1 flex w-full justify-center md:order-2 md:w-1/2">
+        <div className="order-1 flex w-full justify-center md:order-2 md:w-1/2">
           <Carousel>
             {slides.map((s) => (
               <img key={s} src={s} />
