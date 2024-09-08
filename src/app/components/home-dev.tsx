@@ -1,5 +1,6 @@
 import { Button } from '@/app/components/button'
 import Carousel from '@/app/components/carousel'
+import Footer from '@/app/components/footer'
 
 export function HomeDev() {
   const slides = [
@@ -11,7 +12,7 @@ export function HomeDev() {
 
   return (
     <>
-      <h1 className="pb-32 text-4xl font-bold text-white">
+      <h1 className="pb-24 text-4xl font-bold text-white">
         Dev Community Mauá
       </h1>
 

@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { FaLongArrowAltLeft, FaLongArrowAltRight } from 'react-icons/fa'
 import { FaCircleArrowLeft, FaCircleArrowRight } from 'react-icons/fa6'
 
 type Props = {
@@ -20,7 +19,7 @@ export default function Carousel({ children: slides }: Props) {
     )
 
   return (
-    <div className="relative w-full overflow-hidden">
+    <div className="relative z-10 w-full overflow-hidden">
       <div
         className="flex transition-transform duration-500 ease-out"
         style={{ transform: `translateX(-${curr * 100}%)` }}
@@ -40,6 +39,17 @@ export default function Carousel({ children: slides }: Props) {
         >
           <FaCircleArrowRight size={50} />
         </button>
+      </div>
+
+      <div className="absolute bottom-4 left-0 right-0">
+        <div className="flex items-center justify-center gap-2">
+          {slides.map((_, i) => (
+            <div
+              key={i}
+              className={`h-3 w-3 rounded-full bg-white transition-all ${curr === i ? 'p-2' : 'bg-opacity-50'}`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )
