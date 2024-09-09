@@ -28,7 +28,12 @@ export function Navbar() {
   }
 
   return (
-    <div className="fixed flex h-screen w-full flex-col font-league">
+    <div
+      style={{
+        height: isMenuOpen ? '100vh' : 'auto'
+      }}
+      className="fixed z-10 flex w-full flex-col font-league"
+    >
       <nav className="flex w-full select-none items-center justify-between bg-white px-8 py-2 md:px-10 md:py-3">
         <img
           src={window.innerWidth < 768 ? shortLogo : fullLogo}

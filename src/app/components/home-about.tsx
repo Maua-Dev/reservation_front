@@ -16,18 +16,13 @@ export function About() {
   }, [])
 
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center bg-blue-primary md:p-4">
-      <div className="flex w-full flex-col items-center justify-between md:flex-row-reverse">
-        <div className="mt-[4.5rem] flex-none sm:mt-[4.7rem] sm:w-full sm:py-2 md:mt-32 md:w-[46%] md:px-2 md:py-2 lg:mr-12 lg:mt-36 lg:w-[40%]">
+    <div className="flex h-screen w-full flex-col items-start justify-start bg-blue-primary md:p-4">
+      <div className="flex w-full max-w-[1280px] flex-col items-center justify-between md:flex-row-reverse md:py-12 lg:py-0">
+        <div className="mt-[4rem] flex-none sm:mt-[3.9rem] sm:w-full sm:py-2 md:mt-32 md:w-[46%] md:px-2 md:py-2 lg:mr-12 lg:mt-36 lg:w-[40%]">
           <div className="pointer-events-auto relative">
             <Carousel onSlideChange={handleSlideChange}>
               {slides.map((s) => (
-                <img
-                  key={s}
-                  src={s}
-                  className="h-[280px] w-[800px] object-cover sm:h-[312px] sm:w-[800px] md:h-[270px]"
-                  alt="slide"
-                />
+                <img key={s} src={s} className="object-cover" alt="slide" />
               ))}
             </Carousel>
           </div>
