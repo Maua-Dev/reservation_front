@@ -1,6 +1,5 @@
 import { Button } from '@/app/components/button'
 import Carousel from '@/app/components/carousel'
-import Footer from '@/app/components/footer'
 
 export function HomeDev() {
   const slides = [

@@ -1,5 +1,3 @@
-import { Button } from '@/app/components/button'
-import Carousel from '@/app/components/carousel'
 import Footer from '@/app/components/footer'
 import { HomeDev } from '@/app/components/home-dev'
 
