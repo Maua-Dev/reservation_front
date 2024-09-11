@@ -19,7 +19,7 @@ export default function Carousel({ children: slides }: Props) {
     )
 
   return (
-    <div className="relative z-10 w-full overflow-hidden">
+    <div className="relative w-full overflow-hidden">
       <div
         className="flex transition-transform duration-500 ease-out"
         style={{ transform: `translateX(-${curr * 100}%)` }}
