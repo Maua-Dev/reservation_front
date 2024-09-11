@@ -16,9 +16,9 @@ export function About() {
   }, [])
 
   return (
-    <div className="flex h-screen w-full flex-col items-start justify-start bg-blue-primary md:p-4">
+    <div className="mx-auto flex h-screen w-full max-w-6xl flex-col items-start justify-start bg-blue-primary md:p-4">
       <div className="flex w-full max-w-[1280px] flex-col items-center justify-between md:flex-row-reverse md:py-12 lg:py-0">
-        <div className="mt-[4rem] flex-none sm:mt-[3.9rem] sm:w-full sm:py-2 md:mt-32 md:w-[46%] md:px-2 md:py-2 lg:mr-12 lg:mt-36 lg:w-[40%]">
+        <div className="mt-16 flex-none sm:mt-16 sm:w-full sm:py-2 md:mt-32 md:w-2/5 md:px-2 md:py-2 lg:mr-12 lg:mt-36 lg:w-5/12">
           <div className="pointer-events-auto relative">
             <Carousel onSlideChange={handleSlideChange}>
               {slides.map((s) => (
@@ -30,22 +30,22 @@ export function About() {
             {slides.map((_, index) => (
               <MdCircle
                 key={index}
-                className={`w-8 ${currSlide === index ? 'text-white' : 'text-white/50'} hidden md:flex`}
+                className={`w-8 transition-all ${currSlide === index ? 'w-10 text-white' : 'w-6 text-white/50'} hidden md:flex`}
               />
             ))}
           </div>
         </div>
-        <div className="flex flex-col sm:p-0 md:mr-0 lg:mr-0 lg:items-start">
-          <h1 className="hidden px-6 font-league font-normal text-white md:mt-24 md:flex md:text-3xl lg:mt-36 lg:text-4xl">
+        <div className="flex flex-col text-center sm:text-center md:justify-start md:text-start lg:items-start lg:text-start">
+          <h1 className="hidden px-6 font-league font-normal text-white md:mt-40 md:flex md:text-4xl lg:mt-56 lg:text-5xl">
             Reservation Mauá
           </h1>
-          <p className="mt-4 px-5 text-center font-poppins text-[0.9rem] font-light text-white sm:mt-[-1.8rem] sm:px-5 sm:py-4 sm:text-center sm:text-[0.9rem] md:mt-2 md:justify-start md:px-6 md:py-4 md:text-start md:text-[1rem] lg:mr-28 lg:mt-8 lg:px-6 lg:py-2 lg:text-start lg:text-[1.1rem]">
+          <p className="mt-4 px-5 font-poppins text-xl font-light text-white sm:px-12 sm:text-2xl md:mr-12 md:px-6 md:text-justify md:text-xl lg:mr-28 lg:mt-8 lg:text-2xl">
             O Reservation Mauá é o sistema de reservas de salas do Instituto
             Mauá de Tecnologia, projetado para facilitar o agendamento de
             espaços para estudos, reuniões e eventos acadêmicos.
           </p>
-          <div className="mt-4 flex items-center justify-center sm:items-center sm:justify-center md:mt-2 md:items-start md:justify-start md:px-6 lg:mt-8">
-            <Button className="w-52 text-[1rem] font-semibold sm:w-48 sm:p-2 sm:text-[1.3rem] md:mt-12 md:w-48 md:p-[0.4rem] md:text-[1.2rem] lg:w-52 lg:px-0 lg:text-xl">
+          <div className="mt-4 flex items-center justify-center sm:mt-8 sm:items-center sm:justify-center md:mt-2 md:items-start md:justify-start md:px-6 lg:mt-8">
+            <Button className="w-60 text-xl font-semibold sm:w-52 sm:p-2 sm:text-xl md:mt-8 md:w-48 md:p-2 md:text-xl lg:w-52 lg:px-0 lg:text-xl">
               Menu de Reservas
             </Button>
           </div>
