@@ -4,7 +4,7 @@ import imageDev2 from '@/app/assets/image-2.svg'
 import imageDev3 from '@/app/assets/image-3.svg'
 
 export function HomeDev() {
-  const slides = [imageDev1, imageDev2, imageDev3]
+  // const slides = [imageDev1, imageDev2, imageDev3]
 
   return (
     <>
