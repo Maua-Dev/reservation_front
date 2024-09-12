@@ -12,9 +12,8 @@ export function Reservations() {
         </h1>
         <p className="mt-4 hidden p-4 font-poppins text-4xl font-normal text-[#0080F5] lg:block">
           O Reservation Mauá é o sistema de reserva de salas, auditórios e
-          quadras do<br></br> Instituto Mauá de Tecnologia, projetado para
-          facilitar o agendamento de espaços<br></br> para estudos, reuniões e
-          eventos acadêmicos.
+          quadras do Instituto Mauá de Tecnologia, projetado para facilitar o
+          agendamento de espaços para estudos, reuniões e eventos acadêmicos.
         </p>
       </div>
       <div className="flex justify-center gap-2 lg:gap-20 lg:px-48">
@@ -29,10 +28,9 @@ export function Reservations() {
               Campo
             </h1>
             <p className="hidden p-4 font-poppins text-xl lg:block">
-              O Reservation Mauá é o sistema de<br></br> reserva de salas do
-              Instituto Mauá de<br></br> Tecnologia, projetado para facilitar o
-              <br></br> agendamento de espaços para estudos,<br></br> reuniões e
-              eventos acadêmicos.
+              O Reservation Mauá é o sistema de reserva de salas do Instituto
+              Mauá de Tecnologia, projetado para facilitar o agendamento de
+              espaços para estudos, reuniões e eventos acadêmicos.
             </p>
             <div className="flex justify-center">
               <Button className="mb-4 mt-4 flex h-4 w-16 items-center justify-center font-league text-sm font-bold lg:h-10 lg:w-72 lg:text-2xl">
@@ -52,10 +50,9 @@ export function Reservations() {
               Quadra
             </h1>
             <p className="hidden p-4 font-poppins text-xl lg:block">
-              O Reservation Mauá é o sistema de<br></br> reserva de salas do
-              Instituto Mauá de<br></br> Tecnologia, projetado para facilitar o
-              <br></br> agendamento de espaços para estudos,<br></br> reuniões e
-              eventos acadêmicos.
+              O Reservation Mauá é o sistema de reserva de salas do Instituto
+              Mauá de Tecnologia, projetado para facilitar o agendamento de
+              espaços para estudos, reuniões e eventos acadêmicos.
             </p>
             <div className="flex justify-center">
               <Button className="mb-4 mt-4 flex h-4 w-16 items-center justify-center font-league text-sm font-bold lg:h-10 lg:w-72 lg:text-2xl">
@@ -75,10 +72,9 @@ export function Reservations() {
               Beach Tênis
             </h1>
             <p className="hidden p-4 font-poppins text-xl lg:block">
-              O Reservation Mauá é o sistema de<br></br> reserva de salas do
-              Instituto Mauá de<br></br> Tecnologia, projetado para facilitar o
-              <br></br> agendamento de espaços para estudos,<br></br> reuniões e
-              eventos acadêmicos.
+              O Reservation Mauá é o sistema de reserva de salas do Instituto
+              Mauá de Tecnologia, projetado para facilitar o agendamento de
+              espaços para estudos, reuniões e eventos acadêmicos.
             </p>
             <div className="flex justify-center">
               <Button className="mb-4 mt-4 flex h-4 w-16 items-center justify-center font-league text-sm font-bold lg:h-10 lg:w-72 lg:text-2xl">
