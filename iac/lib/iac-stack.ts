@@ -6,7 +6,6 @@ import { Certificate } from 'aws-cdk-lib/aws-certificatemanager'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as route53Targets from 'aws-cdk-lib/aws-route53-targets'
 import * as iam from 'aws-cdk-lib/aws-iam'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
 
 import { Construct } from 'constructs'
 
@@ -24,7 +23,6 @@ export class IacStack extends cdk.Stack {
     const alternativeDomain =
       process.env.ALTERNATIVE_DOMAIN_NAME || 'reservation-dev.devmaua.com'
     const hostedZoneIdValue = process.env.HOSTED_ZONE_ID || 'Z1UJRXOUMOOFQ8'
-    const projectName = process.env.PROJECT_NAME || 'ReservationFront'
 
     const s3Bucket = new s3.Bucket(this, 'ReservationFrontBucket' + stage, {
       versioned: true,
