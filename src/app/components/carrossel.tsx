@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { FaCircleArrowLeft, FaCircleArrowRight } from 'react-icons/fa6'
+import { MdCircle } from 'react-icons/md'
 
 type Props = {
   children: React.ReactNode[]
@@ -14,12 +15,6 @@ export function Carousel({ children: slides, onSlideChange }: Props) {
 
   const next = () =>
     setCurr((curr) => (curr === slides.length - 1 ? 0 : curr + 1))
-
-  useEffect(() => {
-    if (onSlideChange) {
-      onSlideChange(curr)
-    }
-  }, [curr, onSlideChange])
 
   return (
     <div className="relative w-full overflow-hidden">
@@ -39,7 +34,7 @@ export function Carousel({ children: slides, onSlideChange }: Props) {
           className="rounded-full p-1 text-white/80 shadow hover:text-white"
           title="Anterior"
         >
-          <FaCircleArrowLeft size={30} />
+          <FaCircleArrowLeft size={40} />
         </button>
 
         <button
@@ -47,8 +42,16 @@ export function Carousel({ children: slides, onSlideChange }: Props) {
           className="rounded-full p-1 text-white/80 shadow hover:text-white"
           title="Próximo"
         >
-          <FaCircleArrowRight size={30} />
+          <FaCircleArrowRight size={40} />
         </button>
+      </div>
+      <div className="mt-4 flex justify-center">
+        {slides.map((_, index) => (
+          <MdCircle
+            key={index}
+            className={`w-8 transition-all ${curr === index ? 'text-white' : 'text-white/50'} hidden md:flex`}
+          />
+        ))}
       </div>
     </div>
   )
