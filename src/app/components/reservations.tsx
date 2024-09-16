@@ -26,7 +26,7 @@ const reservations = [
 
 export function Reservations() {
   return (
-    <div className="flex h-auto max-w-7xl flex-col items-center justify-center gap-12 px-6 py-64 md:gap-24 md:px-12">
+    <div className="flex h-auto max-w-7xl flex-col items-center justify-center gap-12 px-6 py-44 md:gap-24 md:px-12">
       <div className="flex flex-col gap-4 text-center">
         <h1 className="font-league text-4xl font-bold text-blue-primary lg:text-5xl">
           Reserve seu espaço!
