@@ -28,12 +28,17 @@ export function Navbar() {
   }
 
   return (
-    <div className="fixed z-10 flex w-full flex-col font-league">
-      <nav className="flex w-full select-none items-center justify-between bg-white px-8 py-2 md:px-10 md:py-3">
+    <div
+      style={{
+        height: isMenuOpen ? '100vh' : 'auto'
+      }}
+      className="fixed z-10 flex w-full flex-col font-league"
+    >
+      <nav className="flex w-full select-none items-center justify-between bg-white px-6 py-2 md:px-8 md:py-3 lg:px-10">
         <img
           src={window.innerWidth < 768 ? shortLogo : fullLogo}
           alt="Logo do Mauá Reservation"
-          className="w-14 sm:w-20 md:w-28 lg:w-32"
+          className="w-14 sm:w-20 md:w-24"
         />
         <div className="hidden gap-24 text-xl font-medium text-blue-primary md:flex lg:text-2xl">
           <a href="#" className="cursor-pointer">
