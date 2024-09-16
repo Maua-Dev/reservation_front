@@ -1,10 +1,11 @@
 import { Button } from '@/app/components/button'
-// import imageDev1 from '@/app/assets/image-1.svg'
-// import imageDev2 from '@/app/assets/image-2.svg'
-// import imageDev3 from '@/app/assets/image-3.svg'
+import imageDev1 from '@/app/assets/image-1.svg'
+import imageDev2 from '@/app/assets/image-2.svg'
+import imageDev3 from '@/app/assets/image-3.svg'
+import { Carousel } from '@/app/components/carrossel'
 
 export function HomeDev() {
-  // const slides = [imageDev1, imageDev2, imageDev3]
+  const slides = [imageDev1, imageDev2, imageDev3]
 
   return (
     <>
@@ -29,13 +30,13 @@ export function HomeDev() {
             Acesse nosso portfolio aqui!
           </Button>
         </div>
-        {/* <div className="order-1 flex w-full justify-center md:order-2 md:w-1/2"> */}
-        {/*   <Carousel> */}
-        {/*     {slides.map((s) => ( */}
-        {/*       <img key={s} src={s} /> */}
-        {/*     ))} */}
-        {/*   </Carousel> */}
-        {/* </div> */}
+        <div className="order-1 flex w-full justify-center md:order-2 md:w-1/2">
+          <Carousel>
+            {slides.map((s) => (
+              <img key={s} src={s} />
+            ))}
+          </Carousel>
+        </div>
       </div>
     </>
   )
