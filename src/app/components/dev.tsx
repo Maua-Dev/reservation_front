@@ -4,16 +4,16 @@ import imageDev2 from '@/app/assets/image-2.svg'
 import imageDev3 from '@/app/assets/image-3.svg'
 import { Carousel } from '@/app/components/carrossel'
 
-export function HomeDev() {
+export function Dev() {
   const slides = [imageDev1, imageDev2, imageDev3]
 
   return (
-    <>
-      <h1 className="pb-24 text-4xl font-bold text-white">
+    <section className="flex min-h-screen flex-col items-center justify-center gap-4 bg-blue-primary px-4 py-12 md:gap-16 md:py-0 lg:px-14">
+      <h1 className="font-league text-3xl font-semibold text-white md:text-5xl">
         Dev Community Mauá
       </h1>
 
-      <div className="flex w-full flex-col items-center justify-center gap-4 px-8 md:flex-row md:items-start">
+      <div className="flex w-full flex-col items-center justify-center gap-8 px-8 md:flex-row md:items-start">
         <div className="text-md order-2 flex w-full flex-col items-center text-justify font-poppins text-white md:order-1 md:w-1/2 md:items-start md:text-xl">
           <p className="">
             O Dev. Community Mauá, fundado em 2021, é uma extracurricular do
@@ -26,7 +26,10 @@ export function HomeDev() {
             incorporar, principalmente, o trabalho em equipe e as práticas do
             mercado com o mundo da tecnologia e inovação.
           </p>
-          <Button className="text-md sm:w-2/4 md:w-3/4 md:text-xl">
+          <Button
+            onClick={() => window.open('https://devmaua.com', '_blank')}
+            className="text-md sm:w-2/4 md:w-3/4 md:text-xl"
+          >
             Acesse nosso portfolio aqui!
           </Button>
         </div>
@@ -38,6 +41,6 @@ export function HomeDev() {
           </Carousel>
         </div>
       </div>
-    </>
+    </section>
   )
 }
