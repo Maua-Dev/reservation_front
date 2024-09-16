@@ -4,6 +4,7 @@ import { MdCircle } from 'react-icons/md'
 
 type Props = {
   children: React.ReactNode[]
+  onSlideChange?: (index: number) => void
 }
 
 export function Carousel({ children: slides }: Props) {
@@ -33,7 +34,7 @@ export function Carousel({ children: slides }: Props) {
           className="rounded-full p-1 text-white/80 shadow hover:text-white"
           title="Anterior"
         >
-          <FaCircleArrowLeft size={40} />
+          <FaCircleArrowLeft size={30} />
         </button>
 
         <button
@@ -41,14 +42,16 @@ export function Carousel({ children: slides }: Props) {
           className="rounded-full p-1 text-white/80 shadow hover:text-white"
           title="Próximo"
         >
-          <FaCircleArrowRight size={40} />
+          <FaCircleArrowRight size={30} />
         </button>
       </div>
-      <div className="mt-4 flex justify-center">
+      <div className="mt-5 flex justify-center">
         {slides.map((_, index) => (
           <MdCircle
             key={index}
-            className={`w-8 transition-all ${curr === index ? 'text-white' : 'text-white/50'} hidden md:flex`}
+            className={`w-8 transition-all ${
+              curr === index ? 'h-5 w-6 text-white' : 'h-4 w-6 text-white/50'
+            } hidden md:flex`}
           />
         ))}
       </div>
