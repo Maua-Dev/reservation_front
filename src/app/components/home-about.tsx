@@ -1,6 +1,5 @@
 import { Button } from './button'
 import { Carousel } from '../components/carrossel'
-import { MdCircle } from 'react-icons/md'
 import maua1 from '../assets/maua1.png'
 import maua2 from '../assets/maua2.png'
 import maua3 from '../assets/maua3.png'

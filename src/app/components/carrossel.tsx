@@ -1,13 +1,12 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { FaCircleArrowLeft, FaCircleArrowRight } from 'react-icons/fa6'
 import { MdCircle } from 'react-icons/md'
 
 type Props = {
   children: React.ReactNode[]
-  onSlideChange?: (index: number) => void
 }
 
-export function Carousel({ children: slides, onSlideChange }: Props) {
+export function Carousel({ children: slides }: Props) {
   const [curr, setCurr] = useState(0)
 
   const prev = () =>
