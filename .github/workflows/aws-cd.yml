@@ -47,6 +47,7 @@ jobs:
           echo ACM_CERTIFICATE_ARN=${{ secrets.DEVMAUA_ACM_CERTIFICATE_ARN }} >> $GITHUB_ENV
           echo HOSTED_ZONE_ID=${{ secrets.DEVMAUA_HOSTED_ZONE_ID }} >> $GITHUB_ENV
           echo ALTERNATIVE_DOMAIN_NAME=${{ vars.ALTERNATIVE_DOMAIN_NAME }} >> $GITHUB_ENV
+          echo AWS_BUCKET_ASSETS=${{ vars.AWS_BUCKET_ASSETS }} >> $GITHUB_ENV
       - name: Deploy with CDK
         run: |
           cd iac
