@@ -5,6 +5,8 @@ on:
       - dev
       - homolog
       - prod
+  workflow_dispatch:
+  
 jobs:
   DeployToAWS:
     environment:
