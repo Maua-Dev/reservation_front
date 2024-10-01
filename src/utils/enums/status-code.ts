@@ -1,4 +1,4 @@
-type ObjectValues<T> = T[keyof T]
+import { ObjectValues } from './object-values'
 
 export const HTTP_STATUS_CODE = {
   OK: 200,
