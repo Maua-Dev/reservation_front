@@ -9,11 +9,9 @@ type ModalProps = {
 export function Modal({ open, onClose, children }: ModalProps) {
   return (
     <div
-      onClick={onClose}
-      className={`fixed inset-0 flex items-center justify-center transition-colors ${open ? 'visible bg-black/20' : 'invisible'}`}
+      className={`fixed inset-0 flex items-center justify-center transition-colors ${open ? 'visible z-20 bg-black/20' : 'invisible'}`}
     >
       <div
-        onClick={(e) => e.stopPropagation()}
         className={`rounded-xl bg-white p-6 shadow transition-all ${open ? 'scale-100 opacity-100' : 'scale-125 opacity-0'} `}
       >
         <button

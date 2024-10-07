@@ -1,6 +1,30 @@
-import { IoChevronDown } from 'react-icons/io5'
+import { useState } from 'react'
 
 export function Form() {
+  const [time, setTime] = useState('12:00')
+  const [selectedModality, setSelectedModality] = useState<string | null>(null)
+  const [selectedEquipment, setSelectedEquipment] = useState<string | null>(
+    null
+  )
+  const [selectedRacket, setSelectedRacket] = useState<string | null>(null)
+  const [needsVest, setNeedsVest] = useState(false)
+  const [shareCourt, setShareCourt] = useState(false)
+
+  const getTimeOneHourLater = (time: string) => {
+    const [hours, minutes] = time.split(':').map(Number)
+    const date = new Date()
+    date.setHours(hours + 1, minutes)
+    return date.toTimeString().slice(0, 5)
+  }
+
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    const [hours] = value.split(':')
+    setTime(`${hours}:00`)
+  }
+
+  const modalities = ['Basquete', 'Handbol', 'Vôlei', 'Futsal', 'Tênis']
+
   return (
     <form className="flex flex-col gap-4 bg-white p-4">
       <div className="flex flex-col justify-between">
@@ -19,28 +43,29 @@ export function Form() {
 
       <div className="flex w-full items-center justify-between">
         <div className="mx-2 flex w-40 items-center justify-between rounded bg-yellow p-1">
-          <p className="flex-grow text-center font-poppins text-2xl font-medium">
-            Quadras
-          </p>
-          <button className="ml-2">
-            <IoChevronDown className="text-2xl" />
-          </button>
+          <label className="flex-grow text-center font-poppins text-2xl font-medium">
+            <select className="bg-yellow">
+              <option>Quadra 1</option>
+              <option>Quadra 2</option>
+              <option>Quadra 3</option>
+            </select>
+          </label>
         </div>
 
         <div className="flex items-center">
           <p className="mx-2 font-poppins text-2xl font-medium">Horário</p>
           <div className="mx-2 flex w-40 items-center justify-between rounded bg-yellow p-1">
-            <p className="ml-4 flex-grow text-center font-poppins text-2xl font-medium">
-              12:00
-            </p>
-            <button className="ml-2">
-              <IoChevronDown className="text-2xl" />
-            </button>
+            <input
+              type="time"
+              value={time}
+              onChange={handleTimeChange}
+              className="ml-4 flex-grow border-none bg-yellow text-center font-poppins text-2xl font-medium"
+            />
           </div>
           <p className="mx-2 font-poppins text-2xl font-medium">Até</p>
-          <button className="mr-2 rounded border border-black p-1 font-poppins text-2xl font-medium">
-            13:00
-          </button>
+          <label className="mr-2 rounded border border-black p-1 font-poppins text-2xl font-medium">
+            {getTimeOneHourLater(time)}
+          </label>
         </div>
       </div>
 
@@ -50,24 +75,19 @@ export function Form() {
             Modalidade:
           </p>
         </div>
-        <div className="mx-3 mt-3 pt-4">
-          <button className="mr-2 w-40 rounded border border-black p-1 font-poppins text-2xl font-medium">
-            Basquete
-          </button>
-          <button className="mr-2 w-40 rounded border border-black p-1 font-poppins text-2xl font-medium">
-            Handbol
-          </button>
-          <button className="mr-2 w-40 rounded border border-black p-1 font-poppins text-2xl font-medium">
-            Vôlei
-          </button>
-        </div>
-        <div className="mx-3 mt-3">
-          <button className="mr-2 w-40 rounded border border-black p-1 font-poppins text-2xl font-medium">
-            Futsal
-          </button>
-          <button className="mr-2 w-40 rounded border border-black p-1 font-poppins text-2xl font-medium">
-            Tênis
-          </button>
+
+        <div className="mx-3 mt-3 flex flex-wrap gap-2 pt-4">
+          {modalities.map((modality) => (
+            <label
+              key={modality}
+              onClick={() => setSelectedModality(modality)}
+              className={`mr-2 w-40 rounded border border-black p-1 font-poppins text-2xl font-medium ${
+                selectedModality === modality ? 'bg-yellow' : ''
+              }`}
+            >
+              {modality}
+            </label>
+          ))}
         </div>
       </div>
 
@@ -79,37 +99,54 @@ export function Form() {
         </div>
         <div className="mx-3 mt-3 flex items-center pt-4">
           <p className="mr-3 font-poppins text-2xl font-bold">BOLAS:</p>
-          <button className="mr-2 w-40 rounded border border-black p-1 font-poppins text-2xl font-medium">
-            futebol
-          </button>
-          <button className="mr-2 w-40 rounded border border-black p-1 font-poppins text-2xl font-medium">
-            basquete
-          </button>
-          <button className="mr-2 w-40 rounded border border-black p-1 font-poppins text-2xl font-medium">
-            vôlei
-          </button>
-          <button className="mr-2 w-40 rounded border border-black p-1 font-poppins text-2xl font-medium">
-            de tênis
-          </button>
-          <button className="mr-2 w-40 rounded border border-black p-1 font-poppins text-2xl font-medium">
-            handbol
-          </button>
+          <div className="mx-3 mt-3 flex flex-wrap gap-2 pt-4">
+            {modalities.map((equipment) => (
+              <label
+                key={equipment}
+                onClick={() => setSelectedEquipment(equipment)}
+                className={`mr-2 w-40 rounded border border-black p-1 font-poppins text-2xl font-medium ${
+                  selectedEquipment === equipment ? 'bg-yellow' : ''
+                }`}
+              >
+                {equipment}
+              </label>
+            ))}
+          </div>
         </div>
         <div className="mx-3 mt-3 flex items-center pt-5">
           <p className="mr-3 font-poppins text-2xl font-bold">RAQUETES:</p>
-          <button className="mr-2 w-40 rounded border border-black p-1 font-poppins text-2xl font-medium">
+          <label
+            onClick={() =>
+              setSelectedRacket(
+                selectedRacket === 'de tênis' ? null : 'de tênis'
+              )
+            }
+            className={`mr-2 w-40 rounded border border-black p-1 font-poppins text-2xl font-medium ${
+              selectedRacket === 'de tênis' ? 'bg-yellow' : ''
+            }`}
+          >
             de tênis
-          </button>
+          </label>
         </div>
       </div>
       <div className="mx-3 mt-3 flex flex-row items-center">
-        <button className="mr-2 h-10 w-10 rounded border border-black p-1 font-poppins text-2xl font-medium"></button>
+        <input
+          type="checkbox"
+          checked={needsVest}
+          onChange={() => setNeedsVest(!needsVest)}
+          className="mr-2 h-10 w-10 rounded border border-black p-1"
+        />
         <p className="font-poppins text-2xl font-medium">preciso de colete</p>
       </div>
 
       <div className="mx-3 mt-3 flex flex-row items-center justify-between">
         <div className="flex items-center">
-          <button className="mr-2 h-10 w-10 rounded border border-black p-1 font-poppins text-2xl font-medium"></button>
+          <input
+            type="checkbox"
+            checked={shareCourt}
+            onChange={() => setShareCourt(!shareCourt)}
+            className="mr-2 h-10 w-10 rounded border border-black p-1"
+          />
           <p className="font-poppins text-2xl font-medium">
             Aceito compartilhar quadra
           </p>
