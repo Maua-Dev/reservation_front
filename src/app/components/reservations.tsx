@@ -39,7 +39,11 @@ export function Reservations() {
       </div>
       <div className="flex w-full flex-col items-center justify-center gap-6 md:flex-row">
         {reservations.map((reservation) => (
-          <ReservationCard {...reservation} key={reservation.title} />
+          <ReservationCard
+            {...reservation}
+            key={reservation.title}
+            calendar="/reserve"
+          />
         ))}
       </div>
     </div>
