@@ -12,7 +12,7 @@ export function Modal({ open, onClose, children }: ModalProps) {
       className={`fixed inset-0 flex items-center justify-center transition-colors ${open ? 'visible z-20 bg-black/20' : 'invisible'}`}
     >
       <div
-        className={`rounded-xl bg-white p-6 shadow transition-all ${open ? 'scale-100 opacity-100' : 'scale-125 opacity-0'} `}
+        className={`rounded-xl bg-white w-[1000px] p-6 shadow transition-all ${open ? 'scale-100 opacity-100' : 'scale-125 opacity-0'} `}
       >
         <button
           onClick={(e) => {
