@@ -1,6 +1,6 @@
+import imgBeachTenis from '../assets/imagem-beachtenis.png'
 import imgCampo from '../assets/imagem-campo.png'
 import imgQuadra from '../assets/imagem-quadra.png'
-import imgBeachTenis from '../assets/imagem-beachtenis.png'
 import { ReservationCard } from './reservation-card'
 
 const reservations = [
@@ -8,19 +8,22 @@ const reservations = [
     image: imgCampo,
     title: 'Campo',
     description:
-      'O Reservation Mauá é o sistema de reserva de salas do Instituto Mauá de Tecnologia, projetado para facilitar o agendamento de espaços para estudos, reuniões e eventos acadêmicos.'
+      'O Reservation Mauá é o sistema de reserva de salas do Instituto Mauá de Tecnologia, projetado para facilitar o agendamento de espaços para estudos, reuniões e eventos acadêmicos.',
+    calendar: '/reserve-campobeach'
   },
   {
     image: imgQuadra,
     title: 'Quadra',
     description:
-      'O Reservation Mauá é o sistema de reserva de salas do Instituto Mauá de Tecnologia, projetado para facilitar o agendamento de espaços para estudos, reuniões e eventos acadêmicos.'
+      'O Reservation Mauá é o sistema de reserva de salas do Instituto Mauá de Tecnologia, projetado para facilitar o agendamento de espaços para estudos, reuniões e eventos acadêmicos.',
+    calendar: '/reserve-quadra'
   },
   {
     image: imgBeachTenis,
     title: 'Beach Tênis',
     description:
-      'O Reservation Mauá é o sistema de reserva de salas do Instituto Mauá de Tecnologia, projetado para facilitar o agendamento de espaços para estudos, reuniões e eventos acadêmicos.'
+      'O Reservation Mauá é o sistema de reserva de salas do Instituto Mauá de Tecnologia, projetado para facilitar o agendamento de espaços para estudos, reuniões e eventos acadêmicos.',
+    calendar: '/reserve-campobeach'
   }
 ]
 
@@ -42,7 +45,7 @@ export function Reservations() {
           <ReservationCard
             {...reservation}
             key={reservation.title}
-            calendar="/reserve"
+            calendar={reservation.calendar}
           />
         ))}
       </div>
