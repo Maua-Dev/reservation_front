@@ -1,7 +1,7 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { Home } from './pages/home'
-import { Navbar } from './components/navbar'
 import { Reserve } from '@/app/pages/reserve'
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import { Navbar } from './components/navbar'
+import { Home } from './pages/home'
 
 export function App() {
   return (

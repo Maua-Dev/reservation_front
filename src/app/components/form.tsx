@@ -1,3 +1,6 @@
+import { Button } from '@/app/components/button'
+import { Confirm } from '@/app/components/confirm'
+import { Modal } from '@/app/components/modal'
 import { useState } from 'react'
 
 export function Form() {
@@ -9,6 +12,7 @@ export function Form() {
   const [selectedRacket, setSelectedRacket] = useState<string | null>(null)
   const [needsVest, setNeedsVest] = useState(false)
   const [shareCourt, setShareCourt] = useState(false)
+  const [open, setOpen] = useState(false)
 
   const getTimeOneHourLater = (time: string) => {
     const [hours, minutes] = time.split(':').map(Number)
@@ -136,7 +140,7 @@ export function Form() {
           onChange={() => setNeedsVest(!needsVest)}
           className="mr-2 h-10 w-10 rounded border border-black p-1"
         />
-        <p className="font-poppins text-2xl font-medium">preciso de colete</p>
+        <p className="font-poppins text-2xl font-medium">Preciso de colete</p>
       </div>
 
       <div className="mx-3 mt-3 flex flex-row items-center justify-between">
@@ -151,10 +155,18 @@ export function Form() {
             Aceito compartilhar quadra
           </p>
         </div>
-        <div className="mx-2 flex w-40 items-center justify-between rounded bg-blue-500 p-1">
-          <button className="flex-grow text-center font-poppins text-2xl font-medium text-white">
+        <div className="mx-2 flex w-40 items-center justify-between rounded p-1">
+          <Button
+            onClick={(e) => {
+              setOpen(true)
+              e.preventDefault()
+            }}
+          >
             Salvar
-          </button>
+          </Button>
+          <Modal open={open} onClose={() => setOpen(false)}>
+            <Confirm onClose={() => setOpen(false)} />
+          </Modal>
         </div>
       </div>
     </form>

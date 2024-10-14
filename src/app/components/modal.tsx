@@ -15,7 +15,10 @@ export function Modal({ open, onClose, children }: ModalProps) {
         className={`rounded-xl bg-white p-6 shadow transition-all ${open ? 'scale-100 opacity-100' : 'scale-125 opacity-0'} `}
       >
         <button
-          onClick={onClose}
+          onClick={(e) => {
+            e.preventDefault()
+            onClose()
+          }}
           className="absolute right-2 top-2 rounded-lg bg-white p-1 text-gray-400 hover:bg-gray-50 hover:text-gray-600"
         >
           <IoClose size={30} />
