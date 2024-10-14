@@ -85,7 +85,7 @@ export function FormQuadra() {
             <label
               key={modality}
               onClick={() => setSelectedModality(modality)}
-              className={`mr-2 w-40 rounded border border-black p-1 font-poppins text-2xl font-medium ${
+              className={`w-40 rounded border border-black p-1 font-poppins text-sm font-medium ${
                 selectedModality === modality ? 'bg-yellow' : ''
               }`}
             >
