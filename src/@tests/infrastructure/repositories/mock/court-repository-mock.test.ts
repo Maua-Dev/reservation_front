@@ -26,8 +26,8 @@ describe('get court in court repository mock', () => {
   })
 })
 
-describe('get user list in repository mock', () => {
-  it('should return a list of users', async () => {
+describe('get all courts in repository mock', () => {
+  it('should return all the courts', async () => {
     const courtRepository = new CourtRepositoryMock()
     const courts = await courtRepository.getAllCourts()
 
