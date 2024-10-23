@@ -16,7 +16,7 @@ const reservations = [
     title: 'Quadra',
     description:
       'O Reservation Mauá é o sistema de reserva de salas do Instituto Mauá de Tecnologia, projetado para facilitar o agendamento de espaços para estudos, reuniões e eventos acadêmicos.',
-    calendar: '/reserve-quadra'
+    calendar: '/court-reserve'
   },
   {
     image: imgBeachTenis,
