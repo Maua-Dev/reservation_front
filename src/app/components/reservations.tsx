@@ -9,7 +9,7 @@ const reservations = [
     title: 'Campo',
     description:
       'O Reservation Mauá é o sistema de reserva de salas do Instituto Mauá de Tecnologia, projetado para facilitar o agendamento de espaços para estudos, reuniões e eventos acadêmicos.',
-    calendar: '/reserve-campobeach'
+    calendar: '/fieldbeach-reserve'
   },
   {
     image: imgQuadra,
@@ -23,7 +23,7 @@ const reservations = [
     title: 'Beach Tênis',
     description:
       'O Reservation Mauá é o sistema de reserva de salas do Instituto Mauá de Tecnologia, projetado para facilitar o agendamento de espaços para estudos, reuniões e eventos acadêmicos.',
-    calendar: '/reserve-campobeach'
+    calendar: '/fieldbeach-reserve'
   }
 ]
 
