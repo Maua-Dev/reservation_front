@@ -15,6 +15,9 @@ export default {
         'grey-primary': '#999999',
         'grey-secondary': '#656565',
         'white-primary': '#cccccc'
+      },
+      backgroundImage: {
+        quadra: "url('../assets/imagem-campo.png')"
       }
     }
   },
