@@ -22,6 +22,7 @@ export function CourtReserve() {
           modalities={modalities}
           equipments={equipments}
           options={options}
+          onClose={() => setOpen(false)}
         />
       </Modal>
     </main>

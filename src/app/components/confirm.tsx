@@ -3,9 +3,10 @@ import { IoClose } from 'react-icons/io5'
 
 type ConfirmProps = {
   onClose: () => void
+  onConfirm: () => void
 }
 
-export function Confirm({ onClose }: ConfirmProps) {
+export function Confirm({ onClose, onConfirm }: ConfirmProps) {
   return (
     <div className="flex h-40 w-full flex-col items-center justify-center gap-4 rounded-xl bg-white px-0 pt-4 md:h-full md:w-full">
       <div className="flex flex-grow items-center justify-center px-8 py-2">
@@ -24,7 +25,13 @@ export function Confirm({ onClose }: ConfirmProps) {
         >
           <IoClose className="text-3xl" />
         </button>
-        <button className="flex h-10 flex-1 items-center justify-center rounded-br bg-green-700 text-white">
+        <button
+          onClick={(e) => {
+            onConfirm()
+            e.preventDefault()
+          }}
+          className="flex h-10 flex-1 items-center justify-center rounded-br bg-green-700 text-white"
+        >
           <IoMdCheckmark className="text-3xl" />
         </button>
       </div>

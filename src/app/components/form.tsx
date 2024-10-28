@@ -10,6 +10,7 @@ type FormProps = {
   modalities: string[]
   equipments: string[]
   options: string[]
+  onClose: () => void
 }
 
 const formSchema = z.object({
@@ -22,7 +23,12 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>
 
-export const Form = ({ modalities, equipments, options }: FormProps) => {
+export const Form = ({
+  modalities,
+  equipments,
+  options,
+  onClose
+}: FormProps) => {
   const {
     register,
     handleSubmit,
@@ -40,6 +46,7 @@ export const Form = ({ modalities, equipments, options }: FormProps) => {
     }
   })
   const [open, setOpen] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
   const [selectedModality, setSelectedModality] = useState('')
   const [selectedEquipment, setSelectedEquipment] = useState('')
 
@@ -52,14 +59,17 @@ export const Form = ({ modalities, equipments, options }: FormProps) => {
 
   const onSubmit = (data: FormData) => {
     console.log(data)
-    setOpen(true)
+    onClose()
   }
 
   const time = watch('time')
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={(e) => {
+        setOpen(true)
+        e.preventDefault()
+      }}
       className="flex flex-col gap-4 bg-white p-4"
     >
       <div className="flex flex-col justify-between pb-3">
@@ -182,9 +192,12 @@ export const Form = ({ modalities, equipments, options }: FormProps) => {
           </p>
         </div>
         <div className="mx-2 flex w-40 items-center justify-between rounded p-1">
-          <Button>Salvar</Button>
+          <Button type="submit">Salvar</Button>
           <Modal open={open} onClose={() => setOpen(false)}>
-            <Confirm onClose={() => setOpen(false)} />
+            <Confirm
+              onClose={() => setOpen(false)}
+              onConfirm={handleSubmit(onSubmit)}
+            />
           </Modal>
         </div>
       </div>

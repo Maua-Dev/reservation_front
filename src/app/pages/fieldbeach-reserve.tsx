@@ -16,6 +16,7 @@ export function FieldBeachReserve() {
           modalities={modalities}
           equipments={equipments}
           options={options}
+          onClose={() => setOpen(false)}
         />
       </Modal>
     </main>
