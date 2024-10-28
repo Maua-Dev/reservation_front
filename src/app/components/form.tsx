@@ -46,7 +46,6 @@ export const Form = ({
     }
   })
   const [open, setOpen] = useState(false)
-  const [confirmOpen, setConfirmOpen] = useState(false)
   const [selectedModality, setSelectedModality] = useState('')
   const [selectedEquipment, setSelectedEquipment] = useState('')
 
@@ -192,7 +191,7 @@ export const Form = ({
           </p>
         </div>
         <div className="mx-2 flex w-40 items-center justify-between rounded p-1">
-          <Button type="submit">Salvar</Button>
+          <Button>Salvar</Button>
           <Modal open={open} onClose={() => setOpen(false)}>
             <Confirm
               onClose={() => setOpen(false)}
