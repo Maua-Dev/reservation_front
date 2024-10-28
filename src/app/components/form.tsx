@@ -73,20 +73,18 @@ export const Form = ({
     >
       <div className="flex flex-col justify-between pb-3">
         <div className="flex justify-between">
-          <p className="mx-3 mt-3 font-poppins text-2xl font-bold text-black md:text-3xl">
+          <p className="mt-3 font-poppins text-2xl font-bold text-black md:text-3xl">
             Daniel Capuzzo
           </p>
-          <p className="mx-3 mt-3 font-poppins text-2xl font-bold text-black md:text-3xl">
+          <p className="mt-3 font-poppins text-2xl font-bold text-black md:text-3xl">
             22.001122-0
           </p>
         </div>
-        <p className="mx-3 mt-1 font-poppins text-2xl font-medium">
-          data: 17/09
-        </p>
+        <p className="mt-1 font-poppins text-2xl font-medium">data: 17/09</p>
       </div>
 
-      <div className="flex w-full flex-col justify-start gap-2 md:flex-row md:items-center">
-        <div className="mx-2 flex w-40 items-center justify-between rounded bg-yellow p-1 md:w-48">
+      <div className="flex w-full flex-col justify-start gap-10 md:flex-row md:items-center">
+        <div className="flex w-40 items-center justify-between rounded bg-yellow p-1 md:w-48">
           <label className="flex-grow text-center font-poppins text-lg font-medium md:text-2xl">
             <select className="bg-yellow">
               {options.map((option) => (
@@ -95,32 +93,34 @@ export const Form = ({
             </select>
           </label>
         </div>
-        <label className="mx-2 flex font-poppins text-xl font-medium max-md:pt-4 md:text-2xl">
-          Horário
-          <input
-            type="time"
-            {...register('time')}
-            className="ml-4 border-none bg-yellow text-center font-poppins text-lg font-medium md:text-2xl"
-          />
-          {errors.time && <p className="text-red-500">{errors.time.message}</p>}
-        </label>
-        <div className="flex items-center gap-2">
-          <p className="mx-2 font-poppins text-xl font-medium md:text-2xl">
-            Até
-          </p>
-          <label className="mr-2 rounded border border-black p-1 font-poppins text-xl font-medium md:text-2xl">
-            {getTimeOneHourLater(time)}
+        <div className="flex items-center justify-center gap-2">
+          <label className="flex items-center justify-center gap-2 font-poppins text-xl font-medium max-md:pt-4 md:text-2xl">
+            <p>Horário</p>
+            <input
+              type="time"
+              {...register('time')}
+              className="rounded border-none bg-yellow p-[4px] text-center font-poppins text-lg font-medium md:text-2xl"
+            />
+            {errors.time && (
+              <p className="text-red-500">{errors.time.message}</p>
+            )}
           </label>
+          <div className="flex items-center gap-2">
+            <p className="font-poppins text-xl font-medium md:text-2xl">Até</p>
+            <label className="rounded border border-black p-1 font-poppins text-xl font-medium md:text-2xl">
+              {getTimeOneHourLater(time)}
+            </label>
+          </div>
         </div>
       </div>
 
       <div className="flex flex-col">
         <div className="flex justify-start">
-          <p className="mx-3 pt-4 text-left font-poppins text-3xl font-bold text-black">
+          <p className="pt-4 text-left font-poppins text-3xl font-bold text-black">
             Modalidade:
           </p>
         </div>
-        <div className="mx-3 mt-3 flex flex-wrap gap-2 pt-4">
+        <div className="mt-3 flex flex-wrap gap-2 pt-4">
           {modalities.map((modality) => (
             <button
               key={modality}
@@ -142,11 +142,11 @@ export const Form = ({
 
       <div className="flex flex-col">
         <div className="flex justify-start">
-          <p className="mx-3 mt-3 text-left font-poppins text-3xl font-bold text-black">
+          <p className="mt-3 text-left font-poppins text-3xl font-bold text-black">
             Equipamentos:
           </p>
         </div>
-        <div className="mx-3 flex items-center">
+        <div className="flex items-center">
           <div className="mt-3 flex flex-wrap gap-2 pt-4">
             {equipments.map((equipment) => (
               <button
@@ -168,29 +168,29 @@ export const Form = ({
         </div>
       </div>
 
-      <div className="mx-3 mt-3 flex flex-row items-center">
+      <div className="mt-3 flex flex-row items-center gap-2">
         <input
           type="checkbox"
           {...register('needsVest')}
-          className="mr-2 h-10 w-7 rounded border border-black p-1 md:w-8"
+          className="h-10 w-7 rounded border border-black p-1 md:w-8"
         />
         <p className="text-md font-poppins font-medium md:text-xl">
           Preciso de colete
         </p>
       </div>
 
-      <div className="mx-3 mt-3 flex flex-row items-center justify-between">
-        <div className="flex items-center">
+      <div className="mt-3 flex flex-row items-center justify-between">
+        <div className="flex items-center gap-2">
           <input
             type="checkbox"
             {...register('shareCourt')}
-            className="mr-2 h-10 w-7 rounded border border-black p-1 md:w-8"
+            className="h-10 w-7 rounded border border-black p-1 md:w-8"
           />
           <p className="text-md font-poppins font-medium md:text-xl">
             Aceito compartilhar quadra
           </p>
         </div>
-        <div className="mx-2 flex w-40 items-center justify-between rounded p-1">
+        <div className="flex w-40 items-center justify-between rounded p-1">
           <Button>Salvar</Button>
           <Modal open={open} onClose={() => setOpen(false)}>
             <Confirm
