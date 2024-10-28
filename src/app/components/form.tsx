@@ -1,7 +1,10 @@
 import { Button } from '@/app/components/button'
 import { Confirm } from '@/app/components/confirm'
 import { Modal } from '@/app/components/modal'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 type FormProps = {
   modalities: string[]
@@ -9,15 +12,36 @@ type FormProps = {
   options: string[]
 }
 
+const formSchema = z.object({
+  time: z.string().regex(/^\d{2}:\d{2}$/, 'Invalid time format'),
+  modality: z.string(),
+  equipment: z.string(),
+  needsVest: z.boolean(),
+  shareCourt: z.boolean()
+})
+
+type FormData = z.infer<typeof formSchema>
+
 export const Form = ({ modalities, equipments, options }: FormProps) => {
-  const [time, setTime] = useState('12:00')
-  const [selectedModality, setSelectedModality] = useState<string | null>(null)
-  const [selectedEquipment, setSelectedEquipment] = useState<string | null>(
-    null
-  )
-  const [needsVest, setNeedsVest] = useState(false)
-  const [shareCourt, setShareCourt] = useState(false)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    setValue
+  } = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      time: '12:00',
+      modality: '',
+      equipment: '',
+      needsVest: false,
+      shareCourt: false
+    }
+  })
   const [open, setOpen] = useState(false)
+  const [selectedModality, setSelectedModality] = useState('')
+  const [selectedEquipment, setSelectedEquipment] = useState('')
 
   const getTimeOneHourLater = (time: string) => {
     const [hours, minutes] = time.split(':').map(Number)
@@ -26,15 +50,19 @@ export const Form = ({ modalities, equipments, options }: FormProps) => {
     return date.toTimeString().slice(0, 5)
   }
 
-  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    const [hours] = value.split(':')
-    setTime(`${hours}:00`)
+  const onSubmit = (data: FormData) => {
+    console.log(data)
+    setOpen(true)
   }
 
+  const time = watch('time')
+
   return (
-    <form className="flex flex-col gap-4 bg-white p-4">
-      <div className="flex flex-col justify-between">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-4 bg-white p-4"
+    >
+      <div className="flex flex-col justify-between pb-3">
         <div className="flex justify-between">
           <p className="mx-3 mt-3 font-poppins text-2xl font-bold text-black md:text-3xl">
             Daniel Capuzzo
@@ -48,7 +76,7 @@ export const Form = ({ modalities, equipments, options }: FormProps) => {
         </p>
       </div>
 
-      <div className="flex w-full flex-col gap-3 md:flex-row">
+      <div className="flex w-full flex-col justify-start gap-2 md:flex-row md:items-center">
         <div className="mx-2 flex w-40 items-center justify-between rounded bg-yellow p-1 md:w-48">
           <label className="flex-grow text-center font-poppins text-lg font-medium md:text-2xl">
             <select className="bg-yellow">
@@ -58,23 +86,20 @@ export const Form = ({ modalities, equipments, options }: FormProps) => {
             </select>
           </label>
         </div>
-
-        <div className="flex items-center">
-          <p className="mx-2 font-poppins text-lg font-medium md:text-2xl">
-            Horário
-          </p>
-          <div className="mx-2 flex w-40 items-center justify-between rounded bg-yellow p-1">
-            <input
-              type="time"
-              value={time}
-              onChange={handleTimeChange}
-              className="ml-4 flex-grow border-none bg-yellow text-center font-poppins text-lg font-medium md:text-2xl"
-            />
-          </div>
-          <p className="mx-2 font-poppins text-lg font-medium md:text-2xl">
+        <label className="mx-2 flex font-poppins text-xl font-medium max-md:pt-4 md:text-2xl">
+          Horário
+          <input
+            type="time"
+            {...register('time')}
+            className="ml-4 border-none bg-yellow text-center font-poppins text-lg font-medium md:text-2xl"
+          />
+          {errors.time && <p className="text-red-500">{errors.time.message}</p>}
+        </label>
+        <div className="flex items-center gap-2">
+          <p className="mx-2 font-poppins text-xl font-medium md:text-2xl">
             Até
           </p>
-          <label className="mr-2 rounded border border-black p-1 font-poppins text-lg font-medium md:text-2xl">
+          <label className="mr-2 rounded border border-black p-1 font-poppins text-xl font-medium md:text-2xl">
             {getTimeOneHourLater(time)}
           </label>
         </div>
@@ -82,23 +107,27 @@ export const Form = ({ modalities, equipments, options }: FormProps) => {
 
       <div className="flex flex-col">
         <div className="flex justify-start">
-          <p className="mx-3 mt-3 pt-4 text-left font-poppins text-3xl font-bold text-black">
+          <p className="mx-3 pt-4 text-left font-poppins text-3xl font-bold text-black">
             Modalidade:
           </p>
         </div>
-
         <div className="mx-3 mt-3 flex flex-wrap gap-2 pt-4">
           {modalities.map((modality) => (
-            <label
+            <button
               key={modality}
-              onClick={() => setSelectedModality(modality)}
-              className={`text-md w-24 rounded border border-black p-1 font-poppins font-medium md:w-36 md:text-lg ${
-                selectedModality === modality ? 'bg-yellow' : ''
-              }`}
+              type="button"
+              onClick={() => {
+                setSelectedModality(modality)
+                setValue('modality', modality)
+              }}
+              className={`text-md w-24 rounded border border-black p-1 font-poppins font-medium md:w-36 md:text-lg ${selectedModality === modality ? 'bg-yellow' : ''}`}
             >
               {modality}
-            </label>
+            </button>
           ))}
+          {errors.modality && (
+            <p className="text-red-500">{errors.modality.message}</p>
+          )}
         </div>
       </div>
 
@@ -111,25 +140,30 @@ export const Form = ({ modalities, equipments, options }: FormProps) => {
         <div className="mx-3 flex items-center">
           <div className="mt-3 flex flex-wrap gap-2 pt-4">
             {equipments.map((equipment) => (
-              <label
+              <button
                 key={equipment}
-                onClick={() => setSelectedEquipment(equipment)}
-                className={`text-md w-24 rounded border border-black p-1 font-poppins font-medium md:w-44 md:text-lg ${
-                  selectedEquipment === equipment ? 'bg-yellow' : ''
-                }`}
+                type="button"
+                onClick={() => {
+                  setSelectedEquipment(equipment)
+                  setValue('equipment', equipment)
+                }}
+                className={`text-md w-24 rounded border border-black p-1 font-poppins font-medium md:w-44 md:text-lg ${selectedEquipment === equipment ? 'bg-yellow' : ''}`}
               >
                 {equipment}
-              </label>
+              </button>
             ))}
+            {errors.equipment && (
+              <p className="text-red-500">{errors.equipment.message}</p>
+            )}
           </div>
         </div>
       </div>
+
       <div className="mx-3 mt-3 flex flex-row items-center">
         <input
           type="checkbox"
-          checked={needsVest}
-          onChange={() => setNeedsVest(!needsVest)}
-          className="mr-2 h-10 w-7 rounded border border-black p-1 md:w-10"
+          {...register('needsVest')}
+          className="mr-2 h-10 w-7 rounded border border-black p-1 md:w-8"
         />
         <p className="text-md font-poppins font-medium md:text-xl">
           Preciso de colete
@@ -140,23 +174,15 @@ export const Form = ({ modalities, equipments, options }: FormProps) => {
         <div className="flex items-center">
           <input
             type="checkbox"
-            checked={shareCourt}
-            onChange={() => setShareCourt(!shareCourt)}
-            className="mr-2 h-10 w-8 rounded border border-black p-1 md:w-10"
+            {...register('shareCourt')}
+            className="mr-2 h-10 w-7 rounded border border-black p-1 md:w-8"
           />
           <p className="text-md font-poppins font-medium md:text-xl">
             Aceito compartilhar quadra
           </p>
         </div>
         <div className="mx-2 flex w-40 items-center justify-between rounded p-1">
-          <Button
-            onClick={(e) => {
-              setOpen(true)
-              e.preventDefault()
-            }}
-          >
-            Salvar
-          </Button>
+          <Button>Salvar</Button>
           <Modal open={open} onClose={() => setOpen(false)}>
             <Confirm onClose={() => setOpen(false)} />
           </Modal>
