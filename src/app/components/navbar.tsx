@@ -51,7 +51,9 @@ export function Navbar() {
             SOBRE NÓS
           </a>
         </div>
-        <Button className="hidden text-xl md:flex lg:text-2xl">Login</Button>
+        <a href="/login">
+          <Button className="hidden text-xl md:flex lg:text-2xl">Login</Button>
+        </a>
         {isMenuOpen ? (
           <IoClose
             className={`flex cursor-pointer text-5xl text-yellow transition-all duration-500 md:hidden ${fade ? 'opacity-100' : 'rotate-180 opacity-0'}`}
