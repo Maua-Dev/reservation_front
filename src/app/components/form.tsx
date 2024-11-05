@@ -83,7 +83,7 @@ export const Form = ({
         <p className="mt-1 font-poppins text-2xl font-medium">data: 17/09</p>
       </div>
 
-      <div className="flex w-full flex-col justify-start gap-10 md:flex-row md:items-center">
+      <div className="flex w-full flex-col justify-start gap-4 md:flex-row md:items-center">
         <div className="flex w-40 items-center justify-between rounded bg-yellow p-1 md:w-48">
           <label className="flex-grow text-center font-poppins text-lg font-medium md:text-2xl">
             <select className="bg-yellow">
@@ -93,8 +93,8 @@ export const Form = ({
             </select>
           </label>
         </div>
-        <div className="flex items-center justify-center gap-2">
-          <label className="flex items-center justify-center gap-2 font-poppins text-xl font-medium max-md:pt-4 md:text-2xl">
+        <div className="flex items-center justify-start gap-2 max-md:pt-4">
+          <label className="flex items-center justify-center gap-2 font-poppins text-xl font-medium md:text-2xl">
             <p>Horário</p>
             <input
               type="time"
