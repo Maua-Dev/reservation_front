@@ -35,19 +35,40 @@ export function Navbar() {
       className="fixed z-10 flex w-full flex-col font-league"
     >
       <nav className="flex w-full select-none items-center justify-between bg-white px-6 py-2 md:px-8 md:py-3 lg:px-10">
-        <img
-          src={window.innerWidth < 768 ? shortLogo : fullLogo}
-          alt="Logo do Mauá Reservation"
-          className="w-14 sm:w-20 md:w-24"
-        />
+        <a href="/" className="cursor-pointer">
+          <img
+            src={window.innerWidth < 768 ? shortLogo : fullLogo}
+            alt="Logo do Mauá Reservation"
+            className="w-14 sm:w-20 md:w-24"
+          />
+        </a>
+
         <div className="hidden gap-24 text-xl font-medium text-blue-primary md:flex lg:text-2xl">
-          <a href="#" className="cursor-pointer">
+          <a href="/" className="cursor-pointer">
             INÍCIO
           </a>
-          <a href="#" className="cursor-pointer">
+          <a
+            href="#reservation"
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault() // Evita o comportamento padrão do link
+              document.querySelector('#reservation')?.scrollIntoView({
+                behavior: 'smooth'
+              })
+            }}
+          >
             MENU DE RESERVAS
           </a>
-          <a href="#" className="cursor-pointer">
+          <a
+            href="#dev"
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault() // Evita o comportamento padrão do link
+              document.querySelector('#dev')?.scrollIntoView({
+                behavior: 'smooth'
+              })
+            }}
+          >
             SOBRE NÓS
           </a>
         </div>
@@ -72,19 +93,19 @@ export function Navbar() {
         >
           <div className="flex flex-col justify-center gap-16 px-12">
             <a
-              href="#"
+              href="/"
               className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-75 duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
             >
               <FaHome /> Início
             </a>
             <a
-              href="#"
+              href="#reservation"
               className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-200 duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
             >
               <FaCalendarAlt /> Menu de reservas
             </a>
             <a
-              href="#"
+              href="#dev"
               className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-300 duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
             >
               <BiWorld /> Sobre nós
