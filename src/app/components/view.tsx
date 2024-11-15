@@ -81,7 +81,7 @@ export function View() {
               </Button>
             </div>
           </div>
-          <p className="self-end p-2 font-poppins text-xs font-medium text-black md:text-base">
+          <p className="self-end text-end font-poppins text-xs font-medium text-black md:text-base">
             * Reservas sujeitas a cancelamento
           </p>
         </div>
