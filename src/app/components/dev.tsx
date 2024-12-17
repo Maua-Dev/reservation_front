@@ -8,7 +8,10 @@ export function Dev() {
   const slides = [imageDev1, imageDev2, imageDev3]
 
   return (
-    <section className="flex min-h-screen flex-col items-center justify-center gap-4 bg-blue-primary px-4 py-12 md:gap-16 md:py-0 lg:px-14">
+    <section
+      id="dev"
+      className="flex min-h-screen flex-col items-center justify-center gap-4 scroll-smooth bg-blue-primary px-4 py-12 md:gap-16 md:py-0 lg:px-14"
+    >
       <h1 className="font-league text-3xl font-semibold text-white md:text-5xl">
         Dev Community Mauá
       </h1>
