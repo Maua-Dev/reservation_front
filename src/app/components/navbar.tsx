@@ -35,7 +35,16 @@ export function Navbar() {
       className="fixed z-10 flex w-full flex-col font-league"
     >
       <nav className="flex w-full select-none items-center justify-between bg-white px-6 py-2 md:px-8 md:py-3 lg:px-10">
-        <a href="/" className="cursor-pointer">
+        <a
+          href="/"
+          className="cursor-pointer"
+          onClick={(e) => {
+            if (window.location.pathname === '/') {
+              e.preventDefault() // Evita o redirecionamento se já está na página inicial
+              window.scrollTo({ top: 0, behavior: 'smooth' }) // Rola para o topo
+            }
+          }}
+        >
           <img
             src={window.innerWidth < 768 ? shortLogo : fullLogo}
             alt="Logo do Mauá Reservation"
@@ -44,29 +53,58 @@ export function Navbar() {
         </a>
 
         <div className="hidden gap-24 text-xl font-medium text-blue-primary md:flex lg:text-2xl">
-          <a href="/" className="cursor-pointer">
+          <a
+            href="/"
+            className="cursor-pointer scroll-smooth"
+            onClick={(e) => {
+              if (window.location.pathname === '/') {
+                e.preventDefault() // Evita o redirecionamento se já está na página inicial
+                window.scrollTo({ top: 0, behavior: 'smooth' }) // Rola para o topo
+              }
+            }}
+          >
             INÍCIO
           </a>
           <a
-            href="#reservation"
+            href="/#reservation"
             className="cursor-pointer"
             onClick={(e) => {
-              e.preventDefault() // Evita o comportamento padrão do link
-              document.querySelector('#reservation')?.scrollIntoView({
-                behavior: 'smooth'
-              })
+              e.preventDefault()
+              const destinationUrl = '/#reservation'
+              if (window.location.pathname === '/') {
+                const targetElement = document.querySelector(
+                  '#reservation'
+                ) as HTMLElement | null
+                if (targetElement) {
+                  targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                  })
+                }
+              } else {
+                window.location.href = destinationUrl
+              }
             }}
           >
             MENU DE RESERVAS
           </a>
           <a
-            href="#dev"
+            href="/#dev"
             className="cursor-pointer"
             onClick={(e) => {
-              e.preventDefault() // Evita o comportamento padrão do link
-              document.querySelector('#dev')?.scrollIntoView({
-                behavior: 'smooth'
-              })
+              e.preventDefault()
+              const destinationUrl = '/#dev'
+              if (window.location.pathname === '/') {
+                const targetElement = document.querySelector(
+                  '#dev'
+                ) as HTMLElement | null
+                if (targetElement) {
+                  targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                  })
+                }
+              } else {
+                window.location.href = destinationUrl
+              }
             }}
           >
             SOBRE NÓS
