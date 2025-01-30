@@ -1,8 +1,21 @@
 import { Button } from './button'
 
 export function Court() {
-  const isHighlightedTime = (hour) => {
+  const now = new Date()
+
+  const isHighlightedTime = (hour: number) => {
     return hour >= 19 && hour <= 21
+  }
+
+  const handleClickedTime = (hour: number, day: number) => {
+    if (!isHighlightedTime(hour)) {
+      const clickedTime = new Date()
+      clickedTime.setDate(day - 1)
+      clickedTime.setHours(hour)
+      clickedTime.setMinutes(0)
+      clickedTime.setSeconds(0)
+      console.log(clickedTime)
+    }
   }
 
   return (
@@ -46,9 +59,11 @@ export function Court() {
                 {[...Array(6)].map((_, dayIndex) => (
                   <div
                     key={dayIndex}
-                    className={`flex-1 border-b border-r border-gray-400 p-2 last:border-r-0 ${
-                      isHighlightedTime(hour) ? 'bg-red-200' : 'bg-gray-200'
-                    }`}
+                    onClick={handleClickedTime.bind(null, hour, dayIndex)}
+                    className={`flex-1 border-b border-r border-gray-400 p-2 last:border-r-0 ${isHighlightedTime(hour)
+                      ? 'bg-red-200'
+                      : 'bg-gray-200 hover:cursor-pointer hover:bg-gray-300'
+                      }`}
                   ></div>
                 ))}
               </div>
