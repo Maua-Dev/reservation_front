@@ -61,16 +61,18 @@ export function Court() {
   }
 
   return (
-    <div>
-      <div className="relative h-44 w-screen bg-quadra">
-        <div className="absolute bottom-0 left-0 p-5 font-poppins text-white">
-          <p className="text-3xl font-semibold">Quadras</p>
-          <p className="text-2xl font-normal">
-            {thisMonth()}, {thisWeek()[0]}-{thisWeek()[5]}
-          </p>
-        </div>
-        <div className="absolute bottom-0 right-0 p-8">
-          <Button className="h-12 w-52 p-1">Verificar Reserva</Button>
+    <div className="w-full">
+      <div className="relative h-44 w-full bg-quadra bg-cover bg-center">
+        <div className="h-full w-full bg-black/50">
+          <div className="absolute bottom-0 left-0 p-5 font-poppins text-white">
+            <p className="text-3xl font-semibold">Quadras</p>
+            <p className="text-2xl font-normal">
+              {thisMonth()}, {thisWeek()[0]}-{thisWeek()[5]}
+            </p>
+          </div>
+          <div className="absolute bottom-0 right-0 p-8">
+            <Button className="h-12 w-52 p-1">Verificar Reserva</Button>
+          </div>
         </div>
       </div>
 
@@ -104,11 +106,10 @@ export function Court() {
                   <div
                     key={dayIndex}
                     onClick={handleClickedTime.bind(null, hour, dayIndex)}
-                    className={`flex-1 border-b border-r border-gray-400 p-2 last:border-r-0 ${
-                      isHighlightedTime(hour)
-                        ? 'bg-red-200'
-                        : 'bg-gray-200 hover:cursor-pointer hover:bg-gray-300'
-                    }`}
+                    className={`flex-1 border-b border-r border-gray-400 p-2 last:border-r-0 ${isHighlightedTime(hour)
+                      ? 'bg-red-200'
+                      : 'bg-gray-200 hover:cursor-pointer hover:bg-gray-300'
+                      }`}
                   ></div>
                 ))}
               </div>
