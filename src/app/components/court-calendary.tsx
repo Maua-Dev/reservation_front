@@ -1,45 +1,27 @@
 import { Button } from './button'
 
 export function Court() {
-  const now = new Date()
-
   const isHighlightedTime = (hour: number) => {
     return hour >= 19 && hour <= 21
   }
 
   const thisWeek = () => {
     const today = new Date()
-    const primeiroDia = today.getDate() - today.getDay() + 1
-    const segundoDia = primeiroDia + 1
-    const terceiroDia = primeiroDia + 2
-    const quartoDia = primeiroDia + 3
-    const quintoDia = primeiroDia + 4
-    const sextoDia = primeiroDia + 5
-    const week = [
-      primeiroDia,
-      segundoDia,
-      terceiroDia,
-      quartoDia,
-      quintoDia,
-      sextoDia
-    ]
-    const monthLength = new Date(
-      today.getFullYear(),
-      today.getMonth() + 1,
-      0
-    ).getDate()
-    for (let i = 0; i < week.length; i++) {
-      if (week[i] > monthLength) {
-        week[i] = week[i] - monthLength
-      }
+    const week = []
+    for (let i = 1; i <= 6; i++) {
+      const day = new Date(today)
+      day.setDate(today.getDate() - today.getDay() + i)
+      week.push(day.getDate())
     }
     return week
   }
 
-  const handleClickedTime = (hour: number, day: number) => {
+  const handleClickedTime = (hour: number, dayIndex: number) => {
     if (!isHighlightedTime(hour)) {
       const clickedTime = new Date()
-      clickedTime.setDate(day - 1)
+      clickedTime.setDate(
+        clickedTime.getDate() - clickedTime.getDay() + dayIndex + 1
+      )
       clickedTime.setHours(hour)
       clickedTime.setMinutes(0)
       clickedTime.setSeconds(0)
@@ -65,8 +47,7 @@ export function Court() {
             Hora
           </div>
           <div className="flex flex-1 text-center text-lg text-white">
-            {
-              thisWeek().map((date, index) => (
+            {thisWeek().map((date, index) => (
               <div
                 key={index}
                 className="flex flex-1 flex-col items-center justify-center bg-blue-primary p-1 text-xl font-normal"
