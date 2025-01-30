@@ -1,12 +1,42 @@
 import { Button } from './button'
 
 export function Court() {
+  const today = new Date()
+
   const isHighlightedTime = (hour: number) => {
     return hour >= 19 && hour <= 21
   }
 
+  const thisMonth = () => {
+    switch (today.getMonth()) {
+      case 0:
+        return 'Janeiro'
+      case 1:
+        return 'Fevereiro'
+      case 2:
+        return 'Março'
+      case 3:
+        return 'Abril'
+      case 4:
+        return 'Maio'
+      case 5:
+        return 'Junho'
+      case 6:
+        return 'Julho'
+      case 7:
+        return 'Agosto'
+      case 8:
+        return 'Setembro'
+      case 9:
+        return 'Outubro'
+      case 10:
+        return 'Novembro'
+      case 11:
+        return 'Dezembro'
+    }
+  }
+
   const thisWeek = () => {
-    const today = new Date()
     const week = []
     for (let i = 1; i <= 6; i++) {
       const day = new Date(today)
@@ -31,10 +61,12 @@ export function Court() {
 
   return (
     <div>
-      <div className="relative h-56 w-screen bg-quadra">
+      <div className="relative h-44 w-screen bg-quadra">
         <div className="absolute bottom-0 left-0 p-5 font-poppins text-white">
-          <p className="text-2xl font-semibold">Quadras</p>
-          <p className="text-xl font-normal">Janeiro, 06-11</p>
+          <p className="text-3xl font-semibold">Quadras</p>
+          <p className="text-2xl font-normal">
+            {thisMonth()}, {thisWeek()[0]}-{thisWeek()[5]}
+          </p>
         </div>
         <div className="absolute bottom-0 right-0 p-8">
           <Button className="h-12 w-52 p-1">Verificar Reserva</Button>
