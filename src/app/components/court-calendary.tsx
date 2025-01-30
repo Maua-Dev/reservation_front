@@ -2,12 +2,42 @@ import { Button } from './button'
 import { CalendaryCard } from './calendary-card'
 
 export function Court() {
+  const today = new Date()
+
   const isHighlightedTime = (hour: number) => {
     return hour >= 19 && hour <= 21
   }
 
+  const thisMonth = () => {
+    switch (today.getMonth()) {
+      case 0:
+        return 'Janeiro'
+      case 1:
+        return 'Fevereiro'
+      case 2:
+        return 'Março'
+      case 3:
+        return 'Abril'
+      case 4:
+        return 'Maio'
+      case 5:
+        return 'Junho'
+      case 6:
+        return 'Julho'
+      case 7:
+        return 'Agosto'
+      case 8:
+        return 'Setembro'
+      case 9:
+        return 'Outubro'
+      case 10:
+        return 'Novembro'
+      case 11:
+        return 'Dezembro'
+    }
+  }
+
   const thisWeek = () => {
-    const today = new Date()
     const week = []
     for (let i = 1; i <= 6; i++) {
       const day = new Date(today)
@@ -27,18 +57,23 @@ export function Court() {
       clickedTime.setMinutes(0)
       clickedTime.setSeconds(0)
       console.log(clickedTime)
+      console.log(clickedTime.getTime())
     }
   }
 
   return (
-    <div>
-      <div className="relative h-56 w-screen bg-quadra">
-        <div className="absolute bottom-0 left-0 p-5 font-poppins text-white">
-          <p className="text-2xl font-semibold">Quadras</p>
-          <p className="text-xl font-normal">Janeiro, 06-11</p>
-        </div>
-        <div className="absolute bottom-0 right-0 p-8">
-          <Button className="h-12 w-52 p-1">Verificar Reserva</Button>
+    <div className="w-full">
+      <div className="relative h-44 w-full bg-quadra bg-cover bg-center">
+        <div className="h-full w-full bg-black/50">
+          <div className="absolute bottom-0 left-0 p-5 font-poppins text-white">
+            <p className="text-3xl font-semibold">Quadras</p>
+            <p className="text-2xl font-normal">
+              {thisMonth()}, {thisWeek()[0]}-{thisWeek()[5]}
+            </p>
+          </div>
+          <div className="absolute bottom-0 right-0 p-8">
+            <Button className="h-12 w-52 p-1">Verificar Reserva</Button>
+          </div>
         </div>
       </div>
 
@@ -72,11 +107,10 @@ export function Court() {
                   <div
                     key={dayIndex}
                     onClick={handleClickedTime.bind(null, hour, dayIndex)}
-                    className={`flex-1 border-b border-r border-gray-400 p-2 last:border-r-0 ${
-                      isHighlightedTime(hour)
-                        ? 'bg-red-200'
-                        : 'bg-gray-200 hover:cursor-pointer hover:bg-gray-300'
-                    }`}
+                    className={`flex-1 border-b border-r border-gray-400 p-2 last:border-r-0 ${isHighlightedTime(hour)
+                      ? 'bg-red-200'
+                      : 'bg-gray-200 hover:cursor-pointer hover:bg-gray-300'
+                      }`}
                   ></div>
                 ))}
               </div>
