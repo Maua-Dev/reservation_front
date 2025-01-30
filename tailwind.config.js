@@ -17,7 +17,8 @@ export default {
         'white-primary': '#cccccc'
       },
       backgroundImage: {
-        quadra: "url('../assets/imagem-campo.png')"
+        campo: "url('../assets/imagem-campo.png')",
+        quadra: "url('../assets/maua3.1.png')"
       }
     }
   },

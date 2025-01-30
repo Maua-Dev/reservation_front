@@ -5,7 +5,7 @@ import { Button } from '../components/button'
 export function Login() {
   return (
     <>
-      <div className="absolute left-0 top-0 z-0 flex h-screen w-full bg-quadra bg-cover bg-center brightness-50" />
+      <div className="absolute left-0 top-0 z-0 flex h-screen w-full bg-campo bg-cover bg-center brightness-50" />
       <div className="absolute z-[1] flex h-screen w-full flex-col items-center justify-center bg-black bg-opacity-50 md:flex-row md:justify-between">
         <div className="flex h-1/3 w-1/2 max-w-xl items-center justify-center md:h-full">
           <img
