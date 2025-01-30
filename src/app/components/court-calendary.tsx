@@ -7,6 +7,35 @@ export function Court() {
     return hour >= 19 && hour <= 21
   }
 
+  const thisWeek = () => {
+    const today = new Date()
+    const primeiroDia = today.getDate() - today.getDay() + 1
+    const segundoDia = primeiroDia + 1
+    const terceiroDia = primeiroDia + 2
+    const quartoDia = primeiroDia + 3
+    const quintoDia = primeiroDia + 4
+    const sextoDia = primeiroDia + 5
+    const week = [
+      primeiroDia,
+      segundoDia,
+      terceiroDia,
+      quartoDia,
+      quintoDia,
+      sextoDia
+    ]
+    const monthLength = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      0
+    ).getDate()
+    for (let i = 0; i < week.length; i++) {
+      if (week[i] > monthLength) {
+        week[i] = week[i] - monthLength
+      }
+    }
+    return week
+  }
+
   const handleClickedTime = (hour: number, day: number) => {
     if (!isHighlightedTime(hour)) {
       const clickedTime = new Date()
@@ -36,7 +65,8 @@ export function Court() {
             Hora
           </div>
           <div className="flex flex-1 text-center text-lg text-white">
-            {[6, 7, 8, 9, 10, 11].map((date, index) => (
+            {
+              thisWeek().map((date, index) => (
               <div
                 key={index}
                 className="flex flex-1 flex-col items-center justify-center bg-blue-primary p-1 text-xl font-normal"
@@ -60,10 +90,11 @@ export function Court() {
                   <div
                     key={dayIndex}
                     onClick={handleClickedTime.bind(null, hour, dayIndex)}
-                    className={`flex-1 border-b border-r border-gray-400 p-2 last:border-r-0 ${isHighlightedTime(hour)
-                      ? 'bg-red-200'
-                      : 'bg-gray-200 hover:cursor-pointer hover:bg-gray-300'
-                      }`}
+                    className={`flex-1 border-b border-r border-gray-400 p-2 last:border-r-0 ${
+                      isHighlightedTime(hour)
+                        ? 'bg-red-200'
+                        : 'bg-gray-200 hover:cursor-pointer hover:bg-gray-300'
+                    }`}
                   ></div>
                 ))}
               </div>
