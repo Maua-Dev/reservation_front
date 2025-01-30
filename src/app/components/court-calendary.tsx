@@ -56,6 +56,7 @@ export function Court() {
       clickedTime.setMinutes(0)
       clickedTime.setSeconds(0)
       console.log(clickedTime)
+      console.log(clickedTime.getTime())
     }
   }
 
