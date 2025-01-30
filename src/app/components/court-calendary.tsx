@@ -1,4 +1,5 @@
 import { Button } from './button'
+import { CalendaryCard } from './calendary-card'
 
 export function Court() {
   const isHighlightedTime = (hour: number) => {
@@ -82,6 +83,9 @@ export function Court() {
             </div>
           )
         })}
+        <CalendaryCard court="Quadra1" modality="Vôlei" />
+        <CalendaryCard court="Quadra2" modality="Vôlei" />
+        <CalendaryCard court="Quadra3" modality="Vôlei" />
       </div>
     </div>
   )
