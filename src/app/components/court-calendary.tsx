@@ -18,8 +18,15 @@ const reservas = [
   },
   {
     id: 3,
-    court: 'Quadra3',
-    court_number: 3,
+    court: 'Quadra1',
+    court_number: 1,
+    modality: 'Vôlei',
+    time: '1738069200000'
+  },
+  {
+    id: 7,
+    court: 'Quadra2',
+    court_number: 2,
     modality: 'Vôlei',
     time: '1738069200000'
   },
