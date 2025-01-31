@@ -140,13 +140,17 @@ export function Court() {
       (reserva) => Number(reserva.time) === timestamp
     )
 
+    const isItOne = sameTimeReservations.some(
+      (reserva) => reserva.court_number === 1
+    )
+
     const countSameTime = sameTimeReservations.length
 
     switch (courtNumber) {
       case 1:
         return 4
       case 2:
-        return countSameTime > 1 ? (countSameTime > 2 ? 30 : 4) : 4
+        return countSameTime > 1 ? (isItOne ? 30 : 4) : 4
       case 3:
         return countSameTime > 1 ? (countSameTime > 2 ? 56 : 30) : 4
       default:
