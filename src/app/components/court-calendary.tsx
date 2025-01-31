@@ -5,20 +5,37 @@ const reservas = [
   {
     id: 1,
     court: 'Quadra1',
+    court_number: 1,
     modality: 'Basquete',
     time: '1738252800000'
   },
   {
     id: 2,
     court: 'Quadra2',
+    court_number: 2,
     modality: 'Vôlei',
     time: '1738407600000'
   },
   {
     id: 3,
     court: 'Quadra3',
+    court_number: 3,
     modality: 'Vôlei',
     time: '1738069200000'
+  },
+  {
+    id: 4,
+    court: 'Quadra2',
+    court_number: 2,
+    modality: 'vôlei',
+    time: '1738252800000'
+  },
+  {
+    id: 5,
+    court: 'Quadra3',
+    court_number: 3,
+    modality: 'futsal',
+    time: '1738252800000'
   }
 ]
 
@@ -68,14 +85,33 @@ export function Court() {
     return week
   }
 
+  const deslocation = (courtNumber: number, timestamp: number) => {
+    const sameTimeReservations = reservas.filter(
+      (reserva) => Number(reserva.time) === timestamp
+    )
+
+    const countSameTime = sameTimeReservations.length
+
+    switch (courtNumber) {
+      case 1:
+        return 4
+      case 2:
+        return countSameTime > 1 ? 30 : 4
+      case 3:
+        return countSameTime > 1 ? 56 : 4
+      default:
+        return 4
+    }
+  }
+
   const reservasConvertidas = reservas.map((reserva) => {
-    const date = new Date(Number(reserva.time));
+    const date = new Date(Number(reserva.time))
     return {
       ...reserva,
       day: date.getDate(),
       hour: date.getHours()
-    };
-  });
+    }
+  })
 
   const handleClickedTime = (hour: number, dayIndex: number) => {
     // if (!isHighlightedTime(hour)) {
@@ -132,25 +168,33 @@ export function Court() {
           const hour = 8 + index
           return (
             <div key={index} className="flex">
-              <div className="flex min-h-16 w-20 items-start border-r border-gray-400 px-4">{`${hour}:00`}</div>
+              <div className="flex min-h-28 min-w-20 max-w-20 items-start border-r border-gray-400 px-4 font-poppins">{`${hour}:00`}</div>
               <div className="flex flex-1">
                 {[...Array(6)].map((_, dayIndex) => (
                   <div
                     key={dayIndex}
                     onClick={handleClickedTime.bind(null, hour, dayIndex)}
-                    className={`flex-1 border-b border-r border-gray-400 bg-gray-200 p-2 last:border-r-0 hover:cursor-pointer hover:bg-gray-300`}
+                    className={`relative flex flex-1 border-b border-r border-gray-400 bg-gray-200 p-2 last:border-r-0 hover:cursor-pointer hover:bg-gray-300`}
                   >
-                    {reservasConvertidas.map((reserva) => {
+                    {reservasConvertidas.map((reserva, indexCard) => {
                       if (
                         reserva.hour === hour &&
                         reserva.day === thisWeek()[dayIndex]
                       ) {
                         return (
-                          <CalendaryCard
+                          <div
                             key={reserva.id}
-                            court={reserva.court}
-                            modality={reserva.modality}
-                          />
+                            style={{
+                              position: 'absolute',
+                              left: `${deslocation(reserva.court_number, Number(reserva.time))}%`,
+                              zIndex: indexCard
+                            }}
+                          >
+                            <CalendaryCard
+                              court={reserva.court}
+                              modality={reserva.modality}
+                            />
+                          </div>
                         )
                       }
                     })}
