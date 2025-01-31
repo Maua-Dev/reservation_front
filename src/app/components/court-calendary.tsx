@@ -1,12 +1,33 @@
 import { Button } from './button'
 import { CalendaryCard } from './calendary-card'
 
+const reservas = [
+  {
+    id: 1,
+    court: 'Quadra1',
+    modality: 'Basquete',
+    time: '1738252800000'
+  },
+  {
+    id: 2,
+    court: 'Quadra2',
+    modality: 'Vôlei',
+    time: '1738407600000'
+  },
+  {
+    id: 3,
+    court: 'Quadra3',
+    modality: 'Vôlei',
+    time: '1738069200000'
+  }
+]
+
 export function Court() {
   const today = new Date()
 
-  const isHighlightedTime = (hour: number) => {
-    return hour >= 19 && hour <= 21
-  }
+  // const isHighlightedTime = (hour: number) => {
+  //   return hour >= 19 && hour <= 21
+  // }
 
   const thisMonth = () => {
     switch (today.getMonth()) {
@@ -47,18 +68,28 @@ export function Court() {
     return week
   }
 
+  const reservasConvertidas = reservas.map((reserva) => {
+    const date = new Date(Number(reserva.time));
+    return {
+      ...reserva,
+      day: date.getDate(),
+      hour: date.getHours()
+    };
+  });
+
   const handleClickedTime = (hour: number, dayIndex: number) => {
-    if (!isHighlightedTime(hour)) {
-      const clickedTime = new Date()
-      clickedTime.setDate(
-        clickedTime.getDate() - clickedTime.getDay() + dayIndex + 1
-      )
-      clickedTime.setHours(hour)
-      clickedTime.setMinutes(0)
-      clickedTime.setSeconds(0)
-      console.log(clickedTime)
-      console.log(clickedTime.getTime())
-    }
+    // if (!isHighlightedTime(hour)) {
+    const clickedTime = new Date()
+    clickedTime.setDate(
+      clickedTime.getDate() - clickedTime.getDay() + dayIndex + 1
+    )
+    clickedTime.setHours(hour)
+    clickedTime.setMinutes(0)
+    clickedTime.setSeconds(0)
+    clickedTime.setMilliseconds(0)
+    console.log(clickedTime)
+    console.log(clickedTime.getTime())
+    // }
   }
 
   return (
@@ -101,25 +132,34 @@ export function Court() {
           const hour = 8 + index
           return (
             <div key={index} className="flex">
-              <div className="flex h-16 w-20 items-start border-r border-gray-400 px-4">{`${hour}:00`}</div>
+              <div className="flex min-h-16 w-20 items-start border-r border-gray-400 px-4">{`${hour}:00`}</div>
               <div className="flex flex-1">
                 {[...Array(6)].map((_, dayIndex) => (
                   <div
                     key={dayIndex}
                     onClick={handleClickedTime.bind(null, hour, dayIndex)}
-                    className={`flex-1 border-b border-r border-gray-400 p-2 last:border-r-0 ${isHighlightedTime(hour)
-                      ? 'bg-red-200'
-                      : 'bg-gray-200 hover:cursor-pointer hover:bg-gray-300'
-                      }`}
-                  ></div>
+                    className={`flex-1 border-b border-r border-gray-400 bg-gray-200 p-2 last:border-r-0 hover:cursor-pointer hover:bg-gray-300`}
+                  >
+                    {reservasConvertidas.map((reserva) => {
+                      if (
+                        reserva.hour === hour &&
+                        reserva.day === thisWeek()[dayIndex]
+                      ) {
+                        return (
+                          <CalendaryCard
+                            key={reserva.id}
+                            court={reserva.court}
+                            modality={reserva.modality}
+                          />
+                        )
+                      }
+                    })}
+                  </div>
                 ))}
               </div>
             </div>
           )
         })}
-        <CalendaryCard court="Quadra1" modality="Vôlei" />
-        <CalendaryCard court="Quadra2" modality="Vôlei" />
-        <CalendaryCard court="Quadra3" modality="Vôlei" />
       </div>
     </div>
   )
