@@ -16,13 +16,7 @@ const reservas = [
     modality: 'Vôlei',
     time: '1738407600000'
   },
-  {
-    id: 3,
-    court: 'Quadra1',
-    court_number: 1,
-    modality: 'Vôlei',
-    time: '1738069200000'
-  },
+
   {
     id: 7,
     court: 'Quadra2',
@@ -50,6 +44,48 @@ const reservas = [
     court_number: 3,
     modality: 'Vôlei',
     time: '1738407600000'
+  },
+  {
+    id: 8,
+    court: 'Quadra1',
+    court_number: 1,
+    modality: 'Futsal',
+    time: '1738238400000'
+  },
+  {
+    id: 9,
+    court: 'Quadra3',
+    court_number: 3,
+    modality: 'Vôlei',
+    time: '1738238400000'
+  },
+  {
+    id: 9,
+    court: 'Quadra1',
+    court_number: 1,
+    modality: 'Vôlei',
+    time: '1738159200000'
+  },
+  {
+    id: 10,
+    court: 'Quadra2',
+    court_number: 2,
+    modality: 'Basquete',
+    time: '1738159200000'
+  },
+  {
+    id: 11,
+    court: 'Quadra1',
+    court_number: 1,
+    modality: 'Basquete',
+    time: '1737997200000'
+  },
+  {
+    id: 12,
+    court: 'Quadra3',
+    court_number: 3,
+    modality: 'Basquete',
+    time: '1738245600000'
   }
 ]
 
@@ -201,7 +237,7 @@ export function Court() {
                             style={{
                               position: 'absolute',
                               left: `${deslocation(reserva.court_number, Number(reserva.time))}%`,
-                              zIndex: indexCard
+                              zIndex: reserva.court_number
                             }}
                           >
                             <CalendaryCard
