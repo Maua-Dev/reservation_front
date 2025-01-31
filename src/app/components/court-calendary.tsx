@@ -36,6 +36,13 @@ const reservas = [
     court_number: 3,
     modality: 'futsal',
     time: '1738252800000'
+  },
+  {
+    id: 6,
+    court: 'Quadra3',
+    court_number: 3,
+    modality: 'Vôlei',
+    time: '1738407600000'
   }
 ]
 
@@ -96,9 +103,9 @@ export function Court() {
       case 1:
         return 4
       case 2:
-        return countSameTime > 1 ? 30 : 4
+        return countSameTime > 1 ? (countSameTime > 2 ? 30 : 4) : 4
       case 3:
-        return countSameTime > 1 ? 56 : 4
+        return countSameTime > 1 ? (countSameTime > 2 ? 56 : 30) : 4
       default:
         return 4
     }
