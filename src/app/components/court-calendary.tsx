@@ -7,14 +7,14 @@ const reservas = [
     court: 'Quadra1',
     court_number: 1,
     modality: 'Basquete',
-    time: '1738252800000'
+    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000
   },
   {
     id: 2,
     court: 'Quadra2',
     court_number: 2,
     modality: 'Vôlei',
-    time: '1738407600000'
+    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000
   },
 
   {
@@ -22,70 +22,70 @@ const reservas = [
     court: 'Quadra2',
     court_number: 2,
     modality: 'Vôlei',
-    time: '1738069200000'
+    time: 1738069200000 + 7 * 24 * 60 * 60 * 1000
   },
   {
     id: 4,
     court: 'Quadra2',
     court_number: 2,
     modality: 'vôlei',
-    time: '1738252800000'
+    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000
   },
   {
     id: 5,
     court: 'Quadra3',
     court_number: 3,
     modality: 'futsal',
-    time: '1738252800000'
+    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000
   },
   {
     id: 6,
     court: 'Quadra3',
     court_number: 3,
     modality: 'Vôlei',
-    time: '1738407600000'
+    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000
   },
   {
     id: 8,
     court: 'Quadra1',
     court_number: 1,
     modality: 'Futsal',
-    time: '1738238400000'
+    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000
   },
   {
     id: 9,
     court: 'Quadra3',
     court_number: 3,
     modality: 'Vôlei',
-    time: '1738238400000'
+    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000
   },
   {
     id: 9,
     court: 'Quadra1',
     court_number: 1,
     modality: 'Vôlei',
-    time: '1738159200000'
+    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000
   },
   {
     id: 10,
     court: 'Quadra2',
     court_number: 2,
     modality: 'Basquete',
-    time: '1738159200000'
+    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000
   },
   {
     id: 11,
     court: 'Quadra1',
     court_number: 1,
     modality: 'Basquete',
-    time: '1737997200000'
+    time: 1737997200000 + 7 * 24 * 60 * 60 * 1000
   },
   {
     id: 12,
     court: 'Quadra3',
     court_number: 3,
     modality: 'Basquete',
-    time: '1738245600000'
+    time: 1738245600000 + 7 * 24 * 60 * 60 * 1000
   }
 ]
 
@@ -239,13 +239,12 @@ export function Court() {
                           <div
                             key={reserva.id}
                             style={{
-                              position: 'absolute',
-                              left: `${deslocation(reserva.court_number, Number(reserva.time))}%`,
-                              zIndex: reserva.court_number
+                              left: `${deslocation(reserva.court_number, Number(reserva.time))}%`
                             }}
+                            className="absolute hover:z-50"
                           >
                             <CalendaryCard
-                              court={reserva.court}
+                              court={reserva.court_number}
                               modality={reserva.modality}
                             />
                           </div>

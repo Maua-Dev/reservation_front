@@ -1,24 +1,26 @@
+import { cn } from '../utils/cn'
+
 interface CalendaryCardProps {
-  court: string
+  court: number
   modality: string
 }
 
 export function CalendaryCard({ court, modality }: CalendaryCardProps) {
-  const courtColors = () => {
-    switch (court) {
-      case 'Quadra1':
-        return 'border-blue-primary text-blue-primary'
-      case 'Quadra2':
-        return 'border-blue-secondary text-blue-secondary'
-      case 'Quadra3':
-        return 'border-blue-tertiary text-blue-tertiary'
-    }
+  const courtColors: {
+    [key: number]: string
+  } = {
+    1: 'border-blue-primary text-blue-primary',
+    2: 'border-blue-secondary text-blue-secondary',
+    3: 'border-blue-tertiary text-blue-tertiary'
   }
   return (
     <div
-      className={`${courtColors()} flex h-20 w-20 flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 shadow-md duration-300 hover:-translate-y-1`}
+      className={cn(
+        'flex h-20 w-20 flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 shadow-md duration-300 hover:-translate-y-1',
+        courtColors[court]
+      )}
     >
-      <p>{court}</p>
+      <p>Quadra {court}</p>
       <p>{modality}</p>
     </div>
   )
