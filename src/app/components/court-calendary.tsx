@@ -147,6 +147,35 @@ export function Court() {
     return week
   }
 
+  const specialWidth = (courtNumber: number, timestamp: number) => {
+    const sameTimeReservations = reservas.filter(
+      (reserva) => Number(reserva.time) === timestamp
+    )
+
+    const countSameTime = sameTimeReservations.length
+
+    switch (courtNumber) {
+      case 1:
+        return countSameTime > 1
+          ? countSameTime > 2
+            ? 'min-[1777px]:w-1/3'
+            : 'min-[1777px]:w-[45%]'
+          : 'min-[1777px]:w-[90%]'
+      case 2:
+        return countSameTime > 1
+          ? countSameTime > 2
+            ? 'min-[1777px]:w-1/3'
+            : 'min-[1777px]:w-[45%]'
+          : 'min-[1777px]:w-[90%]'
+      case 3:
+        return countSameTime > 1
+          ? countSameTime > 2
+            ? 'min-[1777px]:w-1/3'
+            : 'min-[1777px]:w-[45%]'
+          : 'min-[1777px]:w-[90%]'
+    }
+  }
+
   const deslocation = (courtNumber: number, timestamp: number) => {
     const sameTimeReservations = reservas.filter(
       (reserva) => Number(reserva.time) === timestamp
@@ -160,11 +189,19 @@ export function Court() {
 
     switch (courtNumber) {
       case 1:
-        return 4
+        return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
       case 2:
-        return countSameTime > 1 ? (isItOne ? 30 : 4) : 4
+        return countSameTime > 1
+          ? isItOne
+            ? 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[30%]'
+            : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
+          : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
       case 3:
-        return countSameTime > 1 ? (countSameTime > 2 ? 56 : 30) : 4
+        return countSameTime > 1
+          ? countSameTime > 2
+            ? 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[56%]'
+            : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[30%]'
+          : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
       default:
         return 4
     }
@@ -208,19 +245,6 @@ export function Court() {
 
   return (
     <div className="w-full">
-      {isReservationModalOpen && selectedTime && (
-        <div className="absolute z-50 flex h-full w-full items-center justify-center">
-          <Form
-            isOpen={isReservationModalOpen}
-            onClose={handleToggleReservationModal}
-            hour={selectedTime.hour}
-            dayIndex={selectedTime.dayIndex}
-            modalities={modalities}
-            equipments={equipments}
-            options={options}
-          />
-        </div>
-      )}
       <div className="relative h-44 w-full bg-quadra bg-cover bg-center">
         <div className="h-full w-full bg-black/50">
           <div className="absolute bottom-0 left-0 p-5 font-poppins text-white">
@@ -265,7 +289,7 @@ export function Court() {
                   <div
                     key={dayIndex}
                     onClick={handleClickedTime.bind(null, hour, dayIndex)}
-                    className={`relative flex flex-1 border-b border-r border-gray-400 bg-gray-200 p-2 last:border-r-0 hover:cursor-pointer hover:bg-gray-300`}
+                    className={`relative flex flex-1 gap-2 border-b border-r border-gray-400 bg-gray-200 p-2 last:border-r-0 hover:cursor-pointer hover:bg-gray-300`}
                   >
                     {reservasConvertidas.map((reserva, indexCard) => {
                       if (
@@ -275,15 +299,12 @@ export function Court() {
                         return (
                           <div
                             key={reserva.id}
-                            style={{
-                              left: `${deslocation(reserva.court_number, Number(reserva.time))}%`
-                            }}
-                            className="absolute hover:z-50"
+                            onClick={(e) => e.stopPropagation()}
+                            className={`flex ${specialWidth(reserva.court_number, Number(reserva.time))} ${deslocation(reserva.court_number, Number(reserva.time))}`}
                           >
                             <CalendaryCard
                               court={reserva.court_number}
                               modality={reserva.modality}
-                              isOpen={isReservationModalOpen}
                             />
                           </div>
                         )
@@ -296,6 +317,19 @@ export function Court() {
           )
         })}
       </div>
+      {isReservationModalOpen && selectedTime && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50">
+          <Form
+            isOpen={isReservationModalOpen}
+            onClose={handleToggleReservationModal}
+            hour={selectedTime.hour}
+            dayIndex={selectedTime.dayIndex}
+            modalities={modalities}
+            equipments={equipments}
+            options={options}
+          />
+        </div>
+      )}
     </div>
   )
 }

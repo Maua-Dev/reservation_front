@@ -1,7 +1,6 @@
 import { cn } from '../utils/cn'
 
 interface CalendaryCardProps {
-  isOpen: boolean
   court: number
   modality: string
 }
@@ -17,7 +16,7 @@ export function CalendaryCard({ court, modality }: CalendaryCardProps) {
   return (
     <div
       className={cn(
-        'flex h-20 w-20 flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 shadow-md duration-300 hover:-translate-y-1',
+        'flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 shadow-md duration-300 hover:-translate-y-1',
         courtColors[court]
       )}
     >
