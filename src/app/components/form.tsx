@@ -12,8 +12,7 @@ type FormProps = {
   options: string[]
   onClose: () => void
   isOpen: boolean
-  hour: number
-  dayIndex: number
+  timestamp: number
 }
 
 const formSchema = z.object({
@@ -29,6 +28,7 @@ type FormData = z.infer<typeof formSchema>
 export const Form = ({
   modalities,
   equipments,
+  timestamp,
   options,
   onClose
 }: FormProps) => {

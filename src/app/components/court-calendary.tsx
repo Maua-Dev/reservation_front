@@ -94,10 +94,7 @@ const reservas = [
 export function Court() {
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
-  const [selectedTime, setSelectedTime] = useState<{
-    hour: number
-    dayIndex: number
-  } | null>(null)
+  const [selectedTime, setSelectedTime] = useState<number | null>(null)
   const today = new Date()
   const modalities = ['Basquete', 'Handbol', 'Futsal', 'Vôlei', 'Tênis']
   const equipments = [
@@ -110,32 +107,21 @@ export function Court() {
   const options = ['Quadra 1', 'Quadra 2', 'Quadra 3']
 
   const thisMonth = () => {
-    switch (today.getMonth()) {
-      case 0:
-        return 'Janeiro'
-      case 1:
-        return 'Fevereiro'
-      case 2:
-        return 'Março'
-      case 3:
-        return 'Abril'
-      case 4:
-        return 'Maio'
-      case 5:
-        return 'Junho'
-      case 6:
-        return 'Julho'
-      case 7:
-        return 'Agosto'
-      case 8:
-        return 'Setembro'
-      case 9:
-        return 'Outubro'
-      case 10:
-        return 'Novembro'
-      case 11:
-        return 'Dezembro'
-    }
+    const months = [
+      'Janeiro',
+      'Fevereiro',
+      'Março',
+      'Abril',
+      'Maio',
+      'Junho',
+      'Julho',
+      'Agosto',
+      'Setembro',
+      'Outubro',
+      'Novembro',
+      'Dezembro'
+    ]
+    return months[today.getMonth()]
   }
 
   const thisWeek = () => {
@@ -229,12 +215,20 @@ export function Court() {
     console.log(clickedTime)
     console.log(clickedTime.getTime())
 
-    console.log('Nenhuma reserva encontrada, abrindo modal...')
-    handleToggleReservationModal()
-    setSelectedTime({ hour, dayIndex })
-    setTimeout(() => {
-      setModalVisible(true)
-    }, 100)
+    if (
+      reservasConvertidas.filter(
+        (reserva) => reserva.time === clickedTime.getTime()
+      ).length >= 3
+    ) {
+      console.log('Não eh possível fazer mais reservas nesse horário')
+    } else {
+      console.log('Nenhuma reserva encontrada, abrindo modal...')
+      handleToggleReservationModal()
+      setSelectedTime(clickedTime.getTime())
+      setTimeout(() => {
+        setModalVisible(true)
+      }, 100)
+    }
   }
 
   function handleToggleReservationModal() {
@@ -323,8 +317,7 @@ export function Court() {
           <Form
             isOpen={isReservationModalOpen}
             onClose={handleToggleReservationModal}
-            hour={selectedTime.hour}
-            dayIndex={selectedTime.dayIndex}
+            timestamp={selectedTime}
             modalities={modalities}
             equipments={equipments}
             options={options}
