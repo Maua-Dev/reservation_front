@@ -93,6 +93,7 @@ const reservas = [
 
 export function Court() {
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false)
   const [selectedTime, setSelectedTime] = useState<{
     hour: number
     dayIndex: number
@@ -235,12 +236,16 @@ export function Court() {
       console.log('Nenhuma reserva encontrada, abrindo modal...')
       handleToggleReservationModal()
       setSelectedTime({ hour, dayIndex })
+      setTimeout(() => {
+        setModalVisible(true)
+      }, 100)
     } else {
       console.log('Já existe uma reserva nesse horário.')
     }
   }
   function handleToggleReservationModal() {
     setIsReservationModalOpen(!isReservationModalOpen)
+    setModalVisible(false)
   }
 
   return (
@@ -318,7 +323,9 @@ export function Court() {
         })}
       </div>
       {isReservationModalOpen && selectedTime && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50">
+        <div
+          className={`duration-250 fixed inset-0 flex items-center justify-center bg-black/50 transition-all ${modalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
+        >
           <Form
             isOpen={isReservationModalOpen}
             onClose={handleToggleReservationModal}
