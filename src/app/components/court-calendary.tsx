@@ -288,7 +288,7 @@ export function Court() {
                   <div
                     key={dayIndex}
                     onClick={handleClickedTime.bind(null, hour, dayIndex)}
-                    className={`relative flex flex-1 border-b border-r border-gray-400 bg-gray-200 last:border-r-0 hover:cursor-pointer hover:bg-gray-300`}
+                    className={`relative flex flex-1 gap-2 border-b border-r border-gray-400 bg-gray-200 p-2 last:border-r-0 hover:cursor-pointer hover:bg-gray-300`}
                   >
                     {reservasConvertidas.map((reserva, indexCard) => {
                       if (
@@ -299,7 +299,7 @@ export function Court() {
                           <div
                             key={reserva.id}
                             onClick={(e) => e.stopPropagation()}
-                            className={`flex py-2 pl-2 ${specialWidth(reserva.court_number, Number(reserva.time))} ${deslocation(reserva.court_number, Number(reserva.time))}`}
+                            className={`flex ${specialWidth(reserva.court_number, Number(reserva.time))} ${deslocation(reserva.court_number, Number(reserva.time))}`}
                           >
                             <CalendaryCard
                               court={reserva.court_number}
