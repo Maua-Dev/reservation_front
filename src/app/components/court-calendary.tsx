@@ -1,5 +1,7 @@
 import { Button } from './button'
 import { CalendaryCard } from './calendary-card'
+import { useState } from 'react'
+import { Form } from './form'
 
 const reservas = [
   {
@@ -90,11 +92,21 @@ const reservas = [
 ]
 
 export function Court() {
+  const [isReservationModalOpen, setIsReservationModalOpen] = useState(false)
+  const [selectedTime, setSelectedTime] = useState<{
+    hour: number
+    dayIndex: number
+  } | null>(null)
   const today = new Date()
-
-  // const isHighlightedTime = (hour: number) => {
-  //   return hour >= 19 && hour <= 21
-  // }
+  const modalities = ['Basquete', 'Handbol', 'Futsal', 'Vôlei', 'Tênis']
+  const equipments = [
+    'Bola de futsal',
+    'Bola de handol',
+    'Bola de tênis',
+    'Bola de vôlei',
+    'Raquete de tênis'
+  ]
+  const options = ['Quadra 1', 'Quadra 2', 'Quadra 3']
 
   const thisMonth = () => {
     switch (today.getMonth()) {
@@ -168,7 +180,6 @@ export function Court() {
   })
 
   const handleClickedTime = (hour: number, dayIndex: number) => {
-    // if (!isHighlightedTime(hour)) {
     const clickedTime = new Date()
     clickedTime.setDate(
       clickedTime.getDate() - clickedTime.getDay() + dayIndex + 1
@@ -179,11 +190,37 @@ export function Court() {
     clickedTime.setMilliseconds(0)
     console.log(clickedTime)
     console.log(clickedTime.getTime())
-    // }
+    const hasReservation = reservasConvertidas.some(
+      (reserva) => reserva.hour === hour && reserva.day === thisWeek()[dayIndex]
+    )
+
+    if (!hasReservation) {
+      console.log('Nenhuma reserva encontrada, abrindo modal...')
+      handleToggleReservationModal()
+      setSelectedTime({ hour, dayIndex })
+    } else {
+      console.log('Já existe uma reserva nesse horário.')
+    }
+  }
+  function handleToggleReservationModal() {
+    setIsReservationModalOpen(!isReservationModalOpen)
   }
 
   return (
     <div className="w-full">
+      {isReservationModalOpen && selectedTime && (
+        <div className="absolute z-50 flex h-full w-full items-center justify-center">
+          <Form
+            isOpen={isReservationModalOpen}
+            onClose={handleToggleReservationModal}
+            hour={selectedTime.hour}
+            dayIndex={selectedTime.dayIndex}
+            modalities={modalities}
+            equipments={equipments}
+            options={options}
+          />
+        </div>
+      )}
       <div className="relative h-44 w-full bg-quadra bg-cover bg-center">
         <div className="h-full w-full bg-black/50">
           <div className="absolute bottom-0 left-0 p-5 font-poppins text-white">
@@ -246,6 +283,7 @@ export function Court() {
                             <CalendaryCard
                               court={reserva.court_number}
                               modality={reserva.modality}
+                              isOpen={isReservationModalOpen}
                             />
                           </div>
                         )

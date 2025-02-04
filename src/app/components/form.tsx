@@ -11,6 +11,9 @@ type FormProps = {
   equipments: string[]
   options: string[]
   onClose: () => void
+  isOpen: boolean
+  hour: number
+  dayIndex: number
 }
 
 const formSchema = z.object({

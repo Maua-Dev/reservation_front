@@ -1,6 +1,7 @@
 import { cn } from '../utils/cn'
 
 interface CalendaryCardProps {
+  isOpen: boolean
   court: number
   modality: string
 }
