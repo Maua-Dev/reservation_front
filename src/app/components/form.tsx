@@ -16,7 +16,6 @@ type FormProps = {
 }
 
 const formSchema = z.object({
-  time: z.string().regex(/^\d{2}:\d{2}$/, 'Invalid time format'),
   modality: z.string(),
   equipment: z.string(),
   needsVest: z.boolean(),
@@ -36,12 +35,10 @@ export const Form = ({
     register,
     handleSubmit,
     formState: { errors },
-    watch,
     setValue
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      time: '12:00',
       modality: '',
       equipment: '',
       needsVest: false,
@@ -51,6 +48,7 @@ export const Form = ({
   const [open, setOpen] = useState(false)
   const [selectedModality, setSelectedModality] = useState('')
   const [selectedEquipment, setSelectedEquipment] = useState('')
+  const selectedDate = new Date(timestamp)
 
   const getTimeOneHourLater = (time: string) => {
     const [hours, minutes] = time.split(':').map(Number)
@@ -63,8 +61,7 @@ export const Form = ({
     console.log(data)
     onClose()
   }
-
-  const time = watch('time')
+  const formatDate = (date = number) => date.toString().padStart(2, '0')
 
   return (
     <form
@@ -83,7 +80,10 @@ export const Form = ({
             22.001122-0
           </p>
         </div>
-        <p className="mt-1 font-poppins text-2xl font-medium">data: 17/09</p>
+        <p className="mt-1 font-poppins text-2xl font-medium">
+          Data: {formatDate(selectedDate.getDate())}/
+          {formatDate(selectedDate.getMonth() + 1)}
+        </p>
       </div>
 
       <div className="flex w-full flex-col justify-start gap-4 md:flex-row md:items-center">
@@ -99,19 +99,14 @@ export const Form = ({
         <div className="flex items-center justify-start gap-2 max-md:pt-4">
           <label className="flex items-center justify-center gap-2 font-poppins text-xl font-medium md:text-2xl">
             <p>Horário</p>
-            <input
-              type="time"
-              {...register('time')}
-              className="rounded border-none bg-yellow p-[4px] text-center font-poppins text-lg font-medium md:text-2xl"
-            />
-            {errors.time && (
-              <p className="text-red-500">{errors.time.message}</p>
-            )}
+            <div className="rounded border-none bg-yellow p-[4px] text-center font-poppins text-lg font-medium md:text-2xl">
+              {formatDate(selectedDate.getHours())}:00
+            </div>
           </label>
           <div className="flex items-center gap-2">
             <p className="font-poppins text-xl font-medium md:text-2xl">Até</p>
             <label className="rounded border border-black p-1 font-poppins text-xl font-medium md:text-2xl">
-              {getTimeOneHourLater(time)}
+              {formatDate(selectedDate.getHours() + 1)}:00
             </label>
           </div>
         </div>
