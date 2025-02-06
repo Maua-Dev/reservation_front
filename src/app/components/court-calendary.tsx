@@ -247,7 +247,7 @@ export function Court() {
             </p>
           </div>
           <div className="absolute bottom-0 right-0 p-8">
-            <Button className="h-12 w-52 p-1">Verificar Reserva</Button>
+            <Button className="h-12 w-52 p-1">Minhas Reservas</Button>
           </div>
         </div>
       </div>
