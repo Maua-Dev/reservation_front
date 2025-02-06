@@ -1,16 +1,16 @@
 import { Button } from './button'
 
 interface ReservationCardProps {
-  date: string
-  time: string
+  startDate: number
+  endDate: number
   court: string
   status: string
   onCancel: () => void
 }
 
 export function ReservationCard({
-  date,
-  time,
+  startDate,
+  endDate,
   court,
   status,
   onCancel
@@ -18,9 +18,15 @@ export function ReservationCard({
   return (
     <div className="flex h-36 w-full cursor-pointer flex-row items-start rounded-lg bg-blue-primary p-4 md:h-44">
       <div className="flex flex-col gap-1">
-        <p className="text-xl font-bold text-white md:text-2xl">{date}</p>
+        <p className="text-xl font-bold text-white md:text-2xl">
+          {new Date(startDate).toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit'
+          })}
+        </p>
         <p className="text-xs font-normal text-white sm:text-base md:text-lg">
-          Hora: {time}
+          Hora: {new Date(startDate).getHours()}:00 -{' '}
+          {new Date(endDate).getHours()}:00
         </p>
         <p className="text-xs font-normal text-white sm:text-base md:text-lg">
           Quadra: {court}

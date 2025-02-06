@@ -8,6 +8,7 @@ export function View() {
   const handleClose = () => {
     console.log('Close button clicked')
   }
+
   return (
     <div className="flex w-full justify-center bg-black/20 p-4 md:p-8">
       <div className="w-5/6 max-w-xl rounded-lg bg-white p-4 font-poppins md:w-3/4">
@@ -28,25 +29,25 @@ export function View() {
         </div>
         <div className="flex max-w-xl flex-col items-center justify-center gap-4">
           <ReservationCard
-            date="12/11"
-            time="15:00 - 16:00"
+            startDate={1733929200000}
+            endDate={1733932800000}
             court="1"
             status="Aprovado"
-            onCancel={() => handleCancel('12/11')}
+            onCancel={() => handleCancel('12/12')}
           />
           <ReservationCard
-            date="16/11"
-            time="14:00 - 15:00"
+            startDate={1734372000000}
+            endDate={1734375600000}
             court="1"
             status="Aprovado"
-            onCancel={() => handleCancel('16/11')}
+            onCancel={() => handleCancel('16/12')}
           />
           <ReservationCard
-            date="20/11"
-            time="10:00 - 11:00"
+            startDate={1734699600000}
+            endDate={1734703200000}
             court="2"
             status="Aprovado"
-            onCancel={() => handleCancel('20/11')}
+            onCancel={() => handleCancel('20/12')}
           />
           <p className="self-end text-end font-poppins text-xs font-medium text-black md:text-base">
             * Reservas sujeitas a cancelamento
