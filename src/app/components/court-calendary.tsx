@@ -2,6 +2,7 @@ import { Button } from './button'
 import { CalendaryCard } from './calendary-card'
 import { useState } from 'react'
 import { Form } from './form'
+import { View } from './view'
 
 const reservas = [
   {
@@ -92,8 +93,11 @@ const reservas = [
 ]
 
 export function Court() {
+  const [isMyBookingsModalOpen, setIsMyBookingsModalOpen] = useState(false)
+  const [isMyBookingsModalVisible, setIsMyBookingsModalVisible] =
+    useState(false)
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false)
-  const [modalVisible, setModalVisible] = useState(false)
+  const [bookingModalVisible, setBookingModalVisible] = useState(false)
   const [selectedTime, setSelectedTime] = useState<number | null>(null)
   const today = new Date()
   const modalities = ['Basquete', 'Handbol', 'Futsal', 'Vôlei', 'Tênis']
@@ -163,6 +167,13 @@ export function Court() {
     }
   }
 
+  function handleOpeMyBookings() {
+    setIsMyBookingsModalOpen(true)
+    setTimeout(() => {
+      setIsMyBookingsModalVisible(true)
+    }, 100)
+  }
+
   const deslocation = (courtNumber: number, timestamp: number) => {
     const sameTimeReservations = reservas.filter(
       (reserva) => Number(reserva.time) === timestamp
@@ -226,14 +237,14 @@ export function Court() {
       handleToggleReservationModal()
       setSelectedTime(clickedTime.getTime())
       setTimeout(() => {
-        setModalVisible(true)
+        setBookingModalVisible(true)
       }, 100)
     }
   }
 
   function handleToggleReservationModal() {
     setIsReservationModalOpen(!isReservationModalOpen)
-    setModalVisible(false)
+    setBookingModalVisible(false)
   }
 
   return (
@@ -247,7 +258,9 @@ export function Court() {
             </p>
           </div>
           <div className="absolute bottom-0 right-0 p-8">
-            <Button className="h-12 w-52 p-1">Minhas Reservas</Button>
+            <Button onClick={handleOpeMyBookings} className="h-12 w-52 p-1">
+              Minhas Reservas
+            </Button>
           </div>
         </div>
       </div>
@@ -312,7 +325,7 @@ export function Court() {
       </div>
       {isReservationModalOpen && selectedTime && (
         <div
-          className={`duration-250 fixed inset-0 flex items-center justify-center bg-black/50 transition-all ${modalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
+          className={`duration-250 fixed inset-0 flex items-center justify-center bg-black/50 transition-all ${bookingModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
         >
           <Form
             isOpen={isReservationModalOpen}
@@ -321,6 +334,18 @@ export function Court() {
             modalities={modalities}
             equipments={equipments}
             options={options}
+          />
+        </div>
+      )}
+      {isMyBookingsModalOpen && (
+        <div
+          className={`duration-250 fixed inset-0 flex items-center justify-center bg-black/50 transition-all ${isMyBookingsModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
+        >
+          <View
+            onClose={() => {
+              setIsMyBookingsModalOpen(false)
+              setIsMyBookingsModalVisible(false)
+            }}
           />
         </div>
       )}

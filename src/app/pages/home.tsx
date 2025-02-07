@@ -3,7 +3,6 @@ import { Dev } from '@/app/components/dev'
 import { About } from '../components/about'
 import { Reservations } from '../components/reservations'
 import { Court } from '../components/court-calendary'
-import { View } from '../components/view'
 
 export function Home() {
   return (
@@ -12,7 +11,6 @@ export function Home() {
       <Reservations />
       <Dev />
       <Court />
-      <View />
       <Footer />
     </main>
   )
