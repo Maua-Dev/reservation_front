@@ -73,7 +73,7 @@ export function View({ onClose }: ViewProps) {
       court: '2',
       status: 'Aprovado',
       date: '20/12'
-    },
+    }
   ]
 
   const handleClose = () => {
@@ -98,7 +98,7 @@ export function View({ onClose }: ViewProps) {
           </div>
           <hr className="border-t-4 border-black" />
         </div>
-        <div className="flex h-fit max-h-[85%] max-w-xl flex-col items-center justify-center gap-4 overflow-y-auto">
+        <div className="flex h-full max-h-[85%] max-w-xl flex-col items-center gap-4 overflow-y-auto">
           {bookings.map((booking, index) => (
             <ReservationCard
               key={index}
