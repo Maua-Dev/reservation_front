@@ -8,7 +8,7 @@ interface CalendaryCardProps {
   location: string
   modality: string
   equipments: string[]
-  time: string
+  time: number
   isChecked: boolean[]
 }
 

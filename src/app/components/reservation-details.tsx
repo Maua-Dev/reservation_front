@@ -2,7 +2,7 @@ type ReservationDetailsProps = {
   location: string
   modality: string
   equipments: string[]
-  time: string
+  time: number
   isChecked: boolean[]
 }
 
@@ -13,15 +13,17 @@ export const ReservationDetails = ({
   time,
   isChecked
 }: ReservationDetailsProps) => {
-  function getTimeOneHourLater(time: string | undefined) {
-    if (!time) {
-      return null
-    }
-    const [hours, minutes] = time.split(':').map(Number)
-    const date = new Date()
-    date.setHours(hours + 1, minutes, 0, 0)
-    return date
-  }
+  const today = new Date()
+  const date = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+    time
+  )
+  const formattedTime = date.toLocaleTimeString('pt-BR', {
+    hour: '2-digit',
+    minute: '2-digit'
+  }) // Format time as HH:MM
 
   return (
     <>
@@ -43,7 +45,11 @@ export const ReservationDetails = ({
             {location}
           </h1>
           <h1 className="mr-6 rounded border border-slate-400 bg-yellow p-2 tracking-wide">
-            Horário: {time} - {getTimeOneHourLater(time)?.toLocaleTimeString()}
+            Horário: {formattedTime} -{' '}
+            {new Date(date.getTime() + 60 * 60 * 1000).toLocaleTimeString(
+              'pt-BR',
+              { hour: '2-digit', minute: '2-digit' }
+            )}
           </h1>
         </div>
 

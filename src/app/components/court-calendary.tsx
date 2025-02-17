@@ -313,7 +313,7 @@ export function Court() {
                               location={reserva.court}
                               modality={reserva.modality}
                               equipments={equipments}
-                              time="12:00"
+                              time={reserva.hour}
                               isChecked={[true, false]}
                             />
                           </div>
