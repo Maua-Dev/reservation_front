@@ -39,8 +39,10 @@ export const ReservationDetails = ({
         </div>
 
         <div className="flex w-full flex-col justify-between gap-2 font-poppins text-2xl font-medium sm:flex-row">
-          <h1 className="w-36 rounded bg-yellow p-2">{location}</h1>
-          <h1 className="mr-6 rounded bg-yellow p-2 tracking-wide">
+          <h1 className="w-36 rounded border border-slate-400 bg-yellow p-2">
+            {location}
+          </h1>
+          <h1 className="mr-6 rounded border border-slate-400 bg-yellow p-2 tracking-wide">
             Horário: {time} - {getTimeOneHourLater(time)?.toLocaleTimeString()}
           </h1>
         </div>
@@ -54,7 +56,7 @@ export const ReservationDetails = ({
           <div className="mt-3 flex flex-wrap gap-2 pt-4">
             <h1
               className={
-                'w-36 rounded border border-black bg-yellow p-1 text-center font-poppins text-2xl font-medium'
+                'w-36 rounded border border-slate-400 bg-yellow p-1 text-center font-poppins text-2xl font-medium'
               }
             >
               {modality}
@@ -74,7 +76,7 @@ export const ReservationDetails = ({
                 <h1
                   key={equipment}
                   className={
-                    'text-md w-24 rounded border border-black p-1 text-center font-poppins font-medium md:w-44 md:text-lg'
+                    'text-md rounded border border-slate-400 bg-yellow p-2 text-center font-poppins font-medium md:text-2xl'
                   }
                 >
                   {equipment}
@@ -86,7 +88,7 @@ export const ReservationDetails = ({
 
         <div className="mt-3 flex flex-row items-center gap-2">
           <div
-            className={`size-8 rounded border border-black p-1 md:w-8 ${isChecked?.[0] ? 'bg-yellow' : 'bg-white'}`}
+            className={`size-8 rounded border border-slate-400 p-1 md:w-8 ${isChecked?.[0] ? 'bg-yellow' : 'bg-white'}`}
           />
           <p className="text-md font-poppins font-medium md:text-xl">
             Preciso de colete
@@ -96,7 +98,7 @@ export const ReservationDetails = ({
         <div className="mt-3 flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
             <div
-              className={`size-8 rounded border border-black p-1 md:w-8 ${isChecked?.[1] ? 'bg-yellow' : 'bg-white'}`}
+              className={`size-8 rounded border border-slate-400 p-1 md:w-8 ${isChecked?.[1] ? 'bg-yellow' : 'bg-white'}`}
             />
             <p className="text-md font-poppins font-medium md:text-xl">
               Aceito compartilhar quadra
