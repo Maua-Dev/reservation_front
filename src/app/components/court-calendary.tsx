@@ -7,88 +7,88 @@ import { View } from './view'
 const reservas = [
   {
     id: 1,
-    court: 'Quadra1',
-    court_number: 1,
+    court: 'Quadra 1',
+    courtNumber: 1,
     modality: 'Basquete',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000
+    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 3
   },
   {
     id: 2,
     court: 'Quadra2',
-    court_number: 2,
+    courtNumber: 2,
     modality: 'Vôlei',
-    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000
+    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 3
   },
 
   {
     id: 7,
     court: 'Quadra2',
-    court_number: 2,
+    courtNumber: 2,
     modality: 'Vôlei',
-    time: 1738069200000 + 7 * 24 * 60 * 60 * 1000
+    time: 1738069200000 + 7 * 24 * 60 * 60 * 1000 * 3
   },
   {
     id: 4,
     court: 'Quadra2',
-    court_number: 2,
+    courtNumber: 2,
     modality: 'vôlei',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000
+    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 3
   },
   {
     id: 5,
     court: 'Quadra3',
-    court_number: 3,
+    courtNumber: 3,
     modality: 'futsal',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000
+    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 3
   },
   {
     id: 6,
     court: 'Quadra3',
-    court_number: 3,
+    courtNumber: 3,
     modality: 'Vôlei',
-    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000
+    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 3
   },
   {
     id: 8,
     court: 'Quadra1',
-    court_number: 1,
+    courtNumber: 1,
     modality: 'Futsal',
-    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000
+    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000 * 3
   },
   {
     id: 9,
     court: 'Quadra3',
-    court_number: 3,
+    courtNumber: 3,
     modality: 'Vôlei',
-    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000
+    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000 * 3
   },
   {
     id: 9,
     court: 'Quadra1',
-    court_number: 1,
+    courtNumber: 1,
     modality: 'Vôlei',
-    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000
+    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000 * 3
   },
   {
     id: 10,
     court: 'Quadra2',
-    court_number: 2,
+    courtNumber: 2,
     modality: 'Basquete',
-    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000
+    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000 * 3
   },
   {
     id: 11,
     court: 'Quadra1',
-    court_number: 1,
+    courtNumber: 1,
     modality: 'Basquete',
-    time: 1737997200000 + 7 * 24 * 60 * 60 * 1000
+    time: 1737997200000 + 7 * 24 * 60 * 60 * 1000 * 3
   },
   {
     id: 12,
     court: 'Quadra3',
-    court_number: 3,
+    courtNumber: 3,
     modality: 'Basquete',
-    time: 1738245600000 + 7 * 24 * 60 * 60 * 1000
+    time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 3
   }
 ]
 
@@ -180,7 +180,7 @@ export function Court() {
     )
 
     const isItOne = sameTimeReservations.some(
-      (reserva) => reserva.court_number === 1
+      (reserva) => reserva.courtNumber === 1
     )
 
     const countSameTime = sameTimeReservations.length
@@ -297,7 +297,7 @@ export function Court() {
                     onClick={handleClickedTime.bind(null, hour, dayIndex)}
                     className={`relative flex flex-1 gap-2 border-b border-r border-gray-400 bg-gray-200 p-2 last:border-r-0 hover:cursor-pointer hover:bg-gray-300`}
                   >
-                    {reservasConvertidas.map((reserva, indexCard) => {
+                    {reservasConvertidas.map((reserva) => {
                       if (
                         reserva.hour === hour &&
                         reserva.day === thisWeek()[dayIndex]
@@ -306,11 +306,15 @@ export function Court() {
                           <div
                             key={reserva.id}
                             onClick={(e) => e.stopPropagation()}
-                            className={`flex ${specialWidth(reserva.court_number, Number(reserva.time))} ${deslocation(reserva.court_number, Number(reserva.time))}`}
+                            className={`flex ${specialWidth(reserva.courtNumber, Number(reserva.time))} ${deslocation(reserva.courtNumber, Number(reserva.time))}`}
                           >
                             <CalendaryCard
-                              court={reserva.court_number}
+                              court={reserva.courtNumber}
+                              location={reserva.court}
                               modality={reserva.modality}
+                              equipments={equipments}
+                              time="12:00"
+                              isChecked={[true, false]}
                             />
                           </div>
                         )

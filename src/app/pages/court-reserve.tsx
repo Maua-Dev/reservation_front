@@ -35,7 +35,7 @@ export function CourtReserve() {
 
       <Modal open={openModal === 'second'} onClose={closeModal}>
         <ReservationDetails
-          option={options[0]}
+          location={options[0]}
           modality={modalities[1]}
           equipments={equipments}
           time="12:00"

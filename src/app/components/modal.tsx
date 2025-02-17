@@ -17,7 +17,7 @@ export function Modal({ open, children, onClose }: ModalProps) {
       onClick={handleClick}
     >
       <div
-        className={`max-h-[90vh] w-[90%] overflow-y-auto overflow-x-hidden rounded-xl bg-white shadow transition-all sm:w-[70%] ${open ? 'scale-100 opacity-100' : 'scale-125 opacity-0'} `}
+        className={`max-h-[90vh] w-[70%] overflow-y-auto overflow-x-hidden rounded-xl bg-white shadow transition-all sm:w-[70%] ${open ? 'scale-100 opacity-100' : 'scale-125 opacity-0'} `}
         onClick={(e) => e.stopPropagation()}
       >
         {children}
