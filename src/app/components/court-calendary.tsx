@@ -238,26 +238,33 @@ export function Court() {
       clickedTime.getDate() - clickedTime.getDay() + dayIndex + 1
     )
     clickedTime.setHours(hour)
-    if (minute === 0) {
-      clickedTime.setMinutes(0)
-    } else {
-      clickedTime.setMinutes(30)
-    }
+    clickedTime.setMinutes(minute === 0 ? 0 : 30)
     clickedTime.setSeconds(0)
     clickedTime.setMilliseconds(0)
-    console.log(clickedTime)
-    console.log(clickedTime.getTime())
 
-    if (
-      reservasConvertidas.filter(
-        (reserva) => reserva.time === clickedTime.getTime()
-      ).length >= 3
-    ) {
-      console.log('Não eh possível fazer mais reservas nesse horário')
+    const timestamp = clickedTime.getTime()
+
+    const occupiedCourts = new Set() // Como se fosse um array para armazenar as quadras ocupadas
+
+    reservasConvertidas.forEach((reserva) => {
+      const reservaStartTime = reserva.time
+      const reservaEndTime =
+        reservaStartTime + reserva.duration * 60 * 60 * 1000 // Duração em milissegundos
+
+      if (timestamp >= reservaStartTime && timestamp < reservaEndTime) {
+        occupiedCourts.add(reserva.courtNumber) // Adiciona a quadra ao Set de quadras ocupadas
+      }
+    })
+
+    // Se todas as 3 quadras estiverem ocupadas, bloqueia o modal
+    if (occupiedCourts.size >= 3) {
+      console.log(
+        'Todas as quadras estão ocupadas neste horário. Não é possível fazer mais reservas.'
+      )
     } else {
-      console.log('Nenhuma reserva encontrada, abrindo modal...')
+      console.log('Há quadras disponíveis. Abrindo modal...')
       handleToggleReservationModal()
-      setSelectedTime(clickedTime.getTime())
+      setSelectedTime(timestamp)
       setTimeout(() => {
         setBookingModalVisible(true)
       }, 100)
@@ -351,7 +358,9 @@ export function Court() {
                               location={reserva.court}
                               modality={reserva.modality}
                               equipments={equipments}
-                              time={Number(`${reserva.hour}${reserva.minute === 0 ? '00' : '30'}`)}
+                              time={Number(
+                                `${reserva.hour}${reserva.minute === 0 ? '00' : '30'}`
+                              )}
                               isChecked={[true, false]}
                             />
                           </div>
