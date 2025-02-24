@@ -10,7 +10,7 @@ const reservas = [
     court: 'Quadra 1',
     courtNumber: 1,
     modality: 'Basquete',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
@@ -18,7 +18,7 @@ const reservas = [
     court: 'Quadra2',
     courtNumber: 2,
     modality: 'Vôlei',
-    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
 
@@ -27,7 +27,7 @@ const reservas = [
     court: 'Quadra2',
     courtNumber: 2,
     modality: 'Vôlei',
-    time: 1738069200000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    time: 1738069200000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
@@ -35,7 +35,7 @@ const reservas = [
     court: 'Quadra2',
     courtNumber: 2,
     modality: 'vôlei',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
@@ -43,7 +43,7 @@ const reservas = [
     court: 'Quadra3',
     courtNumber: 3,
     modality: 'futsal',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
@@ -51,7 +51,7 @@ const reservas = [
     court: 'Quadra3',
     courtNumber: 3,
     modality: 'Vôlei',
-    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
@@ -59,7 +59,7 @@ const reservas = [
     court: 'Quadra1',
     courtNumber: 1,
     modality: 'Futsal',
-    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
@@ -67,7 +67,7 @@ const reservas = [
     court: 'Quadra3',
     courtNumber: 3,
     modality: 'Vôlei',
-    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
@@ -75,7 +75,7 @@ const reservas = [
     court: 'Quadra1',
     courtNumber: 1,
     modality: 'Vôlei',
-    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
@@ -83,7 +83,7 @@ const reservas = [
     court: 'Quadra2',
     courtNumber: 2,
     modality: 'Basquete',
-    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
@@ -91,7 +91,7 @@ const reservas = [
     court: 'Quadra1',
     courtNumber: 1,
     modality: 'Basquete',
-    time: 1737997200000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    time: 1737997200000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
@@ -99,7 +99,7 @@ const reservas = [
     court: 'Quadra3',
     courtNumber: 3,
     modality: 'Basquete',
-    time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   }
 ]
@@ -238,7 +238,11 @@ export function Court() {
       clickedTime.getDate() - clickedTime.getDay() + dayIndex + 1
     )
     clickedTime.setHours(hour)
-    clickedTime.setMinutes(minute)
+    if (minute === 0) {
+      clickedTime.setMinutes(0)
+    } else {
+      clickedTime.setMinutes(30)
+    }
     clickedTime.setSeconds(0)
     clickedTime.setMilliseconds(0)
     console.log(clickedTime)
@@ -303,9 +307,9 @@ export function Court() {
           </div>
         </div>
         <div className="h-12 border-gray-400"></div>
-        {[...Array(27)].map((_, index) => {
-          const hour = 8 + Math.floor(index / 2)
-          const minute = (index % 2) * 30
+        {[...Array(25)].map((_, index) => {
+          const hour = 8 + Math.floor((index + 1) / 2)
+          const minute = (index + 1) % 2
           const isHourSeparator = minute === 0
           return (
             <div key={index} className="flex">
@@ -347,7 +351,7 @@ export function Court() {
                               location={reserva.court}
                               modality={reserva.modality}
                               equipments={equipments}
-                              time={`${reserva.hour}:${reserva.minute === 0 ? '00' : '30'}`}
+                              time={Number(`${reserva.hour}${reserva.minute === 0 ? '00' : '30'}`)}
                               isChecked={[true, false]}
                             />
                           </div>

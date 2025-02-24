@@ -100,13 +100,13 @@ export const Form = ({
           <label className="flex items-center justify-center gap-2 font-poppins text-xl font-medium md:text-2xl">
             <p>Horário</p>
             <div className="rounded border-none bg-yellow p-[4px] text-center font-poppins text-lg font-medium md:text-2xl">
-              {formatDate(selectedDate.getHours())}:00
+              {formatDate(selectedDate.getHours())}:{formatDate(selectedDate.getMinutes())}
             </div>
           </label>
           <div className="flex items-center gap-2">
             <p className="font-poppins text-xl font-medium md:text-2xl">Até</p>
             <label className="rounded border border-black p-1 font-poppins text-xl font-medium md:text-2xl">
-              {formatDate(selectedDate.getHours() + 1)}:00
+              {formatDate(selectedDate.getHours() + 1)}:{formatDate(selectedDate.getMinutes())}
             </label>
           </div>
         </div>
