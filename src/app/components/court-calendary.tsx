@@ -10,14 +10,16 @@ const reservas = [
     court: 'Quadra 1',
     courtNumber: 1,
     modality: 'Basquete',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 3
+    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    duration: 1
   },
   {
     id: 2,
     court: 'Quadra2',
     courtNumber: 2,
     modality: 'Vôlei',
-    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 3
+    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    duration: 1
   },
 
   {
@@ -25,70 +27,80 @@ const reservas = [
     court: 'Quadra2',
     courtNumber: 2,
     modality: 'Vôlei',
-    time: 1738069200000 + 7 * 24 * 60 * 60 * 1000 * 3
+    time: 1738069200000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    duration: 1
   },
   {
     id: 4,
     court: 'Quadra2',
     courtNumber: 2,
     modality: 'vôlei',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 3
+    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    duration: 1
   },
   {
     id: 5,
     court: 'Quadra3',
     courtNumber: 3,
     modality: 'futsal',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 3
+    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    duration: 1
   },
   {
     id: 6,
     court: 'Quadra3',
     courtNumber: 3,
     modality: 'Vôlei',
-    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 3
+    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    duration: 1
   },
   {
     id: 8,
     court: 'Quadra1',
     courtNumber: 1,
     modality: 'Futsal',
-    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000 * 3
+    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    duration: 1
   },
   {
     id: 9,
     court: 'Quadra3',
     courtNumber: 3,
     modality: 'Vôlei',
-    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000 * 3
+    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    duration: 1
   },
   {
     id: 9,
     court: 'Quadra1',
     courtNumber: 1,
     modality: 'Vôlei',
-    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000 * 3
+    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    duration: 1
   },
   {
     id: 10,
     court: 'Quadra2',
     courtNumber: 2,
     modality: 'Basquete',
-    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000 * 3
+    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    duration: 1
   },
   {
     id: 11,
     court: 'Quadra1',
     courtNumber: 1,
     modality: 'Basquete',
-    time: 1737997200000 + 7 * 24 * 60 * 60 * 1000 * 3
+    time: 1737997200000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    duration: 1
   },
   {
     id: 12,
     court: 'Quadra3',
     courtNumber: 3,
     modality: 'Basquete',
-    time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 3
+    time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 3,
+    duration: 1
   }
 ]
 
@@ -210,17 +222,23 @@ export function Court() {
     return {
       ...reserva,
       day: date.getDate(),
-      hour: date.getHours()
+      hour: date.getHours(),
+      minute: date.getMinutes(),
+      endHour: date.getHours() + (reserva.duration ?? 1)
     }
   })
 
-  const handleClickedTime = (hour: number, dayIndex: number) => {
+  const handleClickedTime = (
+    hour: number,
+    minute: number,
+    dayIndex: number
+  ) => {
     const clickedTime = new Date()
     clickedTime.setDate(
       clickedTime.getDate() - clickedTime.getDay() + dayIndex + 1
     )
     clickedTime.setHours(hour)
-    clickedTime.setMinutes(0)
+    clickedTime.setMinutes(minute)
     clickedTime.setSeconds(0)
     clickedTime.setMilliseconds(0)
     console.log(clickedTime)
@@ -285,21 +303,33 @@ export function Court() {
           </div>
         </div>
         <div className="h-12 border-gray-400"></div>
-        {[...Array(14)].map((_, index) => {
-          const hour = 8 + index
+        {[...Array(27)].map((_, index) => {
+          const hour = 8 + Math.floor(index / 2)
+          const minute = (index % 2) * 30
+          const isHourSeparator = minute === 0
           return (
             <div key={index} className="flex">
-              <div className="flex min-h-28 min-w-20 max-w-20 items-start border-r border-gray-400 px-4 font-poppins">{`${hour}:00`}</div>
+              <div className="flex min-h-16 min-w-20 max-w-20 items-start border-r border-gray-400 px-4 font-poppins">{`${hour}:${minute === 0 ? '00' : '30'}`}</div>
               <div className="flex flex-1">
                 {[...Array(6)].map((_, dayIndex) => (
                   <div
                     key={dayIndex}
-                    onClick={handleClickedTime.bind(null, hour, dayIndex)}
+                    onClick={handleClickedTime.bind(
+                      null,
+                      hour,
+                      minute,
+                      dayIndex
+                    )}
                     className={`relative flex flex-1 gap-2 border-b border-r border-gray-400 bg-gray-200 p-2 last:border-r-0 hover:cursor-pointer hover:bg-gray-300`}
+                    style={{
+                      borderBottomStyle: isHourSeparator ? 'dashed' : 'solid',
+                      borderRightStyle: 'solid'
+                    }}
                   >
                     {reservasConvertidas.map((reserva) => {
                       if (
                         reserva.hour === hour &&
+                        reserva.minute === minute &&
                         reserva.day === thisWeek()[dayIndex]
                       ) {
                         return (
@@ -307,13 +337,17 @@ export function Court() {
                             key={reserva.id}
                             onClick={(e) => e.stopPropagation()}
                             className={`flex ${specialWidth(reserva.courtNumber, Number(reserva.time))} ${deslocation(reserva.courtNumber, Number(reserva.time))}`}
+                            style={{
+                              height: `w-28`,
+                              zIndex: 2
+                            }}
                           >
                             <CalendaryCard
                               court={reserva.courtNumber}
                               location={reserva.court}
                               modality={reserva.modality}
                               equipments={equipments}
-                              time={reserva.hour}
+                              time={`${reserva.hour}:${reserva.minute === 0 ? '00' : '30'}`}
                               isChecked={[true, false]}
                             />
                           </div>
@@ -329,7 +363,7 @@ export function Court() {
       </div>
       {isReservationModalOpen && selectedTime && (
         <div
-          className={`duration-250 fixed inset-0 flex items-center justify-center bg-black/50 transition-all ${bookingModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
+          className={`duration-250 fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-all ${bookingModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
         >
           <Form
             isOpen={isReservationModalOpen}
