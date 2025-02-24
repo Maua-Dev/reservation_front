@@ -342,7 +342,7 @@ export function Court() {
                             onClick={(e) => e.stopPropagation()}
                             className={`flex ${specialWidth(reserva.courtNumber, Number(reserva.time))} ${deslocation(reserva.courtNumber, Number(reserva.time))}`}
                             style={{
-                              height: `w-28`,
+                              height: `${reserva.duration * 50 * 2}px`,
                               zIndex: 2
                             }}
                           >

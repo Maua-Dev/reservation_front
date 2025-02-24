@@ -61,7 +61,7 @@ export const Form = ({
     console.log(data)
     onClose()
   }
-  const formatDate = (date = number) => date.toString().padStart(2, '0')
+  const formatDate = (date: number) => date.toString().padStart(2, '0')
 
   return (
     <form

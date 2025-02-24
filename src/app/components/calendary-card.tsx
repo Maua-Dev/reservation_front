@@ -34,7 +34,7 @@ export function CalendaryCard({
       <div
         onClick={() => setOpen(true)}
         className={cn(
-          'z-40 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 shadow-md duration-300 hover:-translate-y-1',
+          'z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 shadow-md duration-300 hover:z-50 hover:-translate-y-1',
           courtColors[court]
         )}
       >
