@@ -101,6 +101,14 @@ const reservas = [
     modality: 'Basquete',
     time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
+  },
+  {
+    id: 13,
+    court: 'Quadra2',
+    courtNumber: 2,
+    modality: 'Basquete',
+    time: 1740663000000 + 7 * 24 * 60 * 60 * 1000 * 4,
+    duration: 1
   }
 ]
 
@@ -243,6 +251,7 @@ export function Court() {
     clickedTime.setMilliseconds(0)
 
     const timestamp = clickedTime.getTime()
+    console.log(timestamp)
 
     const occupiedCourts = new Set() // Como se fosse um array para armazenar as quadras ocupadas
 
@@ -340,7 +349,7 @@ export function Court() {
                     {reservasConvertidas.map((reserva) => {
                       if (
                         reserva.hour === hour &&
-                        reserva.minute === minute &&
+                        (reserva.minute )% 2 === minute &&
                         reserva.day === thisWeek()[dayIndex]
                       ) {
                         return (
