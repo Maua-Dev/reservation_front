@@ -3,6 +3,7 @@ type ReservationDetailsProps = {
   modality: string
   equipments: string[]
   time: number
+  duration: number
   isChecked: boolean[]
 }
 
@@ -10,6 +11,7 @@ export const ReservationDetails = ({
   equipments,
   location,
   modality,
+  duration,
   time,
   isChecked
 }: ReservationDetailsProps) => {
@@ -46,10 +48,12 @@ export const ReservationDetails = ({
           </h1>
           <h1 className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-12 py-4">
             Horário: {formattedTime} -{' '}
-            {new Date(date.getTime() + 60 * 60 * 1000).toLocaleTimeString(
-              'pt-BR',
-              { hour: '2-digit', minute: '2-digit' }
-            )}
+            {new Date(
+              date.getTime() + (duration == 1 ? 60 : 30) * 60 * 1000
+            ).toLocaleTimeString('pt-BR', {
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
           </h1>
         </div>
 

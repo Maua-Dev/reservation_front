@@ -19,9 +19,9 @@ export function CalendaryCard({
   const courtColors: {
     [key: number]: string
   } = {
-    1: 'border-blue-primary text-blue-primary',
-    2: 'border-blue-secondary text-blue-secondary',
-    3: 'border-blue-tertiary text-blue-tertiary'
+    1: 'border-blue-primary text-blue-primary z-[2]',
+    2: 'border-blue-secondary text-blue-secondary z-[3]',
+    3: 'border-blue-tertiary text-blue-tertiary z-[4]'
   }
   return (
     <>

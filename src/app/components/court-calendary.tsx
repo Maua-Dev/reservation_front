@@ -20,8 +20,8 @@ const reservas = [
     court: 'Quadra2',
     courtNumber: 2,
     modality: 'Vôlei',
-    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 4,
-    duration: 1
+    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 4 + 30 * 60 * 1000,
+    duration: 0.5
   },
 
   {
@@ -53,8 +53,8 @@ const reservas = [
     court: 'Quadra3',
     courtNumber: 3,
     modality: 'Vôlei',
-    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 4,
-    duration: 1
+    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 4 + 30 * 60 * 1000,
+    duration: 0.5
   },
   {
     id: 8,
@@ -111,6 +111,14 @@ const reservas = [
     modality: 'Basquete',
     time: 1740663000000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
+  },
+  {
+    id: 14,
+    court: 'Quadra1',
+    courtNumber: 1,
+    modality: 'Basquete',
+    time: 1740663000000 + 7 * 24 * 60 * 60 * 1000 * 4,
+    duration: 1
   }
 ]
 
@@ -129,7 +137,7 @@ export function Court() {
     useState(false)
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false)
   const [bookingModalVisible, setBookingModalVisible] = useState(false)
-  const [selectedReservation, setSelectedReservation] = useState<
+  const [selectedBooking, setSelectedBooking] = useState<
     Reservation | undefined
   >(undefined)
   const [selectedTime, setSelectedTime] = useState<number | null>(null)
@@ -143,24 +151,6 @@ export function Court() {
     'Raquete de tênis'
   ]
   const options = ['Quadra 1', 'Quadra 2', 'Quadra 3']
-
-  const thisMonth = () => {
-    const months = [
-      'Janeiro',
-      'Fevereiro',
-      'Março',
-      'Abril',
-      'Maio',
-      'Junho',
-      'Julho',
-      'Agosto',
-      'Setembro',
-      'Outubro',
-      'Novembro',
-      'Dezembro'
-    ]
-    return months[today.getMonth()]
-  }
 
   const thisWeek = () => {
     const week = []
@@ -208,7 +198,7 @@ export function Court() {
     }, 100)
   }
 
-  const deslocation = (courtNumber: number, timestamp: number) => {
+  const deslocation = (courtNumber: number, _timestamp: number) => {
     // const sameTimeReservations = reservas.filter(
     //   (reserva) => Number(reserva.time) === timestamp
     // )
@@ -223,19 +213,19 @@ export function Court() {
       case 1:
         return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
       case 2:
+        // return countSameTime > 1
+        //   ? isItOne
+        //     ? 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[30%]'
+        //     : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
+        //   : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
         return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[30%]'
-      // countSameTime > 1
-      //   ? isItOne
-      //     ? 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[30%]'
-      //     : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
-      //   : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
       case 3:
+        // return countSameTime > 1
+        //   ? countSameTime > 2
+        //     ? 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[56%]'
+        //     : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[30%]'
+        //   : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
         return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[56%]'
-      // countSameTime > 1
-      //   ? countSameTime > 2
-      //     ? 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[56%]'
-      //     : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[30%]'
-      //   : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
       default:
         return 4
     }
@@ -308,7 +298,14 @@ export function Court() {
           <div className="absolute bottom-0 left-0 p-5 font-poppins text-white">
             <p className="text-3xl font-semibold">Quadras</p>
             <p className="text-2xl font-normal">
-              {thisMonth()}, {thisWeek()[0]}-{thisWeek()[5]}
+              {today
+                .toLocaleDateString('pt-BR', { month: 'long' })
+                .charAt(0)
+                .toUpperCase() +
+                today
+                  .toLocaleDateString('pt-BR', { month: 'long' })
+                  .slice(1)}{' '}
+              {thisWeek()[0]}-{thisWeek()[5]}
             </p>
           </div>
           <div className="absolute bottom-0 right-0 p-8">
@@ -365,17 +362,16 @@ export function Court() {
                     {reservasConvertidas.map((reserva) => {
                       if (
                         reserva.hour === hour &&
-                        reserva.minute % 2 === minute &&
+                        reserva.minute === (minute == 1 ? 30 : 0) &&
                         reserva.day === thisWeek()[dayIndex]
                       ) {
                         return (
                           <div
                             key={reserva.id}
                             onClick={(e) => e.stopPropagation()}
-                            className={`flex ${specialWidth(reserva.courtNumber, Number(reserva.time))} ${deslocation(reserva.courtNumber, Number(reserva.time))}`}
+                            className={`absolute flex ${specialWidth(reserva.courtNumber, Number(reserva.time))} ${deslocation(reserva.courtNumber, Number(reserva.time))}`}
                             style={{
-                              height: `${reserva.duration * 50 * 2}px`,
-                              zIndex: 1
+                              height: `${reserva.duration * 50 * 2}px`
                             }}
                           >
                             <CalendaryCard
@@ -386,7 +382,7 @@ export function Court() {
                               time={reserva.time}
                               isChecked={[true, false]}
                               openModal={() => {
-                                setSelectedReservation(reserva)
+                                setSelectedBooking(reserva)
                               }}
                             />
                           </div>
@@ -426,17 +422,18 @@ export function Court() {
           />
         </div>
       )}
-      {selectedReservation && (
+      {selectedBooking && (
         <Modal
-          open={!!selectedReservation}
-          onClose={() => setSelectedReservation(undefined)}
+          open={!!selectedBooking}
+          onClose={() => setSelectedBooking(undefined)}
         >
           <ReservationDetails
-            location={selectedReservation.court}
-            modality={selectedReservation.modality}
+            location={selectedBooking.court}
+            modality={selectedBooking.modality}
             equipments={equipments}
-            time={selectedReservation.time}
+            time={selectedBooking.time}
             isChecked={[true, false]}
+            duration={selectedBooking.duration}
           />
         </Modal>
       )}
