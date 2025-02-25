@@ -369,7 +369,7 @@ export function Court() {
                               location={reserva.court}
                               modality={reserva.modality}
                               equipments={equipments}
-                              time={new Date(reserva.time).getTime()}
+                              time={reserva.time}
                               isChecked={[true, false]}
                             />
                           </div>

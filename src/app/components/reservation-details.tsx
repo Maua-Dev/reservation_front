@@ -13,21 +13,15 @@ export const ReservationDetails = ({
   time,
   isChecked
 }: ReservationDetailsProps) => {
-  const today = new Date()
-  const date = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate(),
-    time
-  )
+  const date = new Date(time)
   const formattedTime = date.toLocaleTimeString('pt-BR', {
     hour: '2-digit',
     minute: '2-digit'
   }) // Format time as HH:MM
 
   return (
-    <>
-      <div className="flex flex-col gap-4 p-10 tracking-wide">
+    <div className="static z-50 flex h-full w-full flex-col items-center justify-center rounded-lg bg-white shadow-lg">
+      <div className="z-50 flex flex-col gap-4 p-10">
         <div className="flex flex-col justify-between border-b-2 border-slate-500 pb-4">
           <div className="flex justify-between">
             <p className="mt-3 font-poppins text-2xl font-bold text-black md:text-3xl">
@@ -37,14 +31,20 @@ export const ReservationDetails = ({
               22.001122-0
             </p>
           </div>
-          <p className="mt-1 font-poppins text-2xl font-medium">data: 17/09</p>
+          <p className="mt-1 font-poppins text-2xl font-medium">
+            data:{' '}
+            {new Date(date.getTime()).toLocaleDateString('pt-BR', {
+              day: '2-digit',
+              month: '2-digit'
+            })}
+          </p>
         </div>
 
         <div className="flex w-full flex-col justify-start gap-10 pt-4 font-poppins text-2xl font-medium md:flex-row">
-          <h1 className="border-yellow-secondary inline-flex items-center justify-center rounded-xl border border-b-4 bg-yellow px-8 py-4">
+          <h1 className="inline-flex items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-8 py-4">
             {location}
           </h1>
-          <h1 className="border-yellow-secondary inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 bg-yellow px-12 py-4">
+          <h1 className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-12 py-4">
             Horário: {formattedTime} -{' '}
             {new Date(date.getTime() + 60 * 60 * 1000).toLocaleTimeString(
               'pt-BR',
@@ -62,7 +62,7 @@ export const ReservationDetails = ({
           <div className="mt-3 flex flex-wrap gap-2 pt-4 text-2xl">
             <h1
               className={
-                'border-yellow-secondary inline-flex items-center justify-center rounded-xl border border-b-4 bg-yellow px-12 py-4 font-poppins font-medium'
+                'inline-flex items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-12 py-4 font-poppins font-medium'
               }
             >
               {modality}
@@ -82,7 +82,7 @@ export const ReservationDetails = ({
                 <h1
                   key={equipment}
                   className={
-                    'text-md border-yellow-secondary inline-flex items-center justify-center rounded-xl border border-b-4 bg-yellow p-2 px-8 py-4 text-center font-poppins font-medium md:text-2xl'
+                    'text-md inline-flex items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2 px-8 py-4 text-center font-poppins font-medium md:text-2xl'
                   }
                 >
                   {equipment}
@@ -112,6 +112,6 @@ export const ReservationDetails = ({
           </div>
         </div>
       </div>
-    </>
+    </ div>
   )
 }

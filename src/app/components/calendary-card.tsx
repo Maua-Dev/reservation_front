@@ -32,7 +32,10 @@ export function CalendaryCard({
   return (
     <>
       <div
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpen(true)
+          console.log(time)
+        }}
         className={cn(
           'z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 shadow-md duration-300 hover:z-50 hover:-translate-y-1',
           courtColors[court]
