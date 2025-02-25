@@ -5,6 +5,7 @@ import { Form } from './form'
 import { View } from './view'
 import { Modal } from './modal'
 import { ReservationDetails } from './reservation-details'
+import { cn } from '../utils/cn'
 
 const reservas = [
   {
@@ -169,26 +170,11 @@ export function Court() {
 
     const countSameTime = sameTimeReservations.length
 
-    switch (courtNumber) {
-      case 1:
-        return countSameTime > 1
-          ? countSameTime > 2
-            ? 'min-[1777px]:w-1/3'
-            : 'min-[1777px]:w-[45%]'
-          : 'min-[1777px]:w-[90%]'
-      case 2:
-        return countSameTime > 1
-          ? countSameTime > 2
-            ? 'min-[1777px]:w-1/3'
-            : 'min-[1777px]:w-[45%]'
-          : 'min-[1777px]:w-[90%]'
-      case 3:
-        return countSameTime > 1
-          ? countSameTime > 2
-            ? 'min-[1777px]:w-1/3'
-            : 'min-[1777px]:w-[45%]'
-          : 'min-[1777px]:w-[90%]'
-    }
+    return countSameTime > 1
+      ? countSameTime > 2
+        ? '2xl:w-1/3'
+        : '2xl:w-[45%]'
+      : '2xl:w-[90%]'
   }
 
   function handleOpeMyBookings() {
@@ -198,34 +184,34 @@ export function Court() {
     }, 100)
   }
 
-  const deslocation = (courtNumber: number, _timestamp: number) => {
-    // const sameTimeReservations = reservas.filter(
-    //   (reserva) => Number(reserva.time) === timestamp
-    // )
+  const deslocation = (courtNumber: number, timestamp: number) => {
+    const sameTimeReservations = reservas.filter(
+      (reserva) => Number(reserva.time) === timestamp
+    )
 
-    // const isItOne = sameTimeReservations.some(
-    //   (reserva) => reserva.courtNumber === 1
-    // )
+    const isItOne = sameTimeReservations.some(
+      (reserva) => reserva.courtNumber === 1
+    )
 
-    // const countSameTime = sameTimeReservations.length
+    const countSameTime = sameTimeReservations.length
 
     switch (courtNumber) {
       case 1:
         return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
       case 2:
-        // return countSameTime > 1
-        //   ? isItOne
-        //     ? 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[30%]'
-        //     : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
-        //   : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
-        return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[30%]'
+        return countSameTime > 1
+          ? isItOne
+            ? 'absolute w-20 h-20 left-[30%]'
+            : 'absolute w-20 h-20 left-[4%]'
+          : 'absolute w-20 h-20 left-[4%]'
+      // return 'absolute w-20 h-20 left-[30%]'
       case 3:
-        // return countSameTime > 1
-        //   ? countSameTime > 2
-        //     ? 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[56%]'
-        //     : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[30%]'
-        //   : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
-        return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[56%]'
+        return countSameTime > 1
+          ? countSameTime > 2
+            ? 'absolute w-20 h-20 left-[56%]'
+            : 'absolute w-20 h-20 left-[30%]'
+          : 'absolute w-20 h-20 left-[4%]'
+      // return 'absolute w-20 h-20 left-[56%]'
       default:
         return 4
     }
@@ -261,15 +247,24 @@ export function Court() {
 
     const occupiedCourts = new Set() // Como se fosse um array para armazenar as quadras ocupadas
 
-    reservasConvertidas.forEach((reserva) => {
-      const reservaStartTime = reserva.time
-      const reservaEndTime =
-        reservaStartTime + reserva.duration * 60 * 60 * 1000 // Duração em milissegundos
+    // TA TUDO ERRADO AQ PRA BAIXO, CORRIGIR SOCORRO
 
-      if (timestamp >= reservaStartTime && timestamp < reservaEndTime) {
-        occupiedCourts.add(reserva.courtNumber) // Adiciona a quadra ao Set de quadras ocupadas
-      }
-    })
+    reservasConvertidas
+      .filter((reserva) => new Date(reserva.time).getDay() === dayIndex)
+      .forEach((reserva) => {
+        const reservaStartTime = reserva.time + 24 * 60 * 60 * 1000
+        const reservaEndTime =
+          reservaStartTime + reserva.duration * 60 * 60 * 1000 + 24 * 60 * 60 * 1000
+        console.log(dayIndex)
+        console.log('Duração: ', reserva.duration)
+        console.log('StartTime: ', new Date(reservaStartTime).toDateString('pt-BR'))
+        console.log('EndTime: ', new Date(reservaEndTime).toDateString('pt-BR'))
+        console.log('Timestamp: ', new Date(timestamp + 0.5 * 60 * 60 * 1000).toDateString('pt-BR'))
+        console.log('CourtNumber: ', reserva.courtNumber)
+        if (timestamp + 0.5 * 60 * 60 * 1000 < reservaEndTime && timestamp + 0.5 * 60 * 60 * 1000 >= reservaStartTime) {
+          occupiedCourts.add(reserva.courtNumber) // Adiciona a quadra ao Set de quadras ocupadas
+        }
+      })
 
     // Se todas as 3 quadras estiverem ocupadas, bloqueia o modal
     if (occupiedCourts.size >= 3) {
@@ -279,6 +274,7 @@ export function Court() {
       console.log(occupiedCourts)
     } else {
       console.log(occupiedCourts)
+      console.log(reservasConvertidas)
       handleToggleReservationModal()
       setSelectedTime(timestamp)
       setTimeout(() => {
@@ -354,7 +350,7 @@ export function Court() {
                       minute,
                       dayIndex
                     )}
-                    className={`relative flex flex-1 gap-2 border-b border-r border-gray-400 bg-gray-200 p-2 last:border-r-0 hover:cursor-pointer hover:bg-gray-300`}
+                    className={`relative flex min-w-[230px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 bg-gray-200 p-2 last:border-r-0 hover:cursor-pointer hover:bg-gray-300`}
                     style={{
                       borderBottomStyle: isHourSeparator ? 'dashed' : 'solid',
                       borderRightStyle: 'solid'
@@ -370,7 +366,17 @@ export function Court() {
                           <div
                             key={reserva.id}
                             onClick={(e) => e.stopPropagation()}
-                            className={`absolute flex ${specialWidth(reserva.courtNumber, Number(reserva.time))} ${deslocation(reserva.courtNumber, Number(reserva.time))}`}
+                            className={cn(
+                              'absolute flex',
+                              specialWidth(
+                                reserva.courtNumber,
+                                Number(reserva.time)
+                              ),
+                              deslocation(
+                                reserva.courtNumber,
+                                Number(reserva.time)
+                              )
+                            )}
                             style={{
                               height: `${reserva.duration * 50 * 2}px`
                             }}
