@@ -13,7 +13,7 @@ export function Modal({ open, children, onClose }: ModalProps) {
 
   return (
     <div
-      className={`fixed inset-0 flex items-center justify-center transition-colors ${open ? 'visible z-20 bg-black/20' : 'invisible'}`}
+      className={`fixed inset-0 z-[1000] flex items-center justify-center transition-colors ${open ? 'visible z-20 bg-black/20' : 'invisible'}`}
       onClick={handleClick}
     >
       <div

@@ -20,7 +20,7 @@ export const ReservationDetails = ({
   }) // Format time as HH:MM
 
   return (
-    <div className="static z-50 flex h-full w-full flex-col items-center justify-center rounded-lg bg-white shadow-lg">
+    <div>
       <div className="z-50 flex flex-col gap-4 p-10">
         <div className="flex flex-col justify-between border-b-2 border-slate-500 pb-4">
           <div className="flex justify-between">
@@ -112,6 +112,6 @@ export const ReservationDetails = ({
           </div>
         </div>
       </div>
-    </ div>
+    </div>
   )
 }

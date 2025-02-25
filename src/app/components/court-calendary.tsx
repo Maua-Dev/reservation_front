@@ -3,6 +3,8 @@ import { CalendaryCard } from './calendary-card'
 import { useState } from 'react'
 import { Form } from './form'
 import { View } from './view'
+import { Modal } from './modal'
+import { ReservationDetails } from './reservation-details'
 
 const reservas = [
   {
@@ -112,12 +114,24 @@ const reservas = [
   }
 ]
 
+export interface Reservation {
+  id: number
+  court: string
+  courtNumber: number
+  modality: string
+  time: number
+  duration: number
+}
+
 export function Court() {
   const [isMyBookingsModalOpen, setIsMyBookingsModalOpen] = useState(false)
   const [isMyBookingsModalVisible, setIsMyBookingsModalVisible] =
     useState(false)
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false)
   const [bookingModalVisible, setBookingModalVisible] = useState(false)
+  const [selectedReservation, setSelectedReservation] = useState<
+    Reservation | undefined
+  >(undefined)
   const [selectedTime, setSelectedTime] = useState<number | null>(null)
   const today = new Date()
   const modalities = ['Basquete', 'Handbol', 'Futsal', 'Vôlei', 'Tênis']
@@ -361,7 +375,7 @@ export function Court() {
                             className={`flex ${specialWidth(reserva.courtNumber, Number(reserva.time))} ${deslocation(reserva.courtNumber, Number(reserva.time))}`}
                             style={{
                               height: `${reserva.duration * 50 * 2}px`,
-                              zIndex: 2
+                              zIndex: 1
                             }}
                           >
                             <CalendaryCard
@@ -371,6 +385,9 @@ export function Court() {
                               equipments={equipments}
                               time={reserva.time}
                               isChecked={[true, false]}
+                              openModal={() => {
+                                setSelectedReservation(reserva)
+                              }}
                             />
                           </div>
                         )
@@ -408,6 +425,20 @@ export function Court() {
             }}
           />
         </div>
+      )}
+      {selectedReservation && (
+        <Modal
+          open={!!selectedReservation}
+          onClose={() => setSelectedReservation(undefined)}
+        >
+          <ReservationDetails
+            location={selectedReservation.court}
+            modality={selectedReservation.modality}
+            equipments={equipments}
+            time={selectedReservation.time}
+            isChecked={[true, false]}
+          />
+        </Modal>
       )}
     </div>
   )
