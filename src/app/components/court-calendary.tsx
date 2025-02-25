@@ -276,8 +276,9 @@ export function Court() {
       console.log(
         'Todas as quadras estão ocupadas neste horário. Não é possível fazer mais reservas.'
       )
+      console.log(occupiedCourts)
     } else {
-      console.log('Há quadras disponíveis. Abrindo modal...')
+      console.log(occupiedCourts)
       handleToggleReservationModal()
       setSelectedTime(timestamp)
       setTimeout(() => {
