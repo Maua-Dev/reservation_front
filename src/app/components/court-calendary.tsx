@@ -195,31 +195,33 @@ export function Court() {
   }
 
   const deslocation = (courtNumber: number, timestamp: number) => {
-    const sameTimeReservations = reservas.filter(
-      (reserva) => Number(reserva.time) === timestamp
-    )
+    // const sameTimeReservations = reservas.filter(
+    //   (reserva) => Number(reserva.time) === timestamp
+    // )
 
-    const isItOne = sameTimeReservations.some(
-      (reserva) => reserva.courtNumber === 1
-    )
+    // const isItOne = sameTimeReservations.some(
+    //   (reserva) => reserva.courtNumber === 1
+    // )
 
-    const countSameTime = sameTimeReservations.length
+    // const countSameTime = sameTimeReservations.length
 
     switch (courtNumber) {
       case 1:
         return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
       case 2:
-        return countSameTime > 1
-          ? isItOne
-            ? 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[30%]'
-            : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
-          : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
+        return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[30%]'
+      // countSameTime > 1
+      //   ? isItOne
+      //     ? 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[30%]'
+      //     : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
+      //   : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
       case 3:
-        return countSameTime > 1
-          ? countSameTime > 2
-            ? 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[56%]'
-            : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[30%]'
-          : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
+        return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[56%]'
+      // countSameTime > 1
+      //   ? countSameTime > 2
+      //     ? 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[56%]'
+      //     : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[30%]'
+      //   : 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
       default:
         return 4
     }
@@ -349,7 +351,7 @@ export function Court() {
                     {reservasConvertidas.map((reserva) => {
                       if (
                         reserva.hour === hour &&
-                        (reserva.minute )% 2 === minute &&
+                        reserva.minute % 2 === minute &&
                         reserva.day === thisWeek()[dayIndex]
                       ) {
                         return (
@@ -367,9 +369,7 @@ export function Court() {
                               location={reserva.court}
                               modality={reserva.modality}
                               equipments={equipments}
-                              time={Number(
-                                `${reserva.hour}${reserva.minute === 0 ? '00' : '30'}`
-                              )}
+                              time={new Date(reserva.time).getTime()}
                               isChecked={[true, false]}
                             />
                           </div>
