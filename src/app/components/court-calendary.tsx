@@ -254,14 +254,23 @@ export function Court() {
       .forEach((reserva) => {
         const reservaStartTime = reserva.time + 24 * 60 * 60 * 1000
         const reservaEndTime =
-          reservaStartTime + reserva.duration * 60 * 60 * 1000 + 24 * 60 * 60 * 1000
+          reservaStartTime + reserva.duration * 60 * 60 * 1000
         console.log(dayIndex)
         console.log('Duração: ', reserva.duration)
-        console.log('StartTime: ', new Date(reservaStartTime).toDateString('pt-BR'))
+        console.log(
+          'StartTime: ',
+          new Date(reservaStartTime).toDateString('pt-BR')
+        )
         console.log('EndTime: ', new Date(reservaEndTime).toDateString('pt-BR'))
-        console.log('Timestamp: ', new Date(timestamp + 0.5 * 60 * 60 * 1000).toDateString('pt-BR'))
+        console.log(
+          'Timestamp: ',
+          new Date(timestamp + 0.5 * 60 * 60 * 1000).toDateString('pt-BR')
+        )
         console.log('CourtNumber: ', reserva.courtNumber)
-        if (timestamp + 0.5 * 60 * 60 * 1000 < reservaEndTime && timestamp + 0.5 * 60 * 60 * 1000 >= reservaStartTime) {
+        if (
+          timestamp + 0.5 * 60 * 60 * 1000 < reservaEndTime &&
+          timestamp + 0.5 * 60 * 60 * 1000 >= reservaStartTime
+        ) {
           occupiedCourts.add(reserva.courtNumber) // Adiciona a quadra ao Set de quadras ocupadas
         }
       })
@@ -350,7 +359,7 @@ export function Court() {
                       minute,
                       dayIndex
                     )}
-                    className={`relative flex min-w-[230px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 bg-gray-200 p-2 last:border-r-0 hover:cursor-pointer hover:bg-gray-300`}
+                    className={`relative flex min-w-[180px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 bg-gray-200 p-2 last:border-r-0 hover:cursor-pointer hover:bg-gray-300`}
                     style={{
                       borderBottomStyle: isHourSeparator ? 'dashed' : 'solid',
                       borderRightStyle: 'solid'
