@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { IoClose } from 'react-icons/io5'
 
 type FormProps = {
   modalities: string[]
@@ -61,6 +62,13 @@ export const Form = ({
     console.log(data)
     onClose()
   }
+  const handleCancel = (date: string) => {
+    console.log(`Cancel reservation on ${date}`)
+  }
+  const handleClose = () => {
+    onClose()
+  }
+
   const formatDate = (date: number) => date.toString().padStart(2, '0')
 
   return (
@@ -79,6 +87,10 @@ export const Form = ({
           <p className="mt-3 font-poppins text-2xl font-bold text-black md:text-3xl">
             22.001122-0
           </p>
+          <IoClose
+            className="h-8 w-8 cursor-pointer md:h-10 md:w-16"
+            onClick={handleClose}
+          ></IoClose>
         </div>
         <p className="mt-1 font-poppins text-2xl font-medium">
           Data: {formatDate(selectedDate.getDate())}/
@@ -100,13 +112,15 @@ export const Form = ({
           <label className="flex items-center justify-center gap-2 font-poppins text-xl font-medium md:text-2xl">
             <p>Horário</p>
             <div className="rounded border-none bg-yellow p-[4px] text-center font-poppins text-lg font-medium md:text-2xl">
-              {formatDate(selectedDate.getHours())}:{formatDate(selectedDate.getMinutes())}
+              {formatDate(selectedDate.getHours())}:
+              {formatDate(selectedDate.getMinutes())}
             </div>
           </label>
           <div className="flex items-center gap-2">
             <p className="font-poppins text-xl font-medium md:text-2xl">Até</p>
             <label className="rounded border border-black p-1 font-poppins text-xl font-medium md:text-2xl">
-              {formatDate(selectedDate.getHours() + 1)}:{formatDate(selectedDate.getMinutes())}
+              {formatDate(selectedDate.getHours() + 1)}:
+              {formatDate(selectedDate.getMinutes())}
             </label>
           </div>
         </div>
