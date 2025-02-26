@@ -6,7 +6,6 @@ import { View } from './view'
 import { Modal } from './modal'
 import { ReservationDetails } from './reservation-details'
 import { cn } from '../utils/cn'
-
 const reservas = [
   {
     id: 1,
@@ -110,7 +109,7 @@ const reservas = [
     court: 'Quadra2',
     courtNumber: 2,
     modality: 'Basquete',
-    time: 1740663000000 + 7 * 24 * 60 * 60 * 1000 * 4,
+    time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 4 - 30 * 60 * 1000,
     duration: 1
   },
   {
@@ -118,7 +117,7 @@ const reservas = [
     court: 'Quadra1',
     courtNumber: 1,
     modality: 'Basquete',
-    time: 1740663000000 + 7 * 24 * 60 * 60 * 1000 * 4,
+    time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 4 - 30 * 60 * 1000,
     duration: 1
   }
 ]
@@ -224,19 +223,19 @@ export function Court() {
       day: date.getDate(),
       hour: date.getHours(),
       minute: date.getMinutes(),
-      endHour: date.getHours() + (reserva.duration ?? 1)
+      endTime: reserva.time + reserva.duration * 60 * 60 * 1000
     }
   })
 
   const handleClickedTime = (
     hour: number,
     minute: number,
-    dayIndex: number
+    day: number
   ) => {
     const clickedTime = new Date()
-    clickedTime.setDate(
-      clickedTime.getDate() - clickedTime.getDay() + dayIndex + 1
-    )
+    // A LOGICA PARA SETAR O MES ESTA ERRADA AINDA, CORRIGIR
+    clickedTime.setMonth(day < 6 ? today.getMonth() +1 : today.getMonth())
+    clickedTime.setDate(day)
     clickedTime.setHours(hour)
     clickedTime.setMinutes(minute === 0 ? 0 : 30)
     clickedTime.setSeconds(0)
@@ -247,29 +246,23 @@ export function Court() {
 
     const occupiedCourts = new Set() // Como se fosse um array para armazenar as quadras ocupadas
 
-    // TA TUDO ERRADO AQ PRA BAIXO, CORRIGIR SOCORRO
-
     reservasConvertidas
-      .filter((reserva) => new Date(reserva.time).getDay() === dayIndex)
+      .filter((reserva) => reserva.day === day)
       .forEach((reserva) => {
-        const reservaStartTime = reserva.time + 24 * 60 * 60 * 1000
-        const reservaEndTime =
-          reservaStartTime + reserva.duration * 60 * 60 * 1000
-        console.log(dayIndex)
-        console.log('Duração: ', reserva.duration)
+        console.log('Reserva: ', reserva.time)
         console.log(
           'StartTime: ',
-          new Date(reservaStartTime).toDateString('pt-BR')
+          new Date(reserva.time).toTimeString(), new Date(reserva.time).toDateString()
         )
-        console.log('EndTime: ', new Date(reservaEndTime).toDateString('pt-BR'))
+        console.log('EndTime: ', new Date(reserva.endTime).toTimeString(), new Date(reserva.endTime).toDateString())
         console.log(
           'Timestamp: ',
-          new Date(timestamp + 0.5 * 60 * 60 * 1000).toDateString('pt-BR')
+          new Date(timestamp).toTimeString(), new Date(timestamp).toDateString()
         )
         console.log('CourtNumber: ', reserva.courtNumber)
         if (
-          timestamp + 0.5 * 60 * 60 * 1000 < reservaEndTime &&
-          timestamp + 0.5 * 60 * 60 * 1000 >= reservaStartTime
+          timestamp < reserva.endTime &&
+          timestamp >= reserva.time
         ) {
           occupiedCourts.add(reserva.courtNumber) // Adiciona a quadra ao Set de quadras ocupadas
         }
@@ -353,11 +346,10 @@ export function Court() {
                 {[...Array(6)].map((_, dayIndex) => (
                   <div
                     key={dayIndex}
-                    onClick={handleClickedTime.bind(
-                      null,
+                    onClick={() => handleClickedTime(
                       hour,
                       minute,
-                      dayIndex
+                      thisWeek()[dayIndex]
                     )}
                     className={`relative flex min-w-[180px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 bg-gray-200 p-2 last:border-r-0 hover:cursor-pointer hover:bg-gray-300`}
                     style={{
