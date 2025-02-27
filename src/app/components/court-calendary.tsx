@@ -163,14 +163,14 @@ export function Court() {
     return week
   }
 
-  const specialWidth = (timestamp: number, day: number) => {
+  const specialWidth = (timestamp: number, endTime: number, day: number) => {
 
     const sameTimeReservations = new Set()
 
     reservasConvertidas.filter(
       (reserva) => Number(reserva.day) === day
     ).forEach((reserva) => {
-      if (timestamp < reserva.endTime && timestamp >= reserva.time) {
+      if (timestamp < reserva.endTime && timestamp >= reserva.time || endTime <= reserva.endTime && endTime > reserva.time) {
         sameTimeReservations.add(reserva.courtNumber)
       }
     }) 
@@ -189,13 +189,13 @@ export function Court() {
     }, 100)
   }
 
-  const deslocation = (courtNumber: number, timestamp: number, day: number) => {
+  const deslocation = (courtNumber: number, timestamp: number, endTime: number, day: number) => {
     const sameTimeReservations = new Set()
 
     reservasConvertidas.filter(
       (reserva) => Number(reserva.day) === day
     ).forEach((reserva) => {
-      if (timestamp < reserva.endTime && timestamp >= reserva.time) {
+      if (timestamp < reserva.endTime && timestamp >= reserva.time || endTime <= reserva.endTime && endTime > reserva.time) {
         sameTimeReservations.add(reserva.courtNumber)
       }
     }) 
@@ -381,11 +381,13 @@ export function Court() {
                               'absolute flex',
                               specialWidth(
                                 Number(reserva.time),
+                                Number(reserva.endTime),
                                 thisWeek()[dayIndex]
                               ),
                               deslocation(
                                 reserva.courtNumber,
                                 Number(reserva.time),
+                                Number(reserva.endTime),
                                 thisWeek()[dayIndex]
                               )
                             )}
