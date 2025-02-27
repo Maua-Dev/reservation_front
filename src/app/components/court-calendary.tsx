@@ -227,14 +227,14 @@ export function Court() {
     }
   })
 
-  const handleClickedTime = (
-    hour: number,
-    minute: number,
-    day: number
-  ) => {
+  const handleClickedTime = (hour: number, minute: number, day: number) => {
     const clickedTime = new Date()
     // A LOGICA PARA SETAR O MES ESTA ERRADA AINDA, CORRIGIR
-    clickedTime.setMonth(day < 6 ? today.getMonth() +1 : today.getMonth())
+    if (day < today.getDate()) {
+      clickedTime.setMonth(today.getMonth() + 1)
+    } else {
+      clickedTime.setMonth(today.getMonth())
+    }
     clickedTime.setDate(day)
     clickedTime.setHours(hour)
     clickedTime.setMinutes(minute === 0 ? 0 : 30)
@@ -252,18 +252,21 @@ export function Court() {
         console.log('Reserva: ', reserva.time)
         console.log(
           'StartTime: ',
-          new Date(reserva.time).toTimeString(), new Date(reserva.time).toDateString()
+          new Date(reserva.time).toTimeString(),
+          new Date(reserva.time).toDateString()
         )
-        console.log('EndTime: ', new Date(reserva.endTime).toTimeString(), new Date(reserva.endTime).toDateString())
+        console.log(
+          'EndTime: ',
+          new Date(reserva.endTime).toTimeString(),
+          new Date(reserva.endTime).toDateString()
+        )
         console.log(
           'Timestamp: ',
-          new Date(timestamp).toTimeString(), new Date(timestamp).toDateString()
+          new Date(timestamp).toTimeString(),
+          new Date(timestamp).toDateString()
         )
         console.log('CourtNumber: ', reserva.courtNumber)
-        if (
-          timestamp < reserva.endTime &&
-          timestamp >= reserva.time
-        ) {
+        if (timestamp < reserva.endTime && timestamp >= reserva.time) {
           occupiedCourts.add(reserva.courtNumber) // Adiciona a quadra ao Set de quadras ocupadas
         }
       })
@@ -346,11 +349,9 @@ export function Court() {
                 {[...Array(6)].map((_, dayIndex) => (
                   <div
                     key={dayIndex}
-                    onClick={() => handleClickedTime(
-                      hour,
-                      minute,
-                      thisWeek()[dayIndex]
-                    )}
+                    onClick={() =>
+                      handleClickedTime(hour, minute, thisWeek()[dayIndex])
+                    }
                     className={`relative flex min-w-[180px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 bg-gray-200 p-2 last:border-r-0 hover:cursor-pointer hover:bg-gray-300`}
                     style={{
                       borderBottomStyle: isHourSeparator ? 'dashed' : 'solid',
