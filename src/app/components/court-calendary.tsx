@@ -6,6 +6,7 @@ import { View } from './view'
 import { Modal } from './modal'
 import { ReservationDetails } from './reservation-details'
 import { cn } from '../utils/cn'
+
 const reservas = [
   {
     id: 1,
@@ -162,18 +163,23 @@ export function Court() {
     return week
   }
 
-  const specialWidth = (courtNumber: number, timestamp: number) => {
-    const sameTimeReservations = reservas.filter(
-      (reserva) => Number(reserva.time) === timestamp
-    )
+  const specialWidth = (timestamp: number, day: number) => {
 
-    const countSameTime = sameTimeReservations.length
+    const sameTimeReservations = new Set()
 
-    return countSameTime > 1
-      ? countSameTime > 2
-        ? '2xl:w-1/3'
-        : '2xl:w-[45%]'
-      : '2xl:w-[90%]'
+    reservasConvertidas.filter(
+      (reserva) => Number(reserva.day) === day
+    ).forEach((reserva) => {
+      if (timestamp < reserva.endTime && timestamp >= reserva.time) {
+        sameTimeReservations.add(reserva.courtNumber)
+      }
+    }) 
+
+    return sameTimeReservations.size > 1
+      ? sameTimeReservations.size > 2
+        ? 'xl:w-2/5'
+        : 'xl:w-[45%]'
+      : 'xl:w-[86%]'
   }
 
   function handleOpeMyBookings() {
@@ -183,32 +189,36 @@ export function Court() {
     }, 100)
   }
 
-  const deslocation = (courtNumber: number, timestamp: number) => {
-    const sameTimeReservations = reservas.filter(
-      (reserva) => Number(reserva.time) === timestamp
-    )
+  const deslocation = (courtNumber: number, timestamp: number, day: number) => {
+    const sameTimeReservations = new Set()
 
-    const isItOne = sameTimeReservations.some(
-      (reserva) => reserva.courtNumber === 1
-    )
+    reservasConvertidas.filter(
+      (reserva) => Number(reserva.day) === day
+    ).forEach((reserva) => {
+      if (timestamp < reserva.endTime && timestamp >= reserva.time) {
+        sameTimeReservations.add(reserva.courtNumber)
+      }
+    }) 
 
-    const countSameTime = sameTimeReservations.length
+    const isItOne = sameTimeReservations.has(1)
 
     switch (courtNumber) {
       case 1:
         return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
       case 2:
-        return countSameTime > 1
-          ? isItOne
-            ? 'absolute w-20 h-20 left-[30%]'
-            : 'absolute w-20 h-20 left-[4%]'
+        return sameTimeReservations.size > 1 
+          ? sameTimeReservations.size == 2
+            ? isItOne
+              ? 'absolute w-20 h-20 left-[46%]'
+              : 'absolute w-20 h-20 left-[4%]'
+            : 'absolute w-20 h-20 left-[30%]'
           : 'absolute w-20 h-20 left-[4%]'
       // return 'absolute w-20 h-20 left-[30%]'
       case 3:
-        return countSameTime > 1
-          ? countSameTime > 2
-            ? 'absolute w-20 h-20 left-[56%]'
-            : 'absolute w-20 h-20 left-[30%]'
+        return sameTimeReservations.size > 1
+          ? sameTimeReservations.size == 2
+            ? 'absolute w-20 h-20 left-[46%]'
+            : 'absolute w-20 h-20 left-[56%]'
           : 'absolute w-20 h-20 left-[4%]'
       // return 'absolute w-20 h-20 left-[56%]'
       default:
@@ -229,7 +239,6 @@ export function Court() {
 
   const handleClickedTime = (hour: number, minute: number, day: number) => {
     const clickedTime = new Date()
-    // A LOGICA PARA SETAR O MES ESTA ERRADA AINDA, CORRIGIR
     if (day < today.getDate()) {
       clickedTime.setMonth(today.getMonth() + 1)
     } else {
@@ -371,12 +380,13 @@ export function Court() {
                             className={cn(
                               'absolute flex',
                               specialWidth(
-                                reserva.courtNumber,
-                                Number(reserva.time)
+                                Number(reserva.time),
+                                thisWeek()[dayIndex]
                               ),
                               deslocation(
                                 reserva.courtNumber,
-                                Number(reserva.time)
+                                Number(reserva.time),
+                                thisWeek()[dayIndex]
                               )
                             )}
                             style={{
