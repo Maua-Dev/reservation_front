@@ -173,7 +173,7 @@ export function Court() {
       if (timestamp < reserva.endTime && timestamp >= reserva.time || endTime <= reserva.endTime && endTime > reserva.time) {
         sameTimeReservations.add(reserva.courtNumber)
       }
-    }) 
+    })
 
     return sameTimeReservations.size > 1
       ? sameTimeReservations.size > 2
@@ -198,7 +198,7 @@ export function Court() {
       if (timestamp < reserva.endTime && timestamp >= reserva.time || endTime <= reserva.endTime && endTime > reserva.time) {
         sameTimeReservations.add(reserva.courtNumber)
       }
-    }) 
+    })
 
     const isItOne = sameTimeReservations.has(1)
 
@@ -206,7 +206,7 @@ export function Court() {
       case 1:
         return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
       case 2:
-        return sameTimeReservations.size > 1 
+        return sameTimeReservations.size > 1
           ? sameTimeReservations.size == 2
             ? isItOne
               ? 'absolute w-20 h-20 left-[46%]'
@@ -237,44 +237,67 @@ export function Court() {
     }
   })
 
-  const handleClickedTime = (hour: number, minute: number, day: number) => {
-    const clickedTime = new Date()
-    if (day < today.getDate()) {
-      clickedTime.setMonth(today.getMonth() + 1)
+  const isPassed = (day: number, weekday: number, hour: number, minute: number) => {
+    const date = new Date()
+    if (day < today.getDate() && weekday > today.getDay()) {
+      date.setMonth(today.getMonth() + 1);
+      if (today.getMonth() === 11) {
+        date.setFullYear(today.getFullYear() + 1);
+        date.setMonth(0);
+      }
     } else {
-      clickedTime.setMonth(today.getMonth())
+      date.setMonth(today.getMonth());
+      date.setFullYear(today.getFullYear());
     }
-    clickedTime.setDate(day)
-    clickedTime.setHours(hour)
-    clickedTime.setMinutes(minute === 0 ? 0 : 30)
-    clickedTime.setSeconds(0)
-    clickedTime.setMilliseconds(0)
+
+    date.setDate(day);
+    date.setHours(hour);
+    date.setMinutes(minute === 0 ? 0 : 30);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+
+    return date.getTime() < today.getTime()
+
+  }
+
+  function handleClickedTime(hour: number, minute: number, day: number, weekday: number) {
+    const clickedTime = new Date()
+    if (day < today.getDate() && weekday > today.getDay()) {
+      clickedTime.setMonth(today.getMonth() + 1);
+      if (today.getMonth() === 11) {
+        clickedTime.setFullYear(today.getFullYear() + 1);
+        clickedTime.setMonth(0); // Janeiro
+      }
+    } else {
+      clickedTime.setMonth(today.getMonth());
+      clickedTime.setFullYear(today.getFullYear());
+    }
+
+    clickedTime.setDate(day);
+    clickedTime.setHours(hour);
+    clickedTime.setMinutes(minute === 0 ? 0 : 30);
+    clickedTime.setSeconds(0);
+    clickedTime.setMilliseconds(0);
 
     const timestamp = clickedTime.getTime()
+    console.log(
+      'Timestamp: ',
+      new Date(timestamp).toTimeString(),
+      new Date(timestamp).toDateString()
+    )
     console.log(timestamp)
+
+
+    if (timestamp < today.getTime()) {
+      console.log('Não é possível fazer reservas em horários passados.')
+      return
+    }
 
     const occupiedCourts = new Set() // Como se fosse um array para armazenar as quadras ocupadas
 
     reservasConvertidas
       .filter((reserva) => reserva.day === day)
       .forEach((reserva) => {
-        console.log('Reserva: ', reserva.time)
-        console.log(
-          'StartTime: ',
-          new Date(reserva.time).toTimeString(),
-          new Date(reserva.time).toDateString()
-        )
-        console.log(
-          'EndTime: ',
-          new Date(reserva.endTime).toTimeString(),
-          new Date(reserva.endTime).toDateString()
-        )
-        console.log(
-          'Timestamp: ',
-          new Date(timestamp).toTimeString(),
-          new Date(timestamp).toDateString()
-        )
-        console.log('CourtNumber: ', reserva.courtNumber)
         if (timestamp < reserva.endTime && timestamp >= reserva.time) {
           occupiedCourts.add(reserva.courtNumber) // Adiciona a quadra ao Set de quadras ocupadas
         }
@@ -285,10 +308,7 @@ export function Court() {
       console.log(
         'Todas as quadras estão ocupadas neste horário. Não é possível fazer mais reservas.'
       )
-      console.log(occupiedCourts)
     } else {
-      console.log(occupiedCourts)
-      console.log(reservasConvertidas)
       handleToggleReservationModal()
       setSelectedTime(timestamp)
       setTimeout(() => {
@@ -359,9 +379,9 @@ export function Court() {
                   <div
                     key={dayIndex}
                     onClick={() =>
-                      handleClickedTime(hour, minute, thisWeek()[dayIndex])
+                      handleClickedTime(hour, minute, thisWeek()[dayIndex], dayIndex)
                     }
-                    className={`relative flex min-w-[180px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 bg-gray-200 p-2 last:border-r-0 hover:cursor-pointer hover:bg-gray-300`}
+                    className={`relative flex min-w-[180px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? "bg-gray-300" : "bg-gray-200 hover:bg-gray-300 hover:cursor-pointer"} p-2 last:border-r-0`}
                     style={{
                       borderBottomStyle: isHourSeparator ? 'dashed' : 'solid',
                       borderRightStyle: 'solid'
