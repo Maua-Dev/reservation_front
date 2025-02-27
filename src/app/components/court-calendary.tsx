@@ -381,7 +381,7 @@ export function Court() {
                     onClick={() =>
                       handleClickedTime(hour, minute, thisWeek()[dayIndex], dayIndex)
                     }
-                    className={`relative flex min-w-[180px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? "bg-gray-300" : "bg-gray-200 hover:bg-gray-300 hover:cursor-pointer"} p-2 last:border-r-0`}
+                    className={`relative flex min-w-[180px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? "bg-gray-300" : "bg-gray-200 hover:bg-blue-100 hover:cursor-pointer"} p-2 last:border-r-0`}
                     style={{
                       borderBottomStyle: isHourSeparator ? 'dashed' : 'solid',
                       borderRightStyle: 'solid'
