@@ -164,16 +164,18 @@ export function Court() {
   }
 
   const specialWidth = (timestamp: number, endTime: number, day: number) => {
-
     const sameTimeReservations = new Set()
 
-    reservasConvertidas.filter(
-      (reserva) => Number(reserva.day) === day
-    ).forEach((reserva) => {
-      if (timestamp < reserva.endTime && timestamp >= reserva.time || endTime <= reserva.endTime && endTime > reserva.time) {
-        sameTimeReservations.add(reserva.courtNumber)
-      }
-    })
+    reservasConvertidas
+      .filter((reserva) => Number(reserva.day) === day)
+      .forEach((reserva) => {
+        if (
+          (timestamp < reserva.endTime && timestamp >= reserva.time) ||
+          (endTime <= reserva.endTime && endTime > reserva.time)
+        ) {
+          sameTimeReservations.add(reserva.courtNumber)
+        }
+      })
 
     return sameTimeReservations.size > 1
       ? sameTimeReservations.size > 2
@@ -189,16 +191,24 @@ export function Court() {
     }, 100)
   }
 
-  const deslocation = (courtNumber: number, timestamp: number, endTime: number, day: number) => {
+  const deslocation = (
+    courtNumber: number,
+    timestamp: number,
+    endTime: number,
+    day: number
+  ) => {
     const sameTimeReservations = new Set()
 
-    reservasConvertidas.filter(
-      (reserva) => Number(reserva.day) === day
-    ).forEach((reserva) => {
-      if (timestamp < reserva.endTime && timestamp >= reserva.time || endTime <= reserva.endTime && endTime > reserva.time) {
-        sameTimeReservations.add(reserva.courtNumber)
-      }
-    })
+    reservasConvertidas
+      .filter((reserva) => Number(reserva.day) === day)
+      .forEach((reserva) => {
+        if (
+          (timestamp < reserva.endTime && timestamp >= reserva.time) ||
+          (endTime <= reserva.endTime && endTime > reserva.time)
+        ) {
+          sameTimeReservations.add(reserva.courtNumber)
+        }
+      })
 
     const isItOne = sameTimeReservations.has(1)
 
@@ -237,47 +247,58 @@ export function Court() {
     }
   })
 
-  const isPassed = (day: number, weekday: number, hour: number, minute: number) => {
+  const isPassed = (
+    day: number,
+    weekday: number,
+    hour: number,
+    minute: number
+  ) => {
     const date = new Date()
-    if (day < today.getDate() && weekday > today.getDay() - 1) { // esse -1 é por conta do Date(), ele começar com o index 0 no domingo, no nosso caso, é a segunda
-      date.setMonth(today.getMonth() + 1);
+    if (day < today.getDate() && weekday > today.getDay() - 1) {
+      // esse -1 é por conta do Date(), ele começar com o index 0 no domingo, no nosso caso, é a segunda
+      date.setMonth(today.getMonth() + 1)
       if (today.getMonth() === 11) {
-        date.setFullYear(today.getFullYear() + 1);
-        date.setMonth(0);
+        date.setFullYear(today.getFullYear() + 1)
+        date.setMonth(0)
       }
     } else {
-      date.setMonth(today.getMonth());
-      date.setFullYear(today.getFullYear());
+      date.setMonth(today.getMonth())
+      date.setFullYear(today.getFullYear())
     }
 
-    date.setDate(day);
-    date.setHours(hour);
-    date.setMinutes(minute === 0 ? 0 : 30);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
+    date.setDate(day)
+    date.setHours(hour)
+    date.setMinutes(minute === 0 ? 0 : 30)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
 
     return date.getTime() < today.getTime()
-
   }
 
-  function handleClickedTime(hour: number, minute: number, day: number, weekday: number) {
+  function handleClickedTime(
+    hour: number,
+    minute: number,
+    day: number,
+    weekday: number
+  ) {
     const clickedTime = new Date()
-    if (day < today.getDate() && weekday > today.getDay() - 1) { // esse -1 é por conta do Date(), ele começar com o index 0 no domingo, no nosso caso, é a segunda
-      clickedTime.setMonth(today.getMonth() + 1);
+    if (day < today.getDate() && weekday > today.getDay() - 1) {
+      // esse -1 é por conta do Date(), ele começar com o index 0 no domingo, no nosso caso, é a segunda
+      clickedTime.setMonth(today.getMonth() + 1)
       if (today.getMonth() === 11) {
-        clickedTime.setFullYear(today.getFullYear() + 1);
-        clickedTime.setMonth(0); // Janeiro
+        clickedTime.setFullYear(today.getFullYear() + 1)
+        clickedTime.setMonth(0) // Janeiro
       }
     } else {
-      clickedTime.setMonth(today.getMonth());
-      clickedTime.setFullYear(today.getFullYear());
+      clickedTime.setMonth(today.getMonth())
+      clickedTime.setFullYear(today.getFullYear())
     }
 
-    clickedTime.setDate(day);
-    clickedTime.setHours(hour);
-    clickedTime.setMinutes(minute === 0 ? 0 : 30);
-    clickedTime.setSeconds(0);
-    clickedTime.setMilliseconds(0);
+    clickedTime.setDate(day)
+    clickedTime.setHours(hour)
+    clickedTime.setMinutes(minute === 0 ? 0 : 30)
+    clickedTime.setSeconds(0)
+    clickedTime.setMilliseconds(0)
 
     const timestamp = clickedTime.getTime()
     console.log(
@@ -286,7 +307,6 @@ export function Court() {
       new Date(timestamp).toDateString()
     )
     console.log(timestamp)
-
 
     if (timestamp < today.getTime()) {
       console.log('Não é possível fazer reservas em horários passados.')
@@ -357,7 +377,7 @@ export function Court() {
       </div>
 
       <div>
-        <div className="flex font-poppins text-base font-semibold text-gray-600">
+        <div className="sticky top-[5.4rem] z-30 flex font-poppins text-base font-semibold text-gray-600">
           <div className="w-24 bg-blue-primary p-4 text-xl text-white">
             Hora
           </div>
@@ -388,9 +408,14 @@ export function Court() {
                   <div
                     key={dayIndex}
                     onClick={() =>
-                      handleClickedTime(hour, minute, thisWeek()[dayIndex], dayIndex)
+                      handleClickedTime(
+                        hour,
+                        minute,
+                        thisWeek()[dayIndex],
+                        dayIndex
+                      )
                     }
-                    className={`relative flex min-w-[180px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? "bg-gray-300" : "bg-gray-200 hover:bg-blue-100 hover:cursor-pointer"} p-2 last:border-r-0`}
+                    className={`relative flex min-w-[180px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
                     style={{
                       borderBottomStyle: isHourSeparator ? 'dashed' : 'solid',
                       borderRightStyle: 'solid'
