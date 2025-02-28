@@ -309,7 +309,7 @@ export function Court() {
         'Todas as quadras estão ocupadas neste horário. Não é possível fazer mais reservas.'
       )
     } else {
-      handleToggleReservationModal()
+      handleOpenModal()
       setSelectedTime(timestamp)
       setTimeout(() => {
         setBookingModalVisible(true)
@@ -317,9 +317,18 @@ export function Court() {
     }
   }
 
-  function handleToggleReservationModal() {
-    setIsReservationModalOpen(!isReservationModalOpen)
+  function handleOpenModal() {
+    setIsReservationModalOpen(true)
+    setTimeout(() => {
+      setBookingModalVisible(true)
+    }, 100)
+  }
+
+  function handleCloseModal() {
     setBookingModalVisible(false)
+    setTimeout(() => {
+      setIsReservationModalOpen(false)
+    }, 200)
   }
 
   return (
@@ -443,7 +452,7 @@ export function Court() {
         >
           <Form
             isOpen={isReservationModalOpen}
-            onClose={handleToggleReservationModal}
+            onClose={handleCloseModal}
             timestamp={selectedTime}
             modalities={modalities}
             equipments={equipments}
@@ -453,12 +462,14 @@ export function Court() {
       )}
       {isMyBookingsModalOpen && (
         <div
-          className={`duration-250 fixed inset-0 flex items-center justify-center bg-black/50 transition-all ${isMyBookingsModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
+          className={`duration-250 fixed inset-0 z-[999] flex items-center justify-center bg-black/50 transition-all ${isMyBookingsModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
         >
           <View
             onClose={() => {
-              setIsMyBookingsModalOpen(false)
               setIsMyBookingsModalVisible(false)
+              setTimeout(() => {
+                setIsMyBookingsModalOpen(false)
+              }, 200)
             }}
           />
         </div>
