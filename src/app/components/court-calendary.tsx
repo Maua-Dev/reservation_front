@@ -239,7 +239,7 @@ export function Court() {
 
   const isPassed = (day: number, weekday: number, hour: number, minute: number) => {
     const date = new Date()
-    if (day < today.getDate() && weekday > today.getDay()) {
+    if (day < today.getDate() && weekday > today.getDay() - 1) { // esse -1 é por conta do Date(), ele começar com o index 0 no domingo, no nosso caso, é a segunda
       date.setMonth(today.getMonth() + 1);
       if (today.getMonth() === 11) {
         date.setFullYear(today.getFullYear() + 1);
@@ -262,7 +262,7 @@ export function Court() {
 
   function handleClickedTime(hour: number, minute: number, day: number, weekday: number) {
     const clickedTime = new Date()
-    if (day < today.getDate() && weekday > today.getDay()) {
+    if (day < today.getDate() && weekday > today.getDay() - 1) { // esse -1 é por conta do Date(), ele começar com o index 0 no domingo, no nosso caso, é a segunda
       clickedTime.setMonth(today.getMonth() + 1);
       if (today.getMonth() === 11) {
         clickedTime.setFullYear(today.getFullYear() + 1);
