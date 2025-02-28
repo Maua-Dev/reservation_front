@@ -377,7 +377,7 @@ export function Court() {
       </div>
 
       <div>
-        <div className="sticky top-[5.4rem] z-30 flex font-poppins text-base font-semibold text-gray-600">
+        <div className="sticky top-[5.4rem] z-[90] flex font-poppins text-base font-semibold text-gray-600">
           <div className="w-24 bg-blue-primary p-4 text-xl text-white">
             Hora
           </div>
@@ -473,7 +473,7 @@ export function Court() {
       </div>
       {isReservationModalOpen && selectedTime && (
         <div
-          className={`duration-250 fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-all ${bookingModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
+          className={`duration-250 fixed inset-0 z-[100] flex items-center justify-center bg-black/50 transition-all ${bookingModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
         >
           <Form
             isOpen={isReservationModalOpen}
