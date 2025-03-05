@@ -108,7 +108,7 @@ export function View({ onClose }: ViewProps) {
               status={booking.status}
               onCancel={() => handleCancel(booking.date)}
             />
-          )) }
+          ))}
           {bookings.length === 0 && (
             <p className="text-center font-poppins text-sm font-medium text-black md:text-base">
               Nenhuma reserva encontrada

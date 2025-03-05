@@ -51,19 +51,9 @@ export const Form = ({
   const [selectedEquipment, setSelectedEquipment] = useState('')
   const selectedDate = new Date(timestamp)
 
-  const getTimeOneHourLater = (time: string) => {
-    const [hours, minutes] = time.split(':').map(Number)
-    const date = new Date()
-    date.setHours(hours + 1, minutes)
-    return date.toTimeString().slice(0, 5)
-  }
-
   const onSubmit = (data: FormData) => {
     console.log(data)
     onClose()
-  }
-  const handleCancel = (date: string) => {
-    console.log(`Cancel reservation on ${date}`)
   }
   const handleClose = () => {
     onClose()
@@ -77,9 +67,9 @@ export const Form = ({
         setOpen(true)
         e.preventDefault()
       }}
-      className="flex flex-col gap-4 bg-white p-4"
+      className="flex flex-col gap-4 bg-white p-10 tracking-wide"
     >
-      <div className="flex flex-col justify-between pb-3">
+      <div className="flex flex-col justify-between border-b-2 border-slate-500 pb-4">
         <div className="flex justify-between">
           <p className="mt-3 font-poppins text-2xl font-bold text-black md:text-3xl">
             Daniel Capuzzo
@@ -99,9 +89,9 @@ export const Form = ({
       </div>
 
       <div className="flex w-full flex-col justify-start gap-4 md:flex-row md:items-center">
-        <div className="flex w-40 items-center justify-between rounded bg-yellow p-1 md:w-48">
+        <div className="flex w-40 items-center justify-between rounded p-1 md:w-48">
           <label className="flex-grow text-center font-poppins text-lg font-medium md:text-2xl">
-            <select className="bg-yellow">
+            <select className="inline-flex items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-6 py-4">
               {options.map((option) => (
                 <option key={option}>{option}</option>
               ))}
@@ -111,14 +101,14 @@ export const Form = ({
         <div className="flex items-center justify-start gap-2 max-md:pt-4">
           <label className="flex items-center justify-center gap-2 font-poppins text-xl font-medium md:text-2xl">
             <p>Horário</p>
-            <div className="rounded border-none bg-yellow p-[4px] text-center font-poppins text-lg font-medium md:text-2xl">
+            <div className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4">
               {formatDate(selectedDate.getHours())}:
               {formatDate(selectedDate.getMinutes())}
             </div>
           </label>
           <div className="flex items-center gap-2">
             <p className="font-poppins text-xl font-medium md:text-2xl">Até</p>
-            <label className="rounded border border-black p-1 font-poppins text-xl font-medium md:text-2xl">
+            <label className="inline-flex items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-6 py-4 font-poppins text-xl font-medium md:text-2xl">
               {formatDate(selectedDate.getHours() + 1)}:
               {formatDate(selectedDate.getMinutes())}
             </label>
@@ -141,7 +131,7 @@ export const Form = ({
                 setSelectedModality(modality)
                 setValue('modality', modality)
               }}
-              className={`text-md w-24 rounded border border-black p-1 font-poppins font-medium md:w-36 md:text-lg ${selectedModality === modality ? 'bg-yellow' : ''}`}
+              className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-4 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 md:text-xl ${selectedModality === modality ? 'border-yellow bg-yellow/30 hover:bg-yellow/30' : ''}`}
             >
               {modality}
             </button>
@@ -168,7 +158,7 @@ export const Form = ({
                   setSelectedEquipment(equipment)
                   setValue('equipment', equipment)
                 }}
-                className={`text-md w-24 rounded border border-black p-1 font-poppins font-medium md:w-44 md:text-lg ${selectedEquipment === equipment ? 'bg-yellow' : ''}`}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-4 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 md:text-xl ${selectedEquipment === equipment ? 'border-yellow bg-yellow/30 hover:bg-yellow/30' : ''}`}
               >
                 {equipment}
               </button>
@@ -184,7 +174,7 @@ export const Form = ({
         <input
           type="checkbox"
           {...register('needsVest')}
-          className="h-10 w-7 rounded border border-black p-1 md:w-8"
+          className="h-10 w-7 rounded border border-slate-500 p-1 md:w-8"
         />
         <p className="text-md font-poppins font-medium md:text-xl">
           Preciso de colete
@@ -196,14 +186,16 @@ export const Form = ({
           <input
             type="checkbox"
             {...register('shareCourt')}
-            className="h-10 w-7 rounded border border-black p-1 md:w-8"
+            className="h-10 w-7 rounded border border-slate-500 p-1 md:w-8"
           />
           <p className="text-md font-poppins font-medium md:text-xl">
             Aceito compartilhar quadra
           </p>
         </div>
         <div className="flex w-40 items-center justify-between rounded p-1">
-          <Button>Salvar</Button>
+          <Button className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary p-4 font-poppins text-lg font-medium text-black active:border-b-2 md:text-xl">
+            Salvar
+          </Button>
           <Modal open={open} onClose={() => setOpen(false)}>
             <Confirm
               onClose={() => setOpen(false)}

@@ -13,7 +13,7 @@ const reservas = [
     court: 'Quadra 1',
     courtNumber: 1,
     modality: 'Basquete',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 4,
+    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 5,
     duration: 1
   },
   {
@@ -510,7 +510,6 @@ export function Court() {
             equipments={equipments}
             time={selectedBooking.time}
             isChecked={[true, false]}
-            duration={selectedBooking.duration}
           />
         </Modal>
       )}

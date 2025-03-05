@@ -1,4 +1,3 @@
-import { Form } from '@/app/components/form'
 import { Modal } from '@/app/components/modal'
 import { useState } from 'react'
 import { Button } from '@/app/components/button'
@@ -24,22 +23,23 @@ export function CourtReserve() {
       <Button onClick={() => setOpenModal('first')}>Reserva</Button>
       <Button onClick={() => setOpenModal('second')}>Histórico</Button>
 
-      <Modal open={openModal === 'first'} onClose={closeModal}>
+      {/* <Modal open={openModal === 'first'} onClose={closeModal}>
         <Form
           modalities={modalities}
           equipments={equipments}
           options={options}
           onClose={closeModal}
         />
-      </Modal>
+      </Modal> */}
 
       <Modal open={openModal === 'second'} onClose={closeModal}>
         <ReservationDetails
           location={options[0]}
           modality={modalities[1]}
           equipments={equipments}
-          time="12:00"
+          time={10}
           isChecked={isChecked}
+          duration={1}
         />
       </Modal>
     </main>

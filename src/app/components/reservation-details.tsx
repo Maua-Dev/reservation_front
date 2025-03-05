@@ -3,7 +3,6 @@ type ReservationDetailsProps = {
   modality: string
   equipments: string[]
   time: number
-  duration: number
   isChecked: boolean[]
 }
 
@@ -11,19 +10,24 @@ export const ReservationDetails = ({
   equipments,
   location,
   modality,
-  duration,
   time,
   isChecked
 }: ReservationDetailsProps) => {
-  const date = new Date(time)
+  const today = new Date()
+  const date = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+    time
+  )
   const formattedTime = date.toLocaleTimeString('pt-BR', {
     hour: '2-digit',
     minute: '2-digit'
   }) // Format time as HH:MM
 
   return (
-    <div>
-      <div className="z-50 flex flex-col gap-4 p-10">
+    <>
+      <div className="flex flex-col gap-4 p-10 tracking-wide">
         <div className="flex flex-col justify-between border-b-2 border-slate-500 pb-4">
           <div className="flex justify-between">
             <p className="mt-3 font-poppins text-2xl font-bold text-black md:text-3xl">
@@ -33,13 +37,7 @@ export const ReservationDetails = ({
               22.001122-0
             </p>
           </div>
-          <p className="mt-1 font-poppins text-2xl font-medium">
-            data:{' '}
-            {new Date(date.getTime()).toLocaleDateString('pt-BR', {
-              day: '2-digit',
-              month: '2-digit'
-            })}
-          </p>
+          <p className="mt-1 font-poppins text-2xl font-medium">data: 17/09</p>
         </div>
 
         <div className="flex w-full flex-col justify-start gap-10 pt-4 font-poppins text-2xl font-medium md:flex-row">
@@ -48,12 +46,10 @@ export const ReservationDetails = ({
           </h1>
           <h1 className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-12 py-4">
             Horário: {formattedTime} -{' '}
-            {new Date(
-              date.getTime() + (duration == 1 ? 60 : 30) * 60 * 1000
-            ).toLocaleTimeString('pt-BR', {
-              hour: '2-digit',
-              minute: '2-digit'
-            })}
+            {new Date(date.getTime() + 60 * 60 * 1000).toLocaleTimeString(
+              'pt-BR',
+              { hour: '2-digit', minute: '2-digit' }
+            )}
           </h1>
         </div>
 
@@ -116,6 +112,6 @@ export const ReservationDetails = ({
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
