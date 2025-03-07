@@ -32,7 +32,7 @@ export function Navbar() {
       style={{
         height: isMenuOpen ? '100vh' : 'auto'
       }}
-      className="fixed z-10 flex w-full flex-col font-league"
+      className="fixed z-[90] flex w-full flex-col font-league"
     >
       <nav className="flex w-full select-none items-center justify-between bg-white px-6 py-2 md:px-8 md:py-3 lg:px-10">
         <a
