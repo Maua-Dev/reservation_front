@@ -1,5 +1,6 @@
 import { IoClose } from 'react-icons/io5'
 import { ReservationCard } from './reservation-view'
+import { useEffect } from 'react'
 
 interface ViewProps {
   onClose: () => void
@@ -80,10 +81,24 @@ export function View({ onClose }: ViewProps) {
     onClose()
   }
 
+  useEffect(() => {
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          onClose()
+        }
+      }
+  
+      document.addEventListener('keydown', handleEscape)
+      
+      return () => {
+        document.removeEventListener('keydown', handleEscape)
+      }
+    }, [onClose])
+
   return (
     <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
-      <div className="max-h-[50vh] w-5/6 max-w-xl rounded-lg bg-white p-4 font-poppins md:w-3/4">
-        <div className="flex flex-col justify-between py-2 md:py-4">
+      <div className="max-h-[90vh] relative w-[70vw] max-w-[70vw] rounded-lg bg-white p-4 font-poppins" onClick={(e) => e.stopPropagation()}>
+        <div className="flex flex-col justify-between py-2 md:pt-8">
           <div className="flex items-center justify-between">
             <p className="text-sm font-bold text-black sm:text-base md:text-xl">
               Daniel Capuzzo
@@ -92,13 +107,13 @@ export function View({ onClose }: ViewProps) {
               22.001122-0
             </p>
             <IoClose
-              className="h-8 w-8 cursor-pointer md:h-10 md:w-16"
+              className="h-6 w-6 cursor-pointer md:h-10 md:w-16 absolute top-2 left-[94%]"
               onClick={handleClose}
             ></IoClose>
           </div>
           <hr className="border-t-4 border-black" />
         </div>
-        <div className="flex h-full max-h-[85%] max-w-xl flex-col items-center gap-4 overflow-y-auto">
+        <div className="flex h-full max-h-[85%] max-w-[70vw] flex-col items-center gap-4 overflow-y-auto">
           {bookings.map((booking, index) => (
             <ReservationCard
               key={index}

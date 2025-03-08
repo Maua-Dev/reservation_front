@@ -2,7 +2,7 @@ import { Button } from '@/app/components/button'
 import { Confirm } from '@/app/components/confirm'
 import { Modal } from '@/app/components/modal'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { IoClose } from 'react-icons/io5'
@@ -59,6 +59,20 @@ export const Form = ({
     onClose()
   }
 
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [onClose])
+
   const formatDate = (date: number) => date.toString().padStart(2, '0')
 
   return (
@@ -67,7 +81,8 @@ export const Form = ({
         setOpen(true)
         e.preventDefault()
       }}
-      className="flex flex-col gap-4 bg-white p-10 tracking-wide"
+      onClick={(e) => e.stopPropagation()}
+      className="flex rounded-xl flex-col gap-4 relative bg-white p-10 tracking-wide"
     >
       <div className="flex flex-col justify-between border-b-2 border-slate-500 pb-4">
         <div className="flex justify-between">
@@ -78,7 +93,7 @@ export const Form = ({
             22.001122-0
           </p>
           <IoClose
-            className="h-8 w-8 cursor-pointer md:h-10 md:w-16"
+            className="h-8 top-2 left-[94%] absolute w-8 cursor-pointer md:h-10 md:w-16"
             onClick={handleClose}
           ></IoClose>
         </div>

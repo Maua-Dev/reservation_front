@@ -141,6 +141,7 @@ export function Court() {
   const [selectedBooking, setSelectedBooking] = useState<
     Reservation | undefined
   >(undefined)
+  const [selectedBookingVisible, setSelectedBookingVisible] = useState(false)
   const [selectedTime, setSelectedTime] = useState<number | null>(null)
   const today = new Date()
   const modalities = ['Basquete', 'Handbol', 'Futsal', 'Vôlei', 'Tênis']
@@ -351,6 +352,20 @@ export function Court() {
     }, 200)
   }
 
+  function handleSelectingBooking(booking: any) {
+    setSelectedBooking(booking)
+    setTimeout(() => {
+      setSelectedBookingVisible(true)
+    }, 100)
+  }
+
+  function handleDiselectingBooking() {
+    setSelectedBookingVisible(false)
+    setTimeout(() => {
+      setSelectedBooking(undefined)
+    }, 200)
+  }
+
   return (
     <div className="w-full">
       <div className="relative h-44 w-full bg-quadra bg-cover bg-center">
@@ -456,9 +471,7 @@ export function Court() {
                               equipments={equipments}
                               time={reserva.time}
                               isChecked={[true, false]}
-                              openModal={() => {
-                                setSelectedBooking(reserva)
-                              }}
+                              openModal={() => handleSelectingBooking(reserva)}
                             />
                           </div>
                         )
@@ -474,6 +487,7 @@ export function Court() {
       {isReservationModalOpen && selectedTime && (
         <div
           className={`duration-250 fixed inset-0 z-[100] flex items-center justify-center bg-black/50 transition-all ${bookingModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
+          onClick={handleCloseModal}
         >
           <Form
             isOpen={isReservationModalOpen}
@@ -488,6 +502,13 @@ export function Court() {
       {isMyBookingsModalOpen && (
         <div
           className={`duration-250 fixed inset-0 z-[999] flex items-center justify-center bg-black/50 transition-all ${isMyBookingsModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
+          onClick={() => {
+            setIsMyBookingsModalVisible(false)
+            setTimeout(() => {
+              setIsMyBookingsModalOpen(false)
+            }, 200)
+          }
+          }
         >
           <View
             onClose={() => {
@@ -500,9 +521,9 @@ export function Court() {
         </div>
       )}
       {selectedBooking && (
-        <Modal
-          open={!!selectedBooking}
-          onClose={() => setSelectedBooking(undefined)}
+        <div
+          className={`duration-250 fixed inset-0 z-[999] flex items-center justify-center bg-black/50 transition-all ${selectedBookingVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
+          onClick={() => handleDiselectingBooking()}
         >
           <ReservationDetails
             location={selectedBooking.court}
@@ -510,8 +531,9 @@ export function Court() {
             equipments={equipments}
             time={selectedBooking.time}
             isChecked={[true, false]}
+            onClose={() => handleDiselectingBooking()}
           />
-        </Modal>
+        </div>
       )}
     </div>
   )
