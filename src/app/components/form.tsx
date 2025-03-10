@@ -67,7 +67,7 @@ export const Form = ({
     }
 
     document.addEventListener('keydown', handleEscape)
-    
+
     return () => {
       document.removeEventListener('keydown', handleEscape)
     }
@@ -82,7 +82,7 @@ export const Form = ({
         e.preventDefault()
       }}
       onClick={(e) => e.stopPropagation()}
-      className="flex rounded-xl flex-col gap-4 relative bg-white p-10 tracking-wide"
+      className="relative flex flex-col gap-4 rounded-xl bg-white p-10 tracking-wide"
     >
       <div className="flex flex-col justify-between border-b-2 border-slate-500 pb-4">
         <div className="flex justify-between">
@@ -93,7 +93,7 @@ export const Form = ({
             22.001122-0
           </p>
           <IoClose
-            className="h-8 top-2 left-[94%] absolute w-8 cursor-pointer md:h-10 md:w-16"
+            className="absolute left-[94%] top-2 h-8 w-8 cursor-pointer md:h-10 md:w-16"
             onClick={handleClose}
           ></IoClose>
         </div>

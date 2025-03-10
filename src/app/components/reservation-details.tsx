@@ -1,5 +1,5 @@
-import { useEffect } from "react"
-import { IoClose } from "react-icons/io5"
+import { useEffect } from 'react'
+import { IoClose } from 'react-icons/io5'
 
 type ReservationDetailsProps = {
   location: string
@@ -31,18 +31,18 @@ export const ReservationDetails = ({
   }) // Format time as HH:MM
 
   useEffect(() => {
-      const handleEscape = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          onClose()
-        }
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
       }
-  
-      document.addEventListener('keydown', handleEscape)
-      
-      return () => {
-        document.removeEventListener('keydown', handleEscape)
-      }
-    }, [onClose])
+    }
+
+    document.addEventListener('keydown', handleEscape)
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [onClose])
 
   return (
     <>
@@ -61,14 +61,16 @@ export const ReservationDetails = ({
               </p>
             </div>
             <IoClose
-              className="h-8 top-2 left-[94%] absolute w-8 cursor-pointer md:h-10 md:w-16"
+              className="absolute left-[94%] top-2 h-8 w-8 cursor-pointer md:h-10 md:w-16"
               onClick={onClose}
             ></IoClose>
-            <p className="mt-1 font-poppins text-2xl font-medium">data: 17/09</p>
+            <p className="mt-1 font-poppins text-2xl font-medium">
+              data: 17/09
+            </p>
           </div>
 
-          <div className="flex w-full flex-col justify-start gap-10 pt-4 font-poppins text-2xl font-medium md:flex-row">
-            <h1 className="inline-flex items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-8 py-4">
+          <div className="flex w-full flex-col justify-start gap-10 pt-4 font-poppins text-2xl font-medium lg:flex-row">
+            <h1 className="inline-flex items-center justify-center text-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-8 py-4">
               {location}
             </h1>
             <h1 className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-12 py-4">

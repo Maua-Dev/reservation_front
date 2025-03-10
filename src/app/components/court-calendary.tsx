@@ -3,7 +3,6 @@ import { CalendaryCard } from './calendary-card'
 import { useState } from 'react'
 import { Form } from './form'
 import { View } from './view'
-import { Modal } from './modal'
 import { ReservationDetails } from './reservation-details'
 import { cn } from '../utils/cn'
 
@@ -13,7 +12,7 @@ const reservas = [
     court: 'Quadra 1',
     courtNumber: 1,
     modality: 'Basquete',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 5,
+    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 6,
     duration: 1
   },
   {
@@ -352,7 +351,7 @@ export function Court() {
     }, 200)
   }
 
-  function handleSelectingBooking(booking: any) {
+  function handleSelectingBooking(booking: Reservation) {
     setSelectedBooking(booking)
     setTimeout(() => {
       setSelectedBookingVisible(true)
@@ -507,8 +506,7 @@ export function Court() {
             setTimeout(() => {
               setIsMyBookingsModalOpen(false)
             }, 200)
-          }
-          }
+          }}
         >
           <View
             onClose={() => {
