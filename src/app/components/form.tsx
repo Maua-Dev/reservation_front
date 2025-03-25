@@ -82,14 +82,14 @@ export const Form = ({
         e.preventDefault()
       }}
       onClick={(e) => e.stopPropagation()}
-      className="relative flex flex-col gap-4 rounded-xl bg-white p-10 tracking-wide"
+      className="relative flex max-h-[90vh] flex-col gap-4 overflow-y-auto rounded-xl bg-white p-10 tracking-wide text-slate-700"
     >
-      <div className="flex flex-col justify-between border-b-2 border-slate-500 pb-4">
+      <div className="flex flex-col justify-between border-b-2 border-slate-700 pb-4">
         <div className="flex justify-between">
-          <p className="mt-3 font-poppins text-2xl font-bold text-black md:text-3xl">
+          <p className="mt-3 font-poppins text-2xl font-bold md:text-3xl">
             Daniel Capuzzo
           </p>
-          <p className="mt-3 font-poppins text-2xl font-bold text-black md:text-3xl">
+          <p className="mt-3 font-poppins text-2xl font-bold md:text-3xl">
             22.001122-0
           </p>
           <IoClose
@@ -103,9 +103,9 @@ export const Form = ({
         </p>
       </div>
 
-      <div className="flex w-full flex-col justify-start gap-4 md:flex-row md:items-center">
+      <div className="flex w-full flex-col justify-start gap-4 font-medium md:flex-row md:items-center">
         <div className="flex w-40 items-center justify-between rounded p-1 md:w-48">
-          <label className="flex-grow text-center font-poppins text-lg font-medium md:text-2xl">
+          <label className="flex-grow text-center font-poppins text-lg text-white md:text-2xl">
             <select className="inline-flex items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-6 py-4">
               {options.map((option) => (
                 <option key={option}>{option}</option>
@@ -114,16 +114,16 @@ export const Form = ({
           </label>
         </div>
         <div className="flex items-center justify-start gap-2 max-md:pt-4">
-          <label className="flex items-center justify-center gap-2 font-poppins text-xl font-medium md:text-2xl">
+          <label className="flex items-center justify-center gap-2 font-poppins text-xl md:text-2xl">
             <p>Horário</p>
-            <div className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4">
+            <div className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4 text-white">
               {formatDate(selectedDate.getHours())}:
               {formatDate(selectedDate.getMinutes())}
             </div>
           </label>
           <div className="flex items-center gap-2">
-            <p className="font-poppins text-xl font-medium md:text-2xl">Até</p>
-            <label className="inline-flex items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-6 py-4 font-poppins text-xl font-medium md:text-2xl">
+            <p className="font-poppins text-xl md:text-2xl">Até</p>
+            <label className="inline-flex items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-6 py-4 font-poppins text-xl text-white md:text-2xl">
               {formatDate(selectedDate.getHours() + 1)}:
               {formatDate(selectedDate.getMinutes())}
             </label>
@@ -133,7 +133,7 @@ export const Form = ({
 
       <div className="flex flex-col">
         <div className="flex justify-start">
-          <p className="pt-4 text-left font-poppins text-3xl font-bold text-black">
+          <p className="pt-4 text-left font-poppins text-3xl font-bold">
             Modalidade:
           </p>
         </div>
@@ -146,7 +146,7 @@ export const Form = ({
                 setSelectedModality(modality)
                 setValue('modality', modality)
               }}
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-4 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 md:text-xl ${selectedModality === modality ? 'border-yellow bg-yellow/30 hover:bg-yellow/30' : ''}`}
+              className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-4 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 md:text-xl ${selectedModality === modality ? 'border-yellow bg-yellow/10 text-yellow-secondary hover:bg-yellow/10' : 'text-slate-700'}`}
             >
               {modality}
             </button>
@@ -159,7 +159,7 @@ export const Form = ({
 
       <div className="flex flex-col">
         <div className="flex justify-start">
-          <p className="mt-3 text-left font-poppins text-3xl font-bold text-black">
+          <p className="mt-3 text-left font-poppins text-3xl font-bold">
             Equipamentos:
           </p>
         </div>
@@ -173,7 +173,7 @@ export const Form = ({
                   setSelectedEquipment(equipment)
                   setValue('equipment', equipment)
                 }}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-4 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 md:text-xl ${selectedEquipment === equipment ? 'border-yellow bg-yellow/30 hover:bg-yellow/30' : ''}`}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-4 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 md:text-xl ${selectedEquipment === equipment ? 'border-yellow bg-yellow/10 text-yellow-secondary hover:bg-yellow/10' : ''}`}
               >
                 {equipment}
               </button>
@@ -189,7 +189,7 @@ export const Form = ({
         <input
           type="checkbox"
           {...register('needsVest')}
-          className="h-10 w-7 rounded border border-slate-500 p-1 md:w-8"
+          className="h-10 w-7 border border-slate-500 p-1 md:w-8"
         />
         <p className="text-md font-poppins font-medium md:text-xl">
           Preciso de colete
@@ -201,14 +201,14 @@ export const Form = ({
           <input
             type="checkbox"
             {...register('shareCourt')}
-            className="h-10 w-7 rounded border border-slate-500 p-1 md:w-8"
+            className="h-10 w-7 border border-slate-500 p-1 md:w-8"
           />
           <p className="text-md font-poppins font-medium md:text-xl">
             Aceito compartilhar quadra
           </p>
         </div>
         <div className="flex w-40 items-center justify-between rounded p-1">
-          <Button className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary p-4 font-poppins text-lg font-medium text-black active:border-b-2 md:text-xl">
+          <Button className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary px-6 py-4 font-poppins text-lg text-white active:border-b-2 md:text-2xl">
             Salvar
           </Button>
           <Modal open={open} onClose={() => setOpen(false)}>

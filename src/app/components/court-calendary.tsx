@@ -12,7 +12,7 @@ const reservas = [
     court: 'Quadra 1',
     courtNumber: 1,
     modality: 'Basquete',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 6,
+    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 7,
     duration: 1
   },
   {
