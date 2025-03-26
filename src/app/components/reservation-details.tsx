@@ -18,13 +18,7 @@ export const ReservationDetails = ({
   isChecked,
   onClose
 }: ReservationDetailsProps) => {
-  const today = new Date()
-  const date = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate(),
-    time
-  )
+  const date = new Date(time)
   const formattedTime = date.toLocaleTimeString('pt-BR', {
     hour: '2-digit',
     minute: '2-digit'
