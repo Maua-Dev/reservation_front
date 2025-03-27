@@ -21,7 +21,10 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GithubActionsRole
+          role-to-assume: |
+            ${{ github.ref_name == 'dev' && 'arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID_DEV }}:role/GithubActionsRole' || 
+                github.ref_name == 'homolog' && 'arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID_HOMOLOG }}:role/GithubActionsRole' || 
+                github.ref_name == 'prod' && 'arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID_PROD }}:role/GithubActionsRole' }}
           role-session-name: github-action
       - name: Use Node.js 18.x
         uses: actions/setup-node@v3
@@ -43,7 +46,7 @@ jobs:
       - name: Setup envs
         run: |
           echo AWS_REGION=${{ vars.AWS_REGION }} >> $GITHUB_ENV
-          echo AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }} >> $GITHUB_ENV
+          echo AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID_${{ github.ref_name | upper }} }} >> $GITHUB_ENV
           echo STACK_NAME=${{ env.STACK_NAME }} >> $GITHUB_ENV
           echo GITHUB_REF_NAME=${{ github.ref_name }} >> $GITHUB_ENV
           echo ACM_CERTIFICATE_ARN=${{ secrets.DEVMAUA_ACM_CERTIFICATE_ARN }} >> $GITHUB_ENV
