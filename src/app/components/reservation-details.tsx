@@ -41,7 +41,7 @@ export const ReservationDetails = ({
   return (
     <>
       <div
-        className={`absolute max-h-[90vh] max-w-[70vw] overflow-y-auto overflow-x-hidden rounded-xl bg-white text-slate-700 shadow transition-all lg:overflow-y-hidden`}
+        className={`relative max-h-[90vh] w-[90%] max-w-[70vw] overflow-y-auto overflow-x-hidden rounded-xl bg-white text-slate-700 shadow-lg sm:w-[70%]`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col gap-4 p-10 tracking-wide">

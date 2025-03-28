@@ -82,7 +82,7 @@ export const Form = ({
         e.preventDefault()
       }}
       onClick={(e) => e.stopPropagation()}
-      className="relative flex max-h-[90vh] flex-col gap-4 overflow-y-auto rounded-xl bg-white p-10 tracking-wide text-slate-700"
+      className="relative flex max-h-[90vh] w-[90%] max-w-[70vw] flex-col gap-4 overflow-y-auto overflow-x-hidden rounded-xl bg-white p-10 tracking-wide text-slate-700 shadow-lg sm:w-[70%]"
     >
       <div className="flex flex-col justify-between border-b-2 border-slate-700 pb-4">
         <div className="flex justify-between">
@@ -93,7 +93,7 @@ export const Form = ({
             22.001122-0
           </p>
           <IoClose
-            className="absolute left-[94%] top-2 h-8 w-8 cursor-pointer md:h-10 md:w-16"
+            className="absolute right-2 top-2 h-8 w-8 cursor-pointer md:h-10 md:w-16"
             onClick={handleClose}
           ></IoClose>
         </div>
