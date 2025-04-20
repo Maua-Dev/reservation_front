@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { AdminOption } from '../../components/adminOption'
-import imgBeachTenis from '../assets/imagem-beachtenis.png'
-import imgCampo from '../assets/imagem-campo.png'
-import imgQuadra from '../assets/imagem-quadra.png'
-import { Dev } from '../../components/dev'
-import Footer from '../../components/footer'
+import { AdminOption } from '@/app/components/adminOption'
+import { Dev } from '@/app/components/dev'
+import Footer from '@/app/components/footer'
+import imgBeachTenis from '../../assets/imagem-beachtenis.png'
+import imgCampo from '../../assets/imagem-campo.png'
+import imgQuadra from '../../assets/imagem-quadra.png'
 
 const options = [
   {
