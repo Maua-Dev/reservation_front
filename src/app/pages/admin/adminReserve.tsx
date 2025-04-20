@@ -241,9 +241,9 @@ export default function AdminReserve() {
                   return (
                     <div
                       key={index}
-                      className={`flex h-10 w-6 items-center justify-center rounded-md ${
+                      className={`flex h-7 w-7 items-center justify-center rounded-full ${
                         isToday
-                          ? 'bg-blue-primary text-white'
+                          ? 'rounded-full bg-gray-300 text-white'
                           : isCurrentMonth
                             ? 'text-gray-600 hover:cursor-pointer hover:bg-blue-100'
                             : 'text-gray-400'
