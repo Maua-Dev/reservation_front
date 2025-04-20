@@ -24,94 +24,6 @@ const reservas = [
     modality: 'Vôlei',
     time: 1738069200000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
-  },
-  {
-    id: 4,
-    court: 'Quadra 2',
-    courtNumber: 2,
-    modality: 'Vôlei',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 4,
-    duration: 1
-  },
-  {
-    id: 5,
-    court: 'Quadra 3',
-    courtNumber: 3,
-    modality: 'Futsal',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 4,
-    duration: 1
-  },
-  {
-    id: 6,
-    court: 'Quadra 3',
-    courtNumber: 3,
-    modality: 'Vôlei',
-    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 4 + 30 * 60 * 1000,
-    duration: 0.5
-  },
-  {
-    id: 8,
-    court: 'Quadra 1',
-    courtNumber: 1,
-    modality: 'Futsal',
-    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000 * 4,
-    duration: 1
-  },
-  {
-    id: 9,
-    court: 'Quadra 3',
-    courtNumber: 3,
-    modality: 'Vôlei',
-    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000 * 4,
-    duration: 1
-  },
-  {
-    id: 10,
-    court: 'Quadra 1',
-    courtNumber: 1,
-    modality: 'Vôlei',
-    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000 * 4,
-    duration: 1
-  },
-  {
-    id: 11,
-    court: 'Quadra 2',
-    courtNumber: 2,
-    modality: 'Basquete',
-    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000 * 4,
-    duration: 1
-  },
-  {
-    id: 12,
-    court: 'Quadra 1',
-    courtNumber: 1,
-    modality: 'Basquete',
-    time: 1737997200000 + 7 * 24 * 60 * 60 * 1000 * 4,
-    duration: 1
-  },
-  {
-    id: 13,
-    court: 'Quadra 3',
-    courtNumber: 3,
-    modality: 'Basquete',
-    time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 4,
-    duration: 1
-  },
-  {
-    id: 14,
-    court: 'Quadra 2',
-    courtNumber: 2,
-    modality: 'Basquete',
-    time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 4 - 30 * 60 * 1000,
-    duration: 1
-  },
-  {
-    id: 15,
-    court: 'Quadra 1',
-    courtNumber: 1,
-    modality: 'Basquete',
-    time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 4 - 30 * 60 * 1000,
-    duration: 1
   }
 ]
 
@@ -295,25 +207,28 @@ export default function AdminReserve() {
       <div className="flex h-full w-full flex-col items-center justify-center">
         <div className="sticky top-[5.4rem] z-[90] flex w-full font-poppins text-base font-semibold text-gray-600">
           {/* Coluna do mês - 25% */}
-          <div className="flex h-auto w-1/4 flex-col">
+          <div className="flex h-auto w-1/4 flex-grow-0 flex-col bg-white">
             <h1 className="flex h-20 w-full items-center justify-center bg-blue-primary p-4 text-xl text-white">
               {month}
             </h1>
             {/* Month calendar */}
-            <div className="flex h-auto w-full flex-col items-center justify-center bg-gray-200 p-4">
+            <div className="flex h-auto w-full flex-col items-center justify-center bg-white p-4">
               <div className="grid grid-cols-7 gap-2 text-center">
-                {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(
-                  (day, index) => (
-                    <div
-                      key={index}
-                      className="flex h-10 items-center justify-center font-bold text-gray-600"
-                    >
-                      {day}
-                    </div>
-                  )
-                )}
+                {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map((day, index) => (
+                  <div
+                    key={index}
+                    className="flex h-10 items-center justify-center font-bold text-gray-600"
+                  >
+                    {day}
+                  </div>
+                ))}
                 {Array.from({ length: 42 }, (_, index) => {
-                  const day = index - today.getDay() + 1
+                  const firstDayOfMonth = new Date(
+                    today.getFullYear(),
+                    today.getMonth(),
+                    1
+                  )
+                  const day = index - firstDayOfMonth.getDay() + 1
                   const date = new Date(today)
                   date.setDate(day)
 
@@ -326,7 +241,7 @@ export default function AdminReserve() {
                   return (
                     <div
                       key={index}
-                      className={`flex h-10 items-center justify-center rounded-md ${
+                      className={`flex h-10 w-6 items-center justify-center rounded-md ${
                         isToday
                           ? 'bg-blue-primary text-white'
                           : isCurrentMonth
@@ -370,7 +285,7 @@ export default function AdminReserve() {
                 const isHourSeparator = minute === 0
                 return (
                   <div key={index} className="flex">
-                    <div className="flex h-16 w-32 items-center justify-center border-b border-r border-gray-400 px-4 font-poppins text-black">
+                    <div className="flex h-16 w-32 items-center justify-center border-b border-r border-gray-400 bg-white px-4 font-poppins text-black">
                       {`${hour}:${minute === 0 ? '00' : '30'}`}
                     </div>
                     <div className="flex flex-1">
