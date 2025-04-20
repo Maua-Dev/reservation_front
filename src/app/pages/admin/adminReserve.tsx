@@ -152,9 +152,9 @@ export default function AdminReserve() {
 
     return sameTimeReservations.size > 1
       ? sameTimeReservations.size > 2
-        ? 'xl:w-2/5'
-        : 'xl:w-[45%]'
-      : 'xl:w-[86%]'
+        ? 'xl:w-2/5 lg:w-1/3 md:w-1/2 w-4/5'
+        : 'xl:w-[45%] lg:w-2/5 md:w-1/2 w-4/5'
+      : 'xl:w-[86%] lg:w-4/5 md:w-3/4 w-4/5'
   }
 
   const deslocation = (
@@ -180,21 +180,21 @@ export default function AdminReserve() {
 
     switch (courtNumber) {
       case 1:
-        return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
+        return 'lg:left-[4%] md:left-[2%] left-[1%]'
       case 2:
         return sameTimeReservations.size > 1
           ? sameTimeReservations.size === 2
             ? isItOne
-              ? 'absolute w-20 h-20 left-[46%]'
-              : 'absolute w-20 h-20 left-[4%]'
-            : 'absolute w-20 h-20 left-[30%]'
-          : 'absolute w-20 h-20 left-[4%]'
+              ? 'lg:left-[46%] md:left-[42%] left-[33%]'
+              : 'lg:left-[4%] md:left-[2%] left-[1%]'
+            : 'lg:left-[30%] md:left-[25%] left-[18%]'
+          : 'lg:left-[4%] md:left-[2%] left-[1%]'
       case 3:
         return sameTimeReservations.size > 1
           ? sameTimeReservations.size === 2
-            ? 'absolute w-20 h-20 left-[46%]'
-            : 'absolute w-20 h-20 left-[56%]'
-          : 'absolute w-20 h-20 left-[4%]'
+            ? 'lg:left-[46%] md:left-[42%] left-[33%]'
+            : 'lg:left-[56%] md:left-[52%] left-[66%]'
+          : 'lg:left-[4%] md:left-[2%] left-[1%]'
       default:
         return ''
     }
@@ -205,9 +205,9 @@ export default function AdminReserve() {
   return (
     <main className="z-50 flex h-auto w-full flex-col items-center justify-center overflow-x-hidden bg-white pt-24">
       <div className="flex h-full w-full flex-col items-center justify-center">
-        <div className="sticky top-[5.4rem] z-[90] flex w-full font-poppins text-base font-semibold text-gray-600">
-          {/* Coluna do mês - 25% */}
-          <div className="flex h-auto w-1/4 flex-grow-0 flex-col bg-white">
+        <div className="sticky top-[5.4rem] z-[90] flex w-full flex-col font-poppins text-base font-semibold text-gray-600 md:flex-row">
+          {/* Coluna do mês - 25% em telas grandes, 100% em telas pequenas */}
+          <div className="flex h-auto w-full flex-grow-0 flex-col bg-white md:w-1/4">
             <h1 className="flex h-20 w-full items-center justify-center bg-blue-primary p-4 text-xl text-white">
               {month}
             </h1>
@@ -217,7 +217,7 @@ export default function AdminReserve() {
                 {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map((day, index) => (
                   <div
                     key={index}
-                    className="flex h-10 items-center justify-center font-bold text-gray-600"
+                    className="flex h-8 items-center justify-center font-bold text-gray-600 md:h-10"
                   >
                     {day}
                   </div>
@@ -241,7 +241,7 @@ export default function AdminReserve() {
                   return (
                     <div
                       key={index}
-                      className={`flex h-7 w-7 items-center justify-center rounded-full ${
+                      className={`flex h-6 w-6 items-center justify-center rounded-full md:h-7 md:w-7 ${
                         isToday
                           ? 'rounded-full bg-gray-300 text-white'
                           : isCurrentMonth
@@ -257,18 +257,18 @@ export default function AdminReserve() {
             </div>
           </div>
 
-          {/* Coluna da semana - 75% */}
-          <div className="flex h-auto w-3/4 flex-col">
+          {/* Coluna da semana - 75% em telas grandes, 100% em telas pequenas */}
+          <div className="flex h-auto w-full flex-col bg-white md:w-3/4">
             <div className="flex h-20 w-full flex-col items-center bg-blue-primary p-4 text-xl text-white">
               <div className="flex w-full">
-                <div className="w-32 bg-blue-primary p-4 text-xl text-white">
+                <div className="ml-4 min-w-28 bg-blue-primary p-4 text-sm text-white md:text-base">
                   Semana
                 </div>
-                <div className="flex flex-1 text-center text-lg text-white">
+                <div className="flex flex-1 overflow-x-auto text-center text-lg text-white">
                   {thisWeek().map((date, index) => (
                     <div
                       key={index}
-                      className="flex flex-1 flex-col items-center justify-center bg-blue-primary p-1 text-xl font-normal"
+                      className="flex min-w-10 flex-1 flex-col items-center justify-center bg-blue-primary p-1 text-lg font-normal md:min-w-12 md:text-xl"
                     >
                       <div>{date}</div>
                       <div>{weekDays[index]}</div>
@@ -278,17 +278,17 @@ export default function AdminReserve() {
               </div>
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col overflow-x-auto pl-6 pr-4">
               {[...Array(25)].map((_, index) => {
                 const hour = 8 + Math.floor(index / 2)
                 const minute = index % 2
                 const isHourSeparator = minute === 0
                 return (
-                  <div key={index} className="flex">
-                    <div className="flex h-16 w-32 items-center justify-center border-b border-r border-gray-400 bg-white px-4 font-poppins text-black">
+                  <div key={index} className="flex min-w-full bg-white">
+                    <div className="flex h-16 min-w-24 items-center justify-center border-b border-r border-gray-400 bg-white px-2 font-poppins text-black md:min-w-32 md:px-4">
                       {`${hour}:${minute === 0 ? '00' : '30'}`}
                     </div>
-                    <div className="flex flex-1">
+                    <div className="flex min-w-max flex-1">
                       {[...Array(6)].map((_, dayIndex) => (
                         <div
                           key={dayIndex}
@@ -300,7 +300,7 @@ export default function AdminReserve() {
                               dayIndex + 1
                             )
                           }
-                          className={`relative flex min-w-[120px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 ${
+                          className={`relative flex min-w-14 flex-1 gap-2 border-b border-r border-gray-400 lg:min-w-24 ${
                             isPassed(
                               thisWeek()[dayIndex],
                               dayIndex + 1,
@@ -329,7 +329,7 @@ export default function AdminReserve() {
                                   key={reserva.id}
                                   onClick={(e) => e.stopPropagation()}
                                   className={cn(
-                                    'absolute flex items-center justify-center rounded-md bg-blue-200 p-2 text-blue-800',
+                                    'absolute flex items-center justify-center rounded-md bg-blue-200 p-1 text-xs text-blue-800 md:p-2 md:text-sm',
                                     specialWidth(
                                       Number(reserva.time),
                                       Number(reserva.endTime),
@@ -346,7 +346,7 @@ export default function AdminReserve() {
                                     height: `${reserva.duration * 64}px`
                                   }}
                                 >
-                                  <div className="text-sm font-medium">
+                                  <div className="truncate text-xs font-medium md:text-sm">
                                     {reserva.court} - {reserva.modality}
                                   </div>
                                 </div>
