@@ -1,31 +1,31 @@
 /* eslint-disable prettier/prettier */
-import { AdminOption } from "../components/adminOption";
-import imgBeachTenis from "../assets/imagem-beachtenis.png";
-import imgCampo from "../assets/imagem-campo.png";
-import imgQuadra from "../assets/imagem-quadra.png";
-import { Dev } from "../components/dev";
-import Footer from "../components/footer";
+import { AdminOption } from '../../components/adminOption'
+import imgBeachTenis from '../assets/imagem-beachtenis.png'
+import imgCampo from '../assets/imagem-campo.png'
+import imgQuadra from '../assets/imagem-quadra.png'
+import { Dev } from '../../components/dev'
+import Footer from '../../components/footer'
 
 const options = [
   {
     image: imgCampo,
-    title: "Manutenção e Eventos",
-    action: "Eventos",
-    calendar: "/fieldbeach-reserve",
+    title: 'Manutenção e Eventos',
+    action: 'Eventos',
+    calendar: '/fieldbeach-reserve'
   },
   {
     image: imgQuadra,
-    title: "Reservas e Relatórios",
-    action: "Visualizar",
-    calendar: "/court-reserve",
+    title: 'Reservas e Relatórios',
+    action: 'Visualizar',
+    calendar: '/court-reserve'
   },
   {
     image: imgBeachTenis,
-    title: "Professores Autorizados",
-    action: "Visualizar",
-    calendar: "/fieldbeach-reserve",
-  },
-];
+    title: 'Professores Autorizados',
+    action: 'Visualizar',
+    calendar: '/fieldbeach-reserve'
+  }
+]
 
 export default function AdminHome() {
   return (
@@ -40,7 +40,7 @@ export default function AdminHome() {
           agendamento de espaços para estudos, reuniões e eventos acadêmicos.
         </p>
       </div>
-      <div className="flex w-full flex-col items-center justify-center gap-20 pb-40 bg-gray-50 p-4">
+      <div className="flex w-full flex-col items-center justify-center gap-20 bg-gray-50 p-4 pb-40">
         {options.map((option) => (
           <AdminOption
             key={option.title}
@@ -54,5 +54,5 @@ export default function AdminHome() {
       <Dev />
       <Footer />
     </main>
-  );
+  )
 }

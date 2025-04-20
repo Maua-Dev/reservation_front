@@ -1,10 +1,12 @@
-import { CourtReserve } from "@/app/pages/court-reserve";
-import { FieldBeachReserve } from "@/app/pages/fieldbeach-reserve";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import { Navbar } from "./components/navbar";
-import { Login } from "./pages/login";
-import { Home } from "./pages/home";
-import AdminHome from "./pages/adminHome";
+import { CourtReserve } from '@/app/pages/court-reserve'
+import { FieldBeachReserve } from '@/app/pages/fieldbeach-reserve'
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import { Navbar } from './components/navbar'
+import { Login } from './pages/login'
+import { Home } from './pages/home'
+import AdminHome from './pages/admin/adminHome'
+import AdminReport from './pages/admin/adminReport'
+import AdminReserve from './pages/admin/adminReserve'
 
 export function App() {
   return (
@@ -17,9 +19,11 @@ export function App() {
           <Route path="/court-reserve" element={<CourtReserve />} />
           <Route path="/fieldbeach-reserve" element={<FieldBeachReserve />} />
           <Route path="/admin-home" element={<AdminHome />} />
+          <Route path="/admin-report" element={<AdminReport />} />
+          <Route path="/admin-reserve" element={<AdminReserve />} />
           <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
       </Router>
     </>
-  );
+  )
 }
