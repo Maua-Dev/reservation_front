@@ -1,5 +1,6 @@
 import MonthCalendar from '@/app/components/monthCalendar'
 import { cn } from '../../utils/cn'
+import { CiFilter } from 'react-icons/ci'
 
 const reservas = [
   {
@@ -206,7 +207,42 @@ export default function AdminReserve() {
   return (
     <main className="z-50 flex h-auto w-full flex-col items-center justify-center overflow-x-hidden bg-white pt-24">
       <div className="flex h-full w-full flex-col items-center justify-center">
-        <div className="sticky top-[5.4rem] z-[90] flex w-full flex-col font-poppins text-base font-semibold text-gray-600 md:flex-row">
+        <div className="top-[5.4rem] z-[90] flex w-full flex-col font-poppins text-base font-semibold text-gray-600 md:flex-row">
+          {/* Floating menu in the bottom-left corner */}
+          <div className="fixed bottom-4 left-4 z-50 flex flex-col gap-2">
+            <div className="flex flex-col gap-2 text-black">
+              <CiFilter
+                size={32}
+                className="duration-300 hover:scale-110 hover:cursor-pointer"
+              />
+            </div>
+            <div className="flex gap-2 text-sm">
+              <button
+                className="rounded-lg bg-grey-primary p-2 text-white shadow-lg duration-300 hover:bg-grey-primary/70"
+                onClick={() => console.log('Reserva clicked')}
+              >
+                Reserva
+              </button>
+              <button
+                className="rounded-lg bg-yellow p-2 text-white shadow-lg duration-300 hover:bg-yellow/70"
+                onClick={() => console.log('Manutenção clicked')}
+              >
+                Manutenção
+              </button>
+              <button
+                className="rounded-lg bg-grey-primary p-2 text-white shadow-lg duration-300 hover:bg-grey-primary/70"
+                onClick={() => console.log('Campo clicked')}
+              >
+                Campo
+              </button>
+              <button
+                className="rounded-lg bg-yellow p-2 text-white shadow-lg duration-300 hover:bg-yellow/70"
+                onClick={() => console.log('Quadras clicked')}
+              >
+                Quadras
+              </button>
+            </div>
+          </div>
           {/* Coluna do mês - 25% em telas grandes, 100% em telas pequenas */}
           <div className="flex h-auto w-full flex-grow-0 flex-col bg-white md:w-1/4">
             <h1 className="flex h-20 w-full items-center justify-center bg-blue-primary p-4 text-xl text-white">
