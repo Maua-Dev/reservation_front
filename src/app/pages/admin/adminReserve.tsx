@@ -1,32 +1,31 @@
-import MonthCalendar from '@/app/components/monthCalendar'
-import { cn } from '../../utils/cn'
-import { CiFilter } from 'react-icons/ci'
-import { useState } from 'react'
-import ReserveOptionsModal from '@/app/components/admin/reserveOptionsModal'
-import { set } from 'react-hook-form'
+import MonthCalendar from "@/app/components/monthCalendar"
+import { cn } from "../../utils/cn"
+import { CiFilter } from "react-icons/ci"
+import { useState } from "react"
+import ReserveOptionsModal from "@/app/components/admin/reserveOptionsModal"
 
 const reservas = [
   {
     id: 1,
-    court: 'Quadra 1',
+    court: "Quadra 1",
     courtNumber: 1,
-    modality: 'Basquete',
+    modality: "Basquete",
     time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 7,
     duration: 1
   },
   {
     id: 2,
-    court: 'Quadra 2',
+    court: "Quadra 2",
     courtNumber: 2,
-    modality: 'Vôlei',
+    modality: "Vôlei",
     time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 4 + 30 * 60 * 1000,
     duration: 0.5
   },
   {
     id: 7,
-    court: 'Quadra 2',
+    court: "Quadra 2",
     courtNumber: 2,
-    modality: 'Vôlei',
+    modality: "Vôlei",
     time: 1738069200000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   }
@@ -34,7 +33,7 @@ const reservas = [
 
 export default function AdminReserve() {
   const today = new Date()
-  const month = today.toLocaleString('default', { month: 'long' })
+  const month = today.toLocaleString("default", { month: "long" })
   const [isOptionsOpen, setIsOptionsOpen] = useState(false)
 
   function handleClickedTime(
@@ -64,14 +63,14 @@ export default function AdminReserve() {
 
     const timestamp = clickedTime.getTime()
     console.log(
-      'Timestamp: ',
+      "Timestamp: ",
       new Date(timestamp).toTimeString(),
       new Date(timestamp).toDateString()
     )
     console.log(timestamp)
 
     if (timestamp < today.getTime()) {
-      console.log('Não é possível fazer reservas em horários passados.')
+      console.log("Não é possível fazer reservas em horários passados.")
       return
     }
 
@@ -88,7 +87,7 @@ export default function AdminReserve() {
     // Se todas as 3 quadras estiverem ocupadas, bloqueia o modal
     if (occupiedCourts.size >= 3) {
       console.log(
-        'Todas as quadras estão ocupadas neste horário. Não é possível fazer mais reservas.'
+        "Todas as quadras estão ocupadas neste horário. Não é possível fazer mais reservas."
       )
     }
 
@@ -160,9 +159,9 @@ export default function AdminReserve() {
 
     return sameTimeReservations.size > 1
       ? sameTimeReservations.size > 2
-        ? 'xl:w-2/5 lg:w-1/3 md:w-1/2 w-4/5'
-        : 'xl:w-[45%] lg:w-2/5 md:w-1/2 w-4/5'
-      : 'xl:w-[86%] lg:w-4/5 md:w-3/4 w-4/5'
+        ? "xl:w-2/5 lg:w-1/3 md:w-1/2 w-4/5"
+        : "xl:w-[45%] lg:w-2/5 md:w-1/2 w-4/5"
+      : "xl:w-[86%] lg:w-4/5 md:w-3/4 w-4/5"
   }
 
   const deslocation = (
@@ -188,27 +187,27 @@ export default function AdminReserve() {
 
     switch (courtNumber) {
       case 1:
-        return 'lg:left-[4%] md:left-[2%] left-[1%]'
+        return "lg:left-[4%] md:left-[2%] left-[1%]"
       case 2:
         return sameTimeReservations.size > 1
           ? sameTimeReservations.size === 2
             ? isItOne
-              ? 'lg:left-[46%] md:left-[42%] left-[33%]'
-              : 'lg:left-[4%] md:left-[2%] left-[1%]'
-            : 'lg:left-[30%] md:left-[25%] left-[18%]'
-          : 'lg:left-[4%] md:left-[2%] left-[1%]'
+              ? "lg:left-[46%] md:left-[42%] left-[33%]"
+              : "lg:left-[4%] md:left-[2%] left-[1%]"
+            : "lg:left-[30%] md:left-[25%] left-[18%]"
+          : "lg:left-[4%] md:left-[2%] left-[1%]"
       case 3:
         return sameTimeReservations.size > 1
           ? sameTimeReservations.size === 2
-            ? 'lg:left-[46%] md:left-[42%] left-[33%]'
-            : 'lg:left-[56%] md:left-[52%] left-[66%]'
-          : 'lg:left-[4%] md:left-[2%] left-[1%]'
+            ? "lg:left-[46%] md:left-[42%] left-[33%]"
+            : "lg:left-[56%] md:left-[52%] left-[66%]"
+          : "lg:left-[4%] md:left-[2%] left-[1%]"
       default:
-        return ''
+        return ""
     }
   }
 
-  const weekDays = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+  const weekDays = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
 
   return (
     <main className='z-50 flex h-auto w-full flex-col items-center justify-center overflow-x-hidden bg-white pt-24'>
@@ -229,25 +228,25 @@ export default function AdminReserve() {
             <div className='flex gap-2 text-sm'>
               <button
                 className='rounded-lg bg-grey-primary p-2 text-white shadow-lg duration-300 hover:bg-grey-primary/70'
-                onClick={() => console.log('Reserva clicked')}
+                onClick={() => console.log("Reserva clicked")}
               >
                 Reserva
               </button>
               <button
                 className='rounded-lg bg-yellow p-2 text-white shadow-lg duration-300 hover:bg-yellow/70'
-                onClick={() => console.log('Manutenção clicked')}
+                onClick={() => console.log("Manutenção clicked")}
               >
                 Manutenção
               </button>
               <button
                 className='rounded-lg bg-grey-primary p-2 text-white shadow-lg duration-300 hover:bg-grey-primary/70'
-                onClick={() => console.log('Campo clicked')}
+                onClick={() => console.log("Campo clicked")}
               >
                 Campo
               </button>
               <button
                 className='rounded-lg bg-yellow p-2 text-white shadow-lg duration-300 hover:bg-yellow/70'
-                onClick={() => console.log('Quadras clicked')}
+                onClick={() => console.log("Quadras clicked")}
               >
                 Quadras
               </button>
@@ -291,7 +290,7 @@ export default function AdminReserve() {
                 return (
                   <div key={index} className='flex min-w-full bg-white'>
                     <div className='flex h-16 min-w-24 items-center justify-center border-b border-r border-gray-400 bg-white px-2 font-poppins text-black md:min-w-32 md:px-4'>
-                      {`${hour}:${minute === 0 ? '00' : '30'}`}
+                      {`${hour}:${minute === 0 ? "00" : "30"}`}
                     </div>
                     <div className='flex min-w-max flex-1'>
                       {[...Array(6)].map((_, dayIndex) => (
@@ -312,15 +311,15 @@ export default function AdminReserve() {
                               hour,
                               minute
                             )
-                              ? 'bg-gray-300'
-                              : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'
+                              ? "bg-gray-300"
+                              : "bg-gray-200 hover:cursor-pointer hover:bg-blue-100"
                           } p-2 last:border-r-0`}
                           style={{
                             borderBottomStyle: isHourSeparator
-                              ? 'dashed'
-                              : 'solid',
-                            borderRightStyle: 'solid',
-                            height: '64px'
+                              ? "dashed"
+                              : "solid",
+                            borderRightStyle: "solid",
+                            height: "64px"
                           }}
                         >
                           {reservasConvertidas.map((reserva) => {
@@ -334,7 +333,7 @@ export default function AdminReserve() {
                                   key={reserva.id}
                                   onClick={(e) => e.stopPropagation()}
                                   className={cn(
-                                    'absolute flex items-center justify-center rounded-md bg-blue-200 p-1 text-xs text-blue-800 md:p-2 md:text-sm',
+                                    "absolute flex items-center justify-center rounded-md bg-blue-200 p-1 text-xs text-blue-800 md:p-2 md:text-sm",
                                     specialWidth(
                                       Number(reserva.time),
                                       Number(reserva.endTime),
