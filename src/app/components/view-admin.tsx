@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import MonthCalendarAdmin from './monthCalendar-admin'
-import { ReservationCardAdmin } from './reservation-view-admin'
+import { useState } from "react"
+import MonthCalendarAdmin from "./monthCalendar-admin"
+import { ReservationCardAdmin } from "./reservation-view-admin"
 
 export function ViewAdmin() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
@@ -41,44 +41,44 @@ export function ViewAdmin() {
     {
       startDate: 1745494200000,
       endDate: 1745497800000,
-      court: '1',
-      status: 'Aprovado',
-      date: '24/04'
+      court: "1",
+      status: "Aprovado",
+      date: "24/04"
     },
     {
       startDate: 1745442000000,
       endDate: 1745445600000,
-      court: '1',
-      status: 'Aprovado',
-      date: '23/04'
+      court: "1",
+      status: "Aprovado",
+      date: "23/04"
     },
     {
       startDate: 1745938800000,
       endDate: 1745942400000,
-      court: '1',
-      status: 'Aprovado',
-      date: '29/04'
+      court: "1",
+      status: "Aprovado",
+      date: "29/04"
     },
     {
       startDate: 1746014400000,
       endDate: 1746018000000,
-      court: '2',
-      status: 'Aprovado',
-      date: '30/04'
+      court: "2",
+      status: "Aprovado",
+      date: "30/04"
     },
     {
       startDate: 1744722000000,
       endDate: 1744725600000,
-      court: '2',
-      status: 'Aprovado',
-      date: '15/04'
+      court: "2",
+      status: "Aprovado",
+      date: "15/04"
     },
     {
       startDate: 1744056000000,
       endDate: 1744059600000,
-      court: '2',
-      status: 'Aprovado',
-      date: '07/05'
+      court: "2",
+      status: "Aprovado",
+      date: "07/05"
     }
   ]
 
@@ -100,26 +100,25 @@ export function ViewAdmin() {
 
   // Formatar data para exibição
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit'
+    return date.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit"
     })
   }
 
   return (
-    <main className="flex w-full flex-col bg-white pt-24">
-      <div className="flex h-full w-full flex-col">
-        <div className="flex w-full flex-col font-poppins text-base font-semibold md:flex-row">
+    <main className='flex w-full flex-col bg-white pt-24'>
+      <div className='flex h-full w-full flex-col'>
+        <div className='flex h-full w-full flex-col md:flex-row'>
           {/* Coluna do calendário */}
-          <div className="flex h-auto w-[45%] flex-grow flex-col bg-white">
-            <h1 className="flex h-20 w-full items-center justify-center bg-blue-primary text-xl text-white">
-              {new Date(currentYear, currentMonth).toLocaleString('default', {
-                month: 'long',
-                year: 'numeric'
+          <div className='flex h-auto w-[45%] flex-grow flex-col bg-white'>
+            <h1 className='flex h-20 w-full items-center justify-center bg-blue-primary p-4 text-xl text-white'>
+              {new Date(currentYear, currentMonth).toLocaleString("default", {
+                month: "long",
+                year: "numeric"
               })}
             </h1>
-            {/* Month calendar */}
-            <div className="px-12 py-4">
+            <div className='px-12 py-4'>
               <MonthCalendarAdmin
                 selectedDate={selectedDate}
                 onDateSelect={handleDateSelect}
@@ -131,12 +130,11 @@ export function ViewAdmin() {
           </div>
 
           {/* Coluna da semana */}
-          <div className="flex h-auto w-full flex-col bg-white">
-            <div className="flex h-24 w-full items-center justify-center bg-blue-primary text-xl text-white">
+          <div className='flex h-full w-full flex-grow flex-col bg-white'>
+            <div className='flex h-20 w-full items-center justify-center bg-blue-primary p-4 text-xl text-white'>
               Semana {formatDate(startOfWeek)} - {formatDate(endOfWeek)}
             </div>
-
-            <div className="flex h-full w-full flex-col items-center gap-4 px-40 py-4">
+            <div className='flex h-full w-full flex-col items-center gap-4 overflow-scroll px-40 pt-4'>
               {weeklyBookings.length > 0 ? (
                 weeklyBookings.map((booking, index) => (
                   <ReservationCardAdmin
@@ -149,7 +147,7 @@ export function ViewAdmin() {
                   />
                 ))
               ) : (
-                <p className="text-gray-500">Nenhum agendamento nesta semana</p>
+                <p className='text-gray-500'>Nenhum agendamento nesta semana</p>
               )}
             </div>
           </div>
