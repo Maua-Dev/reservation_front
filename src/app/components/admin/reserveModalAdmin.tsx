@@ -65,7 +65,7 @@ export default function ReserveModalAdmin({
         </button>
         <header className='flex h-12 w-full items-center justify-start gap-6 border-b-2 border-black px-4 pb-6'>
           <h2 className='text-3xl font-semibold'>CEAF</h2>
-          <p className='bold text-xl'>Reserva</p>
+          <p className='bold text-xl'>Evento</p>
         </header>
         <div className='flex h-[90%] items-start justify-start pt-8'>
           <div className='flex h-full w-1/3 flex-col items-center justify-start gap-4 px-4 py-2'>

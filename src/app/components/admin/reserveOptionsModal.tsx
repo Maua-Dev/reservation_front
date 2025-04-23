@@ -85,7 +85,7 @@ export default function ReserveOptionsModal({
               <CiCalendar size={192} />
             </div>
             <p className='flex h-1/4 w-full items-center justify-center text-center'>
-              Reserva
+              Evento
             </p>
           </button>
           <button
