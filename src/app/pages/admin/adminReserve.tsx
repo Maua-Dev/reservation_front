@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import MonthCalendar from "@/app/components/monthCalendar"
 import { cn } from "../../utils/cn"
 import { CiFilter } from "react-icons/ci"

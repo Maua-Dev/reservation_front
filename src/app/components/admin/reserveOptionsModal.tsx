@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { CiCalendar } from "react-icons/ci"
 import { FiTool } from "react-icons/fi"
 import MaintenanceModal from "./maintenanceModal"
+import ReserveModalAdmin from "./reserveModalAdmin"
 
 interface reserverOptionsModalProps {
   isOpen: boolean
@@ -26,7 +27,7 @@ export default function ReserveOptionsModal({
   }, [isOpen])
 
   const handleMaintenance = () => {
-    setIsVisible(false) 
+    setIsVisible(false)
     setIsMaintenance(true)
   }
 
@@ -51,6 +52,12 @@ export default function ReserveOptionsModal({
       {isMaintenance && (
         <MaintenanceModal
           isVisible={isMaintenance}
+          onClose={() => handleClose()}
+        />
+      )}
+      {isReserve && (
+        <ReserveModalAdmin
+          isVisible={isReserve}
           onClose={() => handleClose()}
         />
       )}
