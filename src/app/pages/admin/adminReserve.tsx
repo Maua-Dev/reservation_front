@@ -146,18 +146,27 @@ export default function AdminReserve() {
   }
 
   const isPassed = (day: number, hour: number, minute: number) => {
-    const date = new Date(selectedDate)
+    const date = new Date(selectedDate) // Use a data selecionada como base
+    // Ajustar o mês e o ano se o dia pertencer ao próximo ou ao mês anterior
+    if (
+      day > selectedDate.getDate() &&
+      day > 15 &&
+      selectedDate.getDate() < 15
+    ) {
+      date.setMonth(currentMonth - 1)
+    } else if (
+      day < selectedDate.getDate() &&
+      day < 15 &&
+      selectedDate.getDate() > 15
+    ) {
+      date.setMonth(currentMonth + 1)
+    }
+
     date.setDate(day)
     date.setHours(hour)
     date.setMinutes(minute === 0 ? 0 : 30)
     date.setSeconds(0)
     date.setMilliseconds(0)
-    const selectWeek = selectedWeek()
-    if (date.getDate() > selectWeek[selectWeek.length - 1] && date.getDate() < selectWeek[0]) {
-      date.setMonth(date.getMonth() - 1)
-    } else if (date.getDate() < selectWeek[0]) {
-      date.setMonth(date.getMonth() + 1)
-    }
     return date.getTime() < today.getTime()
   }
 
