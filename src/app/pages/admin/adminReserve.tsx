@@ -135,6 +135,16 @@ export default function AdminReserve() {
     return date.getTime()
   }
 
+  const selectedWeek = () => {
+    const week = []
+    for (let i = 1; i < 7; i++) {
+      const day = new Date(selectedDate)
+      day.setDate(selectedDate.getDate() - selectedDate.getDay() + i)
+      week.push(day.getDate())
+    }
+    return week
+  }
+
   const isPassed = (day: number, hour: number, minute: number) => {
     const date = new Date(selectedDate)
     date.setDate(day)
@@ -142,7 +152,12 @@ export default function AdminReserve() {
     date.setMinutes(minute === 0 ? 0 : 30)
     date.setSeconds(0)
     date.setMilliseconds(0)
-
+    const selectWeek = selectedWeek()
+    if (date.getDate() > selectWeek[selectWeek.length - 1] && date.getDate() < selectWeek[0]) {
+      date.setMonth(date.getMonth() - 1)
+    } else if (date.getDate() < selectWeek[0]) {
+      date.setMonth(date.getMonth() + 1)
+    }
     return date.getTime() < today.getTime()
   }
 
@@ -232,16 +247,6 @@ export default function AdminReserve() {
   }
 
   const weekDays = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
-
-  const selectedWeek = () => {
-    const week = []
-    for (let i = 1; i < 7; i++) {
-      const day = new Date(selectedDate)
-      day.setDate(selectedDate.getDate() - selectedDate.getDay() + i)
-      week.push(day.getDate())
-    }
-    return week
-  }
 
   return (
     <main className='z-50 flex h-auto w-full flex-col items-center justify-center overflow-x-hidden bg-white pt-24'>
