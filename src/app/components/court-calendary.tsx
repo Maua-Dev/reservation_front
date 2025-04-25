@@ -1,122 +1,122 @@
-import { Button } from "./button"
-import { CalendaryCard } from "./calendary-card"
-import { useState } from "react"
-import { Form } from "./form"
-import { View } from "./view"
-import { ReservationDetails } from "./reservation-details"
-import { cn } from "../utils/cn"
+import { Button } from './button'
+import { CalendaryCard } from './calendary-card'
+import { useState } from 'react'
+import { Form } from './form'
+import { View } from './view'
+import { ReservationDetails } from './reservation-details'
+import { cn } from '../utils/cn'
 
 const reservas = [
   {
     id: 1,
-    court: "Quadra 1",
+    court: 'Quadra 1',
     courtNumber: 1,
-    modality: "Basquete",
+    modality: 'Basquete',
     time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 7,
     duration: 1
   },
   {
     id: 2,
-    court: "Quadra2",
+    court: 'Quadra2',
     courtNumber: 2,
-    modality: "Vôlei",
+    modality: 'Vôlei',
     time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 4 + 30 * 60 * 1000,
     duration: 0.5
   },
 
   {
     id: 7,
-    court: "Quadra2",
+    court: 'Quadra2',
     courtNumber: 2,
-    modality: "Vôlei",
+    modality: 'Vôlei',
     time: 1738069200000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
     id: 4,
-    court: "Quadra2",
+    court: 'Quadra2',
     courtNumber: 2,
-    modality: "vôlei",
+    modality: 'vôlei',
     time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
     id: 5,
-    court: "Quadra3",
+    court: 'Quadra3',
     courtNumber: 3,
-    modality: "futsal",
+    modality: 'futsal',
     time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
     id: 6,
-    court: "Quadra3",
+    court: 'Quadra3',
     courtNumber: 3,
-    modality: "Vôlei",
+    modality: 'Vôlei',
     time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 4 + 30 * 60 * 1000,
     duration: 0.5
   },
   {
     id: 8,
-    court: "Quadra1",
+    court: 'Quadra1',
     courtNumber: 1,
-    modality: "Futsal",
+    modality: 'Futsal',
     time: 1738238400000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
     id: 9,
-    court: "Quadra3",
+    court: 'Quadra3',
     courtNumber: 3,
-    modality: "Vôlei",
+    modality: 'Vôlei',
     time: 1738238400000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
     id: 9,
-    court: "Quadra1",
+    court: 'Quadra1',
     courtNumber: 1,
-    modality: "Vôlei",
+    modality: 'Vôlei',
     time: 1738159200000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
     id: 10,
-    court: "Quadra2",
+    court: 'Quadra2',
     courtNumber: 2,
-    modality: "Basquete",
+    modality: 'Basquete',
     time: 1738159200000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
     id: 11,
-    court: "Quadra1",
+    court: 'Quadra1',
     courtNumber: 1,
-    modality: "Basquete",
+    modality: 'Basquete',
     time: 1737997200000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
     id: 12,
-    court: "Quadra3",
+    court: 'Quadra3',
     courtNumber: 3,
-    modality: "Basquete",
+    modality: 'Basquete',
     time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 4,
     duration: 1
   },
   {
     id: 13,
-    court: "Quadra2",
+    court: 'Quadra2',
     courtNumber: 2,
-    modality: "Basquete",
+    modality: 'Basquete',
     time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 4 - 30 * 60 * 1000,
     duration: 1
   },
   {
     id: 14,
-    court: "Quadra1",
+    court: 'Quadra1',
     courtNumber: 1,
-    modality: "Basquete",
+    modality: 'Basquete',
     time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 4 - 30 * 60 * 1000,
     duration: 1
   }
@@ -147,15 +147,15 @@ export function Court({ isField }: CourtProps) {
   const [selectedBookingVisible, setSelectedBookingVisible] = useState(false)
   const [selectedTime, setSelectedTime] = useState<number | null>(null)
   const today = new Date()
-  const modalities = ["Basquete", "Handbol", "Futsal", "Vôlei", "Tênis"]
+  const modalities = ['Basquete', 'Handbol', 'Futsal', 'Vôlei', 'Tênis']
   const equipments = [
-    "Bola de futsal",
-    "Bola de handol",
-    "Bola de tênis",
-    "Bola de vôlei",
-    "Raquete de tênis"
+    'Bola de futsal',
+    'Bola de handol',
+    'Bola de tênis',
+    'Bola de vôlei',
+    'Raquete de tênis'
   ]
-  const options = ["Quadra 1", "Quadra 2", "Quadra 3"]
+  const options = ['Quadra 1', 'Quadra 2', 'Quadra 3']
 
   const thisWeek = () => {
     const week = []
@@ -183,9 +183,9 @@ export function Court({ isField }: CourtProps) {
 
     return sameTimeReservations.size > 1
       ? sameTimeReservations.size > 2
-        ? "xl:w-2/5"
-        : "xl:w-[45%]"
-      : "xl:w-[86%]"
+        ? 'xl:w-2/5'
+        : 'xl:w-[45%]'
+      : 'xl:w-[86%]'
   }
 
   function handleOpeMyBookings() {
@@ -218,22 +218,22 @@ export function Court({ isField }: CourtProps) {
 
     switch (courtNumber) {
       case 1:
-        return "max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]"
+        return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
       case 2:
         return sameTimeReservations.size > 1
           ? sameTimeReservations.size == 2
             ? isItOne
-              ? "absolute w-20 h-20 left-[46%]"
-              : "absolute w-20 h-20 left-[4%]"
-            : "absolute w-20 h-20 left-[30%]"
-          : "absolute w-20 h-20 left-[4%]"
+              ? 'absolute w-20 h-20 left-[46%]'
+              : 'absolute w-20 h-20 left-[4%]'
+            : 'absolute w-20 h-20 left-[30%]'
+          : 'absolute w-20 h-20 left-[4%]'
       // return 'absolute w-20 h-20 left-[30%]'
       case 3:
         return sameTimeReservations.size > 1
           ? sameTimeReservations.size == 2
-            ? "absolute w-20 h-20 left-[46%]"
-            : "absolute w-20 h-20 left-[56%]"
-          : "absolute w-20 h-20 left-[4%]"
+            ? 'absolute w-20 h-20 left-[46%]'
+            : 'absolute w-20 h-20 left-[56%]'
+          : 'absolute w-20 h-20 left-[4%]'
       // return 'absolute w-20 h-20 left-[56%]'
       default:
         return 4
@@ -306,14 +306,14 @@ export function Court({ isField }: CourtProps) {
 
     const timestamp = clickedTime.getTime()
     console.log(
-      "Timestamp: ",
+      'Timestamp: ',
       new Date(timestamp).toTimeString(),
       new Date(timestamp).toDateString()
     )
     console.log(timestamp)
 
     if (timestamp < today.getTime()) {
-      console.log("Não é possível fazer reservas em horários passados.")
+      console.log('Não é possível fazer reservas em horários passados.')
       return
     }
 
@@ -330,7 +330,7 @@ export function Court({ isField }: CourtProps) {
     // Se todas as 3 quadras estiverem ocupadas, bloqueia o modal
     if (occupiedCourts.size >= 3) {
       console.log(
-        "Todas as quadras estão ocupadas neste horário. Não é possível fazer mais reservas."
+        'Todas as quadras estão ocupadas neste horário. Não é possível fazer mais reservas.'
       )
     } else {
       handleOpenModal()
@@ -370,28 +370,28 @@ export function Court({ isField }: CourtProps) {
   }
 
   return (
-    <div className='w-full'>
+    <div className="w-full">
       <div
-        className={`relative h-44 w-full ${isField ? "bg-campo" : "bg-quadra"} bg-cover bg-center`}
+        className={`relative h-44 w-full ${isField ? 'bg-campo' : 'bg-quadra'} bg-cover bg-center`}
       >
-        <div className='h-full w-full bg-black/50'>
-          <div className='absolute bottom-0 left-0 p-5 font-poppins text-white'>
-            <p className='text-3xl font-semibold'>
-              {isField ? "Campo" : "Quadras"}
+        <div className="h-full w-full bg-black/50">
+          <div className="absolute bottom-0 left-0 p-5 font-poppins text-white">
+            <p className="text-3xl font-semibold">
+              {isField ? 'Campo' : 'Quadras'}
             </p>
-            <p className='text-2xl font-normal'>
+            <p className="text-2xl font-normal">
               {today
-                .toLocaleDateString("pt-BR", { month: "long" })
+                .toLocaleDateString('pt-BR', { month: 'long' })
                 .charAt(0)
                 .toUpperCase() +
                 today
-                  .toLocaleDateString("pt-BR", { month: "long" })
-                  .slice(1)}{" "}
+                  .toLocaleDateString('pt-BR', { month: 'long' })
+                  .slice(1)}{' '}
               {thisWeek()[0]}-{thisWeek()[5]}
             </p>
           </div>
-          <div className='absolute bottom-0 right-0 p-8'>
-            <Button onClick={handleOpeMyBookings} className='h-12 w-52 p-1'>
+          <div className="absolute bottom-0 right-0 p-8">
+            <Button onClick={handleOpeMyBookings} className="h-12 w-52 p-1">
               Minhas Reservas
             </Button>
           </div>
@@ -399,33 +399,33 @@ export function Court({ isField }: CourtProps) {
       </div>
 
       <div>
-        <div className='sticky top-[5.4rem] z-[90] flex font-poppins text-base font-semibold text-gray-600'>
-          <div className='w-24 bg-blue-primary p-4 text-xl text-white'>
+        <div className="sticky top-[5.4rem] z-[90] flex font-poppins text-base font-semibold text-gray-600">
+          <div className="w-24 bg-blue-primary p-4 text-xl text-white">
             Hora
           </div>
-          <div className='flex flex-1 text-center text-lg text-white'>
+          <div className="flex flex-1 text-center text-lg text-white">
             {thisWeek().map((date, index) => (
               <div
                 key={index}
-                className='flex flex-1 flex-col items-center justify-center bg-blue-primary p-1 text-xl font-normal'
+                className="flex flex-1 flex-col items-center justify-center bg-blue-primary p-1 text-xl font-normal"
               >
                 <div>{date}</div>
                 <div>
-                  {["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][index]}
-                </div>{" "}
+                  {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][index]}
+                </div>{' '}
               </div>
             ))}
           </div>
         </div>
-        <div className='h-12 border-gray-400'></div>
+        <div className="h-12 border-gray-400"></div>
         {[...Array(isField ? 18 : 25)].map((_, index) => {
           const hour = 8 + Math.floor((index + 1) / 2)
           const minute = (index + 1) % 2
           const isHourSeparator = minute === 0
           return (
-            <div key={index} className='flex'>
-              <div className='flex min-h-16 min-w-20 max-w-20 items-start border-r border-gray-400 px-4 font-poppins'>{`${hour}:${minute === 0 ? "00" : "30"}`}</div>
-              <div className='flex flex-1'>
+            <div key={index} className="flex">
+              <div className="flex min-h-16 min-w-20 max-w-20 items-start border-r border-gray-400 px-4 font-poppins">{`${hour}:${minute === 0 ? '00' : '30'}`}</div>
+              <div className="flex flex-1">
                 {[...Array(6)].map((_, dayIndex) => (
                   <div
                     key={dayIndex}
@@ -437,10 +437,10 @@ export function Court({ isField }: CourtProps) {
                         dayIndex
                       )
                     }
-                    className={`relative flex min-w-[180px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? "bg-gray-300" : "bg-gray-200 hover:cursor-pointer hover:bg-blue-100"} p-2 last:border-r-0`}
+                    className={`relative flex min-w-[180px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
                     style={{
-                      borderBottomStyle: isHourSeparator ? "dashed" : "solid",
-                      borderRightStyle: "solid"
+                      borderBottomStyle: isHourSeparator ? 'dashed' : 'solid',
+                      borderRightStyle: 'solid'
                     }}
                   >
                     {reservasConvertidas.map((reserva) => {
@@ -454,7 +454,7 @@ export function Court({ isField }: CourtProps) {
                             key={reserva.id}
                             onClick={(e) => e.stopPropagation()}
                             className={cn(
-                              "absolute flex",
+                              'absolute flex',
                               specialWidth(
                                 Number(reserva.time),
                                 Number(reserva.endTime),
@@ -493,7 +493,7 @@ export function Court({ isField }: CourtProps) {
       </div>
       {isReservationModalOpen && selectedTime && (
         <div
-          className={`duration-250 fixed inset-0 z-[100] flex items-center justify-center bg-black/50 transition-all ${bookingModalVisible ? "translate-y-0 opacity-100" : "translate-y-96 opacity-0"} backdrop-blur-sm`}
+          className={`duration-250 fixed inset-0 z-[100] flex items-center justify-center bg-black/50 transition-all ${bookingModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
           onClick={handleCloseModal}
         >
           <Form
@@ -508,7 +508,7 @@ export function Court({ isField }: CourtProps) {
       )}
       {isMyBookingsModalOpen && (
         <div
-          className={`duration-250 fixed inset-0 z-[999] flex items-center justify-center bg-black/50 transition-all ${isMyBookingsModalVisible ? "translate-y-0 opacity-100" : "translate-y-96 opacity-0"} backdrop-blur-sm`}
+          className={`duration-250 fixed inset-0 z-[999] flex items-center justify-center bg-black/50 transition-all ${isMyBookingsModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
           onClick={() => {
             setIsMyBookingsModalVisible(false)
             setTimeout(() => {
@@ -528,7 +528,7 @@ export function Court({ isField }: CourtProps) {
       )}
       {selectedBooking && (
         <div
-          className={`duration-250 fixed inset-0 z-[999] flex items-center justify-center bg-black/50 transition-all ${selectedBookingVisible ? "translate-y-0 opacity-100" : "translate-y-96 opacity-0"} backdrop-blur-sm`}
+          className={`duration-250 fixed inset-0 z-[999] flex items-center justify-center bg-black/50 transition-all ${selectedBookingVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
           onClick={() => handleDiselectingBooking()}
         >
           <ReservationDetails
