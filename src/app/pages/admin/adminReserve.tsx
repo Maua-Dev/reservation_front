@@ -135,21 +135,21 @@ export default function AdminReserve() {
     return date.getTime()
   }
 
+  // A função não está funcionando corretamente
   const isPassed = (day: number, hour: number, minute: number) => {
-    const date = new Date()
-    const compareDate = new Date(selectedDate)
-    compareDate.setDate(day)
-    compareDate.setHours(hour)
-    compareDate.setMinutes(minute === 0 ? 0 : 30)
-    compareDate.setSeconds(0)
-    compareDate.setMilliseconds(0)
+    const date = new Date(selectedDate)
+    date.setDate(day)
+    date.setHours(hour)
+    date.setMinutes(minute === 0 ? 0 : 30)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
 
-    return compareDate.getTime() < date.getTime()
+    return date.getTime() < today.getTime()
   }
 
   const thisWeek = () => {
     const week = []
-    for (let i = 1; i <= 6; i++) {
+    for (let i = 1; i < 7; i++) {
       const day = new Date(today)
       day.setDate(today.getDate() - today.getDay() + i)
       week.push(day.getDate())
@@ -349,7 +349,7 @@ export default function AdminReserve() {
                             )
                           }
                           className={`relative flex min-w-14 flex-1 gap-2 border-b border-r border-gray-400 lg:min-w-24 ${
-                            isPassed(thisWeek()[dayIndex], hour, minute)
+                            isPassed(selectedWeek()[dayIndex], hour, minute)
                               ? "bg-gray-300"
                               : "bg-gray-200 hover:cursor-pointer hover:bg-blue-100"
                           } p-2 last:border-r-0`}
