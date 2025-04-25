@@ -3,13 +3,15 @@ interface MonthCalendarProps {
   onDateSelect: (date: Date) => void
   currentMonth: number
   currentYear: number
+  onMonthChange: (month: number, year: number) => void
 }
 
 export default function MonthCalendarAdmin({
   selectedDate,
   onDateSelect,
   currentMonth,
-  currentYear
+  currentYear,
+  onMonthChange
 }: MonthCalendarProps) {
   // Função para verificar se uma data está na semana selecionada
   const isInSelectedWeek = (date: Date) => {
@@ -39,6 +41,36 @@ export default function MonthCalendarAdmin({
 
   return (
     <div className="flex h-auto w-full flex-col items-center justify-center bg-white p-4">
+      {/* Cabeçalho com navegação entre meses */}
+      <div className="mb-4 flex w-full items-center justify-between">
+        <button
+          onClick={() => {
+            const newMonth = currentMonth === 0 ? 11 : currentMonth - 1
+            const newYear = currentMonth === 0 ? currentYear - 1 : currentYear
+            onMonthChange(newMonth, newYear)
+          }}
+          className="text-gray-600 hover:text-blue-500"
+        >
+          &lt;
+        </button>
+        <span className="font-semibold text-gray-700">
+          {new Date(currentYear, currentMonth).toLocaleString('pt-BR', {
+            month: 'long',
+            year: 'numeric'
+          })}
+        </span>
+        <button
+          onClick={() => {
+            const newMonth = currentMonth === 11 ? 0 : currentMonth + 1
+            const newYear = currentMonth === 11 ? currentYear + 1 : currentYear
+            onMonthChange(newMonth, newYear)
+          }}
+          className="text-gray-600 hover:text-blue-500"
+        >
+          &gt;
+        </button>
+      </div>
+
       {/* Dias da semana */}
       <div className="grid w-full grid-cols-7 gap-2 text-center">
         {weekDays.map((day, index) => (

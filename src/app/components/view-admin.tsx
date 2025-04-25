@@ -83,21 +83,20 @@ export function ViewAdmin() {
     }
   ]
 
-  const weeklyBookings = bookings
-    .filter((booking) => {
-      const bookingDate = new Date(booking.startDate)
-      return bookingDate >= startOfWeek && bookingDate <= endOfWeek
-    })
-    .sort((a, b) => {
-      const dateDiff = a.startDate - b.startDate
-      if (dateDiff !== 0) return dateDiff
-
-      return a.startDate - b.startDate
-    })
+  const weeklyBookings = bookings.filter((booking) => {
+    const bookingDate = new Date(booking.startDate)
+    return bookingDate >= startOfWeek && bookingDate <= endOfWeek
+  })
 
   // Função chamada quando um dia é selecionado no calendário
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date)
+  }
+
+  // Função chamada quando o mês é alterado no calendário
+  const handleMonthChange = (month: number, year: number) => {
+    setCurrentMonth(month)
+    setCurrentYear(year)
   }
 
   // Formatar data para exibição
@@ -107,20 +106,6 @@ export function ViewAdmin() {
       month: '2-digit'
     })
   }
-  const handlePreviousMonth = () => {
-    const newMonth = currentMonth === 0 ? 11 : currentMonth - 1
-    const newYear = currentMonth === 0 ? currentYear - 1 : currentYear
-    setCurrentMonth(newMonth)
-    setCurrentYear(newYear)
-  }
-
-  // Função para navegar para o próximo mês
-  const handleNextMonth = () => {
-    const newMonth = currentMonth === 11 ? 0 : currentMonth + 1
-    const newYear = currentMonth === 11 ? currentYear + 1 : currentYear
-    setCurrentMonth(newMonth)
-    setCurrentYear(newYear)
-  }
 
   return (
     <main className="flex w-full flex-col bg-white pt-24">
@@ -128,32 +113,19 @@ export function ViewAdmin() {
         <div className="flex h-full w-full flex-col md:flex-row">
           {/* Coluna do calendário */}
           <div className="flex h-auto w-[45%] flex-grow flex-col bg-white">
-            <div className="flex h-20 w-full items-center justify-center bg-blue-primary p-4 text-xl text-white">
-              <button
-                onClick={handlePreviousMonth}
-                className="p-2 text-white hover:text-gray-200"
-              >
-                &lt;
-              </button>
-              <span>
-                {new Date(currentYear, currentMonth).toLocaleString('default', {
-                  month: 'long',
-                  year: 'numeric'
-                })}
-              </span>
-              <button
-                onClick={handleNextMonth}
-                className="p-2 text-white hover:text-gray-200"
-              >
-                &gt;
-              </button>
-            </div>
-            <div className="px-12">
+            <h1 className="flex h-20 w-full items-center justify-center bg-blue-primary p-4 text-xl text-white">
+              {new Date(currentYear, currentMonth).toLocaleString('default', {
+                month: 'long',
+                year: 'numeric'
+              })}
+            </h1>
+            <div className="px-12 py-4">
               <MonthCalendarAdmin
                 selectedDate={selectedDate}
                 onDateSelect={handleDateSelect}
                 currentMonth={currentMonth}
                 currentYear={currentYear}
+                onMonthChange={handleMonthChange}
               />
             </div>
             <div className="-mt-8 flex flex-row items-center justify-center gap-2 text-start font-poppins">
@@ -169,18 +141,16 @@ export function ViewAdmin() {
             </div>
             <div className="flex h-full w-full flex-col items-center gap-4 px-40 pt-4">
               {weeklyBookings.length > 0 ? (
-                weeklyBookings
-                  .sort((a, b) => a.startDate - b.startDate)
-                  .map((booking, index) => (
-                    <ReservationCardAdmin
-                      key={index}
-                      startDate={booking.startDate}
-                      endDate={booking.endDate}
-                      court={booking.court}
-                      status={booking.status}
-                      onCancel={() => handleCancel(booking.date)}
-                    />
-                  ))
+                weeklyBookings.map((booking, index) => (
+                  <ReservationCardAdmin
+                    key={index}
+                    startDate={booking.startDate}
+                    endDate={booking.endDate}
+                    court={booking.court}
+                    status={booking.status}
+                    onCancel={() => handleCancel(booking.date)}
+                  />
+                ))
               ) : (
                 <p className="text-gray-500">Nenhum agendamento nesta semana</p>
               )}
