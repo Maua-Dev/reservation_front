@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-import MonthCalendar from "@/app/components/monthCalendar"
 import { cn } from "../../utils/cn"
 import { CiFilter } from "react-icons/ci"
 import { useState } from "react"
@@ -35,7 +34,6 @@ const reservas = [
 
 export default function AdminReserve() {
   const today = new Date()
-  const month = today.toLocaleString("default", { month: "long" })
   const [isOptionsOpen, setIsOptionsOpen] = useState(false)
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
@@ -56,16 +54,7 @@ export default function AdminReserve() {
     setCurrentYear(year)
   }
 
-  // Função para obter o primeiro dia (Domingo) da semana
-  const getStartOfWeek = (date: Date) => {
-    const day = date.getDay()
-    const diff = date.getDate() - day
-    const startOfWeek = new Date(date)
-    startOfWeek.setDate(diff)
-    startOfWeek.setHours(0, 0, 0, 0)
-    return startOfWeek
-  }
-
+  // A FUNÇÃO TA ERRADA EU ACHO CORRIGIR DPS
   function handleClickedTime(
     hour: number,
     minute: number,
@@ -340,7 +329,7 @@ export default function AdminReserve() {
             </div>
 
             <div className='flex flex-col overflow-x-auto pl-6 pr-4'>
-              {[...Array(25)].map((_, index) => {
+              {[...Array(28)].map((_, index) => {
                 const hour = 8 + Math.floor(index / 2)
                 const minute = index % 2
                 const isHourSeparator = minute === 0
