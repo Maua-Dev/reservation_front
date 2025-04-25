@@ -135,7 +135,6 @@ export default function AdminReserve() {
     return date.getTime()
   }
 
-  // A função não está funcionando corretamente
   const isPassed = (day: number, hour: number, minute: number) => {
     const date = new Date(selectedDate)
     date.setDate(day)
