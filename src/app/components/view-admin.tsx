@@ -119,7 +119,7 @@ export function ViewAdmin() {
                 year: 'numeric'
               })}
             </h1>
-            <div className="px-12 py-4">
+            <div className="cursor-pointer px-12 py-4">
               <MonthCalendarAdmin
                 selectedDate={selectedDate}
                 onDateSelect={handleDateSelect}
@@ -128,7 +128,7 @@ export function ViewAdmin() {
                 onMonthChange={handleMonthChange}
               />
             </div>
-            <div className="-mt-8 flex flex-row items-center justify-center gap-2 text-start font-poppins">
+            <div className="-mt-8 flex cursor-pointer flex-row items-center justify-center gap-2 text-start font-poppins">
               <IoMdDownload />
               <span>RELATÓRIO</span>
             </div>
