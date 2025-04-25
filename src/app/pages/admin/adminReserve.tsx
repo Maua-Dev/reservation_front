@@ -4,6 +4,7 @@ import { cn } from "../../utils/cn"
 import { CiFilter } from "react-icons/ci"
 import { useState } from "react"
 import ReserveOptionsModal from "@/app/components/admin/reserveOptionsModal"
+import MonthCalendarAdmin from "@/app/components/monthCalendar-admin"
 
 const reservas = [
   {
@@ -36,6 +37,34 @@ export default function AdminReserve() {
   const today = new Date()
   const month = today.toLocaleString("default", { month: "long" })
   const [isOptionsOpen, setIsOptionsOpen] = useState(false)
+
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+  const [currentMonth, setCurrentMonth] = useState<number>(
+    new Date().getMonth()
+  )
+  const [currentYear, setCurrentYear] = useState<number>(
+    new Date().getFullYear()
+  )
+
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date)
+  }
+
+  // Função chamada quando o mês é alterado no calendário
+  const handleMonthChange = (month: number, year: number) => {
+    setCurrentMonth(month)
+    setCurrentYear(year)
+  }
+
+  // Função para obter o primeiro dia (Domingo) da semana
+  const getStartOfWeek = (date: Date) => {
+    const day = date.getDay()
+    const diff = date.getDate() - day
+    const startOfWeek = new Date(date)
+    startOfWeek.setDate(diff)
+    startOfWeek.setHours(0, 0, 0, 0)
+    return startOfWeek
+  }
 
   function handleClickedTime(
     hour: number,
@@ -95,32 +124,27 @@ export default function AdminReserve() {
     setIsOptionsOpen(true)
   }
 
-  const isPassed = (
-    day: number,
-    weekday: number,
-    hour: number,
-    minute: number
-  ) => {
-    const date = new Date()
-    if (day < today.getDate() && weekday > today.getDay() - 1) {
-      // esse -1 é por conta do Date(), ele começar com o index 0 no domingo, no nosso caso, é a segunda
-      date.setMonth(today.getMonth() + 1)
-      if (today.getMonth() === 11) {
-        date.setFullYear(today.getFullYear() + 1)
-        date.setMonth(0)
-      }
-    } else {
-      date.setMonth(today.getMonth())
-      date.setFullYear(today.getFullYear())
-    }
-
+  const formDate = (day: number, hour: number, minute: number) => {
+    const date = new Date(selectedDate) // Use a data selecionada como base
     date.setDate(day)
     date.setHours(hour)
     date.setMinutes(minute === 0 ? 0 : 30)
     date.setSeconds(0)
     date.setMilliseconds(0)
 
-    return date.getTime() < today.getTime()
+    return date.getTime()
+  }
+
+  const isPassed = (day: number, hour: number, minute: number) => {
+    const date = new Date()
+    const compareDate = new Date(selectedDate)
+    compareDate.setDate(day)
+    compareDate.setHours(hour)
+    compareDate.setMinutes(minute === 0 ? 0 : 30)
+    compareDate.setSeconds(0)
+    compareDate.setMilliseconds(0)
+
+    return compareDate.getTime() < date.getTime()
   }
 
   const thisWeek = () => {
@@ -210,6 +234,16 @@ export default function AdminReserve() {
 
   const weekDays = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
 
+  const selectedWeek = () => {
+    const week = []
+    for (let i = 1; i < 7; i++) {
+      const day = new Date(selectedDate)
+      day.setDate(selectedDate.getDate() - selectedDate.getDay() + i)
+      week.push(day.getDate())
+    }
+    return week
+  }
+
   return (
     <main className='z-50 flex h-auto w-full flex-col items-center justify-center overflow-x-hidden bg-white pt-24'>
       <ReserveOptionsModal
@@ -256,10 +290,19 @@ export default function AdminReserve() {
           {/* Coluna do mês - 25% em telas grandes, 100% em telas pequenas */}
           <div className='flex h-auto w-full flex-grow-0 flex-col bg-white md:w-1/4'>
             <h1 className='flex h-20 w-full items-center justify-center bg-blue-primary p-4 text-xl text-white'>
-              {month}
+              {selectedDate.toLocaleDateString("pt-Br", {
+                month: "long",
+                year: "numeric"
+              })}
             </h1>
             {/* Month calendar */}
-            <MonthCalendar />
+            <MonthCalendarAdmin
+              selectedDate={selectedDate}
+              onDateSelect={handleDateSelect}
+              currentMonth={currentMonth}
+              currentYear={currentYear}
+              onMonthChange={handleMonthChange}
+            />
           </div>
 
           {/* Coluna da semana - 75% em telas grandes, 100% em telas pequenas */}
@@ -270,7 +313,7 @@ export default function AdminReserve() {
                   Semana
                 </div>
                 <div className='flex flex-1 overflow-x-auto text-center text-lg text-white'>
-                  {thisWeek().map((date, index) => (
+                  {selectedWeek().map((date, index) => (
                     <div
                       key={index}
                       className='flex min-w-10 flex-1 flex-col items-center justify-center bg-blue-primary p-1 text-lg font-normal md:min-w-12 md:text-xl'
@@ -306,12 +349,7 @@ export default function AdminReserve() {
                             )
                           }
                           className={`relative flex min-w-14 flex-1 gap-2 border-b border-r border-gray-400 lg:min-w-24 ${
-                            isPassed(
-                              thisWeek()[dayIndex],
-                              dayIndex + 1,
-                              hour,
-                              minute
-                            )
+                            isPassed(thisWeek()[dayIndex], hour, minute)
                               ? "bg-gray-300"
                               : "bg-gray-200 hover:cursor-pointer hover:bg-blue-100"
                           } p-2 last:border-r-0`}
@@ -325,9 +363,9 @@ export default function AdminReserve() {
                         >
                           {reservasConvertidas.map((reserva) => {
                             if (
-                              reserva.hour === hour &&
-                              reserva.minute === (minute === 1 ? 30 : 0) &&
-                              reserva.day === thisWeek()[dayIndex]
+                              formDate(reserva.day, hour, minute) ===
+                                reserva.time &&
+                              thisWeek()[dayIndex] === reserva.day
                             ) {
                               return (
                                 <div

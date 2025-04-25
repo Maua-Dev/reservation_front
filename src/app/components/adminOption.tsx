@@ -24,7 +24,7 @@ export function AdminOption({ image, title, action, directory }: AdminOptionProp
         </h1>
         <div className="flex w-1/5 items-center justify-center px-2">
           <Button
-            onClick={() => navigate(directory)}
+            onClick={() => {navigate(directory); scrollTo(0, 0)}}
             className="flex w-full items-center justify-center py-1 font-league text-sm font-semibold lg:py-2 lg:text-2xl"
           >
             {action}

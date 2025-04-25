@@ -11,19 +11,19 @@ const options = [
     image: imgCampo,
     title: "Agendar Manutenção ou Evento",
     action: "Eventos",
-    calendar: "/admin-reserve"
+    dir: "/admin-reserve"
   },
   {
     image: imgQuadra,
     title: "Visualizar Reservas de Usuários",
     action: "Visualizar",
-    calendar: "/admin-report"
+    dir: "/admin-report"
   },
   {
     image: imgBeachTenis,
     title: "Professores Autorizados",
     action: "Visualizar",
-    calendar: "/fieldbeach-reserve"
+    dir: "/fieldbeach-reserve"
   }
 ]
 
@@ -47,7 +47,7 @@ export default function AdminHome() {
             title={option.title}
             image={option.image}
             action={option.action}
-            directory={option.calendar}
+            directory={option.dir}
           />
         ))}
       </div>
