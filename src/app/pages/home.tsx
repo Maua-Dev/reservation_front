@@ -2,7 +2,6 @@ import Footer from '@/app/components/footer'
 import { Dev } from '@/app/components/dev'
 import { About } from '../components/about'
 import { Reservations } from '../components/reservations'
-import { Court } from '../components/court-calendary'
 
 export function Home() {
   return (
@@ -10,7 +9,6 @@ export function Home() {
       <About />
       <Reservations />
       <Dev />
-      <Court />
       <Footer />
     </main>
   )
