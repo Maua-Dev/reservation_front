@@ -51,7 +51,6 @@ export default function AdminHome() {
           />
         ))}
       </div>
-      <Dev />
       <Footer />
     </main>
   )
