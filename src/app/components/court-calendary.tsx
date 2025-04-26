@@ -7,118 +7,76 @@ import { ReservationDetails } from './reservation-details'
 import { cn } from '../utils/cn'
 
 const reservas = [
+  // Caso com 1 reserva
   {
     id: 1,
     court: 'Quadra 1',
     courtNumber: 1,
     modality: 'Basquete',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 7,
+    time: new Date(2025, 3, 26, 10, 0).getTime(), // 26/04 10:00
     duration: 1
-  },
-  {
-    id: 2,
-    court: 'Quadra2',
-    courtNumber: 2,
-    modality: 'Vôlei',
-    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 4 + 30 * 60 * 1000,
-    duration: 0.5
   },
 
+  // Caso com 2 reservas no mesmo horário
   {
-    id: 7,
-    court: 'Quadra2',
+    id: 2,
+    court: 'Quadra 2',
     courtNumber: 2,
     modality: 'Vôlei',
-    time: 1738069200000 + 7 * 24 * 60 * 60 * 1000 * 4,
+    time: new Date(2025, 3, 26, 11, 0).getTime(), // 26/04 11:00
     duration: 1
   },
   {
+    id: 3,
+    court: 'Quadra 3',
+    courtNumber: 3,
+    modality: 'Futsal',
+    time: new Date(2025, 3, 26, 11, 0).getTime(), // 26/04 11:00
+    duration: 1
+  },
+
+  // Caso com 3 reservas no mesmo horário (manhã)
+  {
     id: 4,
-    court: 'Quadra2',
-    courtNumber: 2,
-    modality: 'vôlei',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 4,
+    court: 'Quadra 1',
+    courtNumber: 1,
+    modality: 'Vôlei',
+    time: new Date(2025, 3, 26, 9, 0).getTime(), // 26/04 09:00
     duration: 1
   },
   {
     id: 5,
-    court: 'Quadra3',
-    courtNumber: 3,
-    modality: 'futsal',
-    time: 1738252800000 + 7 * 24 * 60 * 60 * 1000 * 4,
+    court: 'Quadra 2',
+    courtNumber: 2,
+    modality: 'Basquete',
+    time: new Date(2025, 3, 26, 9, 0).getTime(), // 26/04 09:00
     duration: 1
   },
   {
     id: 6,
-    court: 'Quadra3',
+    court: 'Quadra 3',
     courtNumber: 3,
+    modality: 'Futsal',
+    time: new Date(2025, 3, 26, 9, 0).getTime(), // 26/04 09:00
+    duration: 1
+  },
+
+  // Outras reservas variadas
+  {
+    id: 7,
+    court: 'Quadra 2',
+    courtNumber: 2,
     modality: 'Vôlei',
-    time: 1738407600000 + 7 * 24 * 60 * 60 * 1000 * 4 + 30 * 60 * 1000,
-    duration: 0.5
+    time: new Date(2025, 3, 26, 15, 0).getTime(), // 26/04 15:00
+    duration: 1
   },
   {
     id: 8,
-    court: 'Quadra1',
+    court: 'Quadra 1',
     courtNumber: 1,
     modality: 'Futsal',
-    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000 * 4,
-    duration: 1
-  },
-  {
-    id: 9,
-    court: 'Quadra3',
-    courtNumber: 3,
-    modality: 'Vôlei',
-    time: 1738238400000 + 7 * 24 * 60 * 60 * 1000 * 4,
-    duration: 1
-  },
-  {
-    id: 9,
-    court: 'Quadra1',
-    courtNumber: 1,
-    modality: 'Vôlei',
-    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000 * 4,
-    duration: 1
-  },
-  {
-    id: 10,
-    court: 'Quadra2',
-    courtNumber: 2,
-    modality: 'Basquete',
-    time: 1738159200000 + 7 * 24 * 60 * 60 * 1000 * 4,
-    duration: 1
-  },
-  {
-    id: 11,
-    court: 'Quadra1',
-    courtNumber: 1,
-    modality: 'Basquete',
-    time: 1737997200000 + 7 * 24 * 60 * 60 * 1000 * 4,
-    duration: 1
-  },
-  {
-    id: 12,
-    court: 'Quadra3',
-    courtNumber: 3,
-    modality: 'Basquete',
-    time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 4,
-    duration: 1
-  },
-  {
-    id: 13,
-    court: 'Quadra2',
-    courtNumber: 2,
-    modality: 'Basquete',
-    time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 4 - 30 * 60 * 1000,
-    duration: 1
-  },
-  {
-    id: 14,
-    court: 'Quadra1',
-    courtNumber: 1,
-    modality: 'Basquete',
-    time: 1738245600000 + 7 * 24 * 60 * 60 * 1000 * 4 - 30 * 60 * 1000,
-    duration: 1
+    time: new Date(2025, 3, 29, 16, 30).getTime(), // 29/04 16:30
+    duration: 0.5
   }
 ]
 
@@ -225,14 +183,14 @@ export function Court({ isField }: CourtProps) {
             ? isItOne
               ? 'absolute w-20 h-20 left-[46%]'
               : 'absolute w-20 h-20 left-[4%]'
-            : 'absolute w-20 h-20 left-[30%]'
+            : 'absolute w-20 h-20 left-[25%]'
           : 'absolute w-20 h-20 left-[4%]'
       // return 'absolute w-20 h-20 left-[30%]'
       case 3:
         return sameTimeReservations.size > 1
           ? sameTimeReservations.size == 2
-            ? 'absolute w-20 h-20 left-[46%]'
-            : 'absolute w-20 h-20 left-[56%]'
+            ? 'absolute w-20 h-20 left-[25%]'
+            : 'absolute w-20 h-20 left-[50%]'
           : 'absolute w-20 h-20 left-[4%]'
       // return 'absolute w-20 h-20 left-[56%]'
       default:
@@ -370,7 +328,7 @@ export function Court({ isField }: CourtProps) {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full max-w-[100vw]">
       <div
         className={`relative h-44 w-full ${isField ? 'bg-campo' : 'bg-quadra'} bg-cover bg-center`}
       >
@@ -398,99 +356,94 @@ export function Court({ isField }: CourtProps) {
         </div>
       </div>
 
-      <div>
-        <div className="sticky top-[5.4rem] z-[90] flex font-poppins text-base font-semibold text-gray-600">
-          <div className="w-24 bg-blue-primary p-4 text-xl text-white">
-            Hora
-          </div>
-          <div className="flex flex-1 text-center text-lg text-white">
-            {thisWeek().map((date, index) => (
-              <div
-                key={index}
-                className="flex flex-1 flex-col items-center justify-center bg-blue-primary p-1 text-xl font-normal"
-              >
-                <div>{date}</div>
-                <div>
-                  {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][index]}
-                </div>{' '}
-              </div>
-            ))}
-          </div>
+      <div className="sticky top-20 z-[90] mb-12 flex max-w-[100vw] font-poppins text-base font-semibold text-gray-600">
+        <div className="w-24 bg-blue-primary p-4 text-xl text-white">Hora</div>
+        <div className="flex flex-1 text-center text-lg text-white">
+          {thisWeek().map((date, index) => (
+            <div
+              key={index}
+              className="flex flex-1 flex-col items-center justify-center bg-blue-primary p-1 text-xl font-normal"
+            >
+              <div>{date}</div>
+              <div>
+                {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][index]}
+              </div>{' '}
+            </div>
+          ))}
         </div>
-        <div className="h-12 border-gray-400"></div>
-        {[...Array(isField ? 18 : 25)].map((_, index) => {
-          const hour = 8 + Math.floor((index + 1) / 2)
-          const minute = (index + 1) % 2
-          const isHourSeparator = minute === 0
-          return (
-            <div key={index} className="flex">
-              <div className="flex min-h-16 min-w-20 max-w-20 items-start border-r border-gray-400 px-4 font-poppins">{`${hour}:${minute === 0 ? '00' : '30'}`}</div>
-              <div className="flex flex-1">
-                {[...Array(6)].map((_, dayIndex) => (
-                  <div
-                    key={dayIndex}
-                    onClick={() =>
-                      handleClickedTime(
-                        hour,
-                        minute,
-                        thisWeek()[dayIndex],
-                        dayIndex
+      </div>
+      {[...Array(isField ? 18 : 25)].map((_, index) => {
+        const hour = 8 + Math.floor((index + 1) / 2)
+        const minute = (index + 1) % 2
+        const isHourSeparator = minute === 0
+        return (
+          <div key={index} className="flex">
+            <div className="flex min-h-16 min-w-16 max-w-16 items-start border-r border-gray-400 px-4 font-poppins">{`${hour}:${minute === 0 ? '00' : '30'}`}</div>
+            <div className="flex flex-1">
+              {[...Array(6)].map((_, dayIndex) => (
+                <div
+                  key={dayIndex}
+                  onClick={() =>
+                    handleClickedTime(
+                      hour,
+                      minute,
+                      thisWeek()[dayIndex],
+                      dayIndex
+                    )
+                  }
+                  className={`relative flex min-w-[90px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
+                  style={{
+                    borderBottomStyle: isHourSeparator ? 'dashed' : 'solid',
+                    borderRightStyle: 'solid'
+                  }}
+                >
+                  {reservasConvertidas.map((reserva) => {
+                    if (
+                      reserva.hour === hour &&
+                      reserva.minute === (minute == 1 ? 30 : 0) &&
+                      reserva.day === thisWeek()[dayIndex]
+                    ) {
+                      return (
+                        <div
+                          key={reserva.id}
+                          onClick={(e) => e.stopPropagation()}
+                          className={cn(
+                            'absolute flex',
+                            specialWidth(
+                              Number(reserva.time),
+                              Number(reserva.endTime),
+                              thisWeek()[dayIndex]
+                            ),
+                            deslocation(
+                              reserva.courtNumber,
+                              Number(reserva.time),
+                              Number(reserva.endTime),
+                              thisWeek()[dayIndex]
+                            )
+                          )}
+                          style={{
+                            height: `${reserva.duration * 50 * 2}px`
+                          }}
+                        >
+                          <CalendaryCard
+                            court={reserva.courtNumber}
+                            location={reserva.court}
+                            modality={reserva.modality}
+                            equipments={equipments}
+                            time={reserva.time}
+                            isChecked={[true, false]}
+                            openModal={() => handleSelectingBooking(reserva)}
+                          />
+                        </div>
                       )
                     }
-                    className={`relative flex min-w-[180px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
-                    style={{
-                      borderBottomStyle: isHourSeparator ? 'dashed' : 'solid',
-                      borderRightStyle: 'solid'
-                    }}
-                  >
-                    {reservasConvertidas.map((reserva) => {
-                      if (
-                        reserva.hour === hour &&
-                        reserva.minute === (minute == 1 ? 30 : 0) &&
-                        reserva.day === thisWeek()[dayIndex]
-                      ) {
-                        return (
-                          <div
-                            key={reserva.id}
-                            onClick={(e) => e.stopPropagation()}
-                            className={cn(
-                              'absolute flex',
-                              specialWidth(
-                                Number(reserva.time),
-                                Number(reserva.endTime),
-                                thisWeek()[dayIndex]
-                              ),
-                              deslocation(
-                                reserva.courtNumber,
-                                Number(reserva.time),
-                                Number(reserva.endTime),
-                                thisWeek()[dayIndex]
-                              )
-                            )}
-                            style={{
-                              height: `${reserva.duration * 50 * 2}px`
-                            }}
-                          >
-                            <CalendaryCard
-                              court={reserva.courtNumber}
-                              location={reserva.court}
-                              modality={reserva.modality}
-                              equipments={equipments}
-                              time={reserva.time}
-                              isChecked={[true, false]}
-                              openModal={() => handleSelectingBooking(reserva)}
-                            />
-                          </div>
-                        )
-                      }
-                    })}
-                  </div>
-                ))}
-              </div>
+                  })}
+                </div>
+              ))}
             </div>
-          )
-        })}
-      </div>
+          </div>
+        )
+      })}
       {isReservationModalOpen && selectedTime && (
         <div
           className={`duration-250 fixed inset-0 z-[100] flex items-center justify-center bg-black/50 transition-all ${bookingModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}

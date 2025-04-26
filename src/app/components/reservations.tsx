@@ -1,4 +1,3 @@
-import imgBeachTenis from '../assets/imagem-beachtenis.png'
 import imgCampo from '../assets/imagem-campo.png'
 import imgQuadra from '../assets/imagem-quadra.png'
 import { ReservationCard } from './reservation-card'
@@ -17,13 +16,6 @@ const reservations = [
     description:
       'O Reservation Mauá é o sistema de reserva de salas do Instituto Mauá de Tecnologia, projetado para facilitar o agendamento de espaços para estudos, reuniões e eventos acadêmicos.',
     calendar: '/court-reserve'
-  },
-  {
-    image: imgBeachTenis,
-    title: 'Beach Tênis',
-    description:
-      'O Reservation Mauá é o sistema de reserva de salas do Instituto Mauá de Tecnologia, projetado para facilitar o agendamento de espaços para estudos, reuniões e eventos acadêmicos.',
-    calendar: '/fieldbeach-reserve'
   }
 ]
 
