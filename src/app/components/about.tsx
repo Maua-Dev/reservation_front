@@ -35,7 +35,10 @@ export function About() {
             espaços para estudos, reuniões e eventos acadêmicos.
           </p>
           <div className="flex items-center justify-center xl:items-start xl:justify-start">
-            <Button className="px-4 text-lg font-semibold sm:text-xl">
+            <Button 
+            className="px-4 text-lg font-semibold sm:text-xl"
+            // onClick={() => }
+            >
               Menu de Reservas
             </Button>
           </div>

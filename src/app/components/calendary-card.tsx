@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { cn } from '../utils/cn'
 
 interface CalendaryCardProps {
