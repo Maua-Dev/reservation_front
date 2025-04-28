@@ -357,7 +357,7 @@ export function Court({ isField }: CourtProps) {
       </div>
 
       <div className="sticky top-20 z-[90] mb-12 flex max-w-[100vw] font-poppins text-base font-semibold text-gray-600">
-        <div className="w-24 bg-blue-primary p-4 text-xl text-white">Hora</div>
+        <div className="w-16 bg-blue-primary p-4 text-xl text-white">Hora</div>
         <div className="flex flex-1 text-center text-lg text-white">
           {thisWeek().map((date, index) => (
             <div
