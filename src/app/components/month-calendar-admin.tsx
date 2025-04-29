@@ -76,7 +76,7 @@ export default function MonthCalendarAdmin({
         {weekDays.map((day, index) => (
           <div
             key={index}
-            className="flex h-8 items-center justify-center font-bold text-gray-600 md:h-10"
+            className="flex h-6 w-6 items-center justify-center font-bold text-gray-600 md:h-10"
           >
             {day}
           </div>

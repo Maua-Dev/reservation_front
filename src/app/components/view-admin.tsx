@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import MonthCalendarAdmin from './monthCalendar-admin'
+import MonthCalendarAdmin from './month-calendar-admin'
 import { ReservationCardAdmin } from './reservation-view-admin'
 import { IoMdDownload } from 'react-icons/io'
 
