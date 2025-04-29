@@ -11,23 +11,7 @@ const reservas = [
     court: 'Quadra 1',
     courtNumber: 1,
     modality: 'Basquete',
-    time: new Date().getTime() + 1 * 60 * 60 * 1000 * 24,
-    duration: 1
-  },
-  {
-    id: 2,
-    court: 'Quadra 2',
-    courtNumber: 2,
-    modality: 'Vôlei',
-    time: new Date().getTime() + 1 * 60 * 60 * 1000 * 24, // adiciona 1 dia
-    duration: 0.5
-  },
-  {
-    id: 7,
-    court: 'Quadra 2',
-    courtNumber: 2,
-    modality: 'Vôlei',
-    time: new Date().getTime() + 1 * 60 * 60 * 1000 * 24,
+    time: new Date(2025, 4, 1, 17, 30).getTime(), //year, month, day, hour, minute
     duration: 1
   }
 ]
@@ -35,7 +19,6 @@ const reservas = [
 export default function AdminReserve() {
   const today = new Date()
   const [isOptionsOpen, setIsOptionsOpen] = useState(false)
-
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [currentMonth, setCurrentMonth] = useState<number>(
     new Date().getMonth()
@@ -178,7 +161,7 @@ export default function AdminReserve() {
       ...reserva,
       day: date.getDate(),
       hour: date.getHours(),
-      minute: date.getMinutes(),
+      minute: date.getMinutes() == 30 ? 1 : 0,
       endTime: reserva.time + reserva.duration * 60 * 60 * 1000
     }
   })
@@ -369,8 +352,8 @@ export default function AdminReserve() {
                           {reservasConvertidas.map((reserva) => {
                             if (
                               reserva.hour === hour &&
-                              reserva.minute === (minute == 1 ? 30 : 0) &&
-                              reserva.day === thisWeek()[dayIndex]
+                              reserva.minute === minute &&
+                              reserva.day === selectedWeek()[dayIndex]
                             ) {
                               return (
                                 <div
