@@ -218,7 +218,7 @@ export default function AdminReserve() {
   const weekDays = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 
   return (
-    <main className="z-50 flex h-auto w-full flex-col items-center justify-center overflow-x-hidden bg-white pt-24">
+    <main className="z-50 flex h-auto w-full flex-col items-center justify-center bg-white pt-24">
       <ReserveOptionsModal
         isOpen={isOptionsOpen}
         onClose={() => {
@@ -265,8 +265,8 @@ export default function AdminReserve() {
             </div>
           </div>
           {/* Coluna do mês - 25% em telas grandes, 100% em telas pequenas */}
-          <div className="flex h-auto w-full flex-grow-0 flex-col bg-white md:w-1/4">
-            <h1 className="flex h-20 w-full items-center justify-center bg-blue-primary p-4 text-xl text-white">
+          <div className="sticky top-0 flex h-full min-h-screen w-full flex-grow flex-col bg-white md:w-1/4">
+            <h1 className="sticky top-0 flex h-20 w-full items-center justify-center bg-blue-primary p-4 text-xl text-white">
               {selectedDate.toLocaleDateString('pt-Br', {
                 month: 'long',
                 year: 'numeric'
@@ -283,10 +283,10 @@ export default function AdminReserve() {
           </div>
 
           {/* Coluna da semana - 75% em telas grandes, 100% em telas pequenas */}
-          <div className="flex h-auto w-full flex-col bg-white md:w-3/4">
-            <div className="flex h-20 w-full flex-col items-center bg-blue-primary p-4 text-xl text-white">
+          <div className="flex h-full w-full flex-col bg-white md:w-3/4">
+            <div className="sticky top-0 z-30 flex h-20 w-full flex-col items-center bg-blue-primary p-4 text-xl text-white">
               <div className="flex w-full">
-                <div className="ml-4 min-w-28 bg-blue-primary p-4 text-sm text-white md:text-base">
+                <div className="sticky top-0 ml-4 min-w-28 bg-blue-primary p-4 text-sm text-white md:text-base">
                   Semana
                 </div>
                 <div className="flex flex-1 overflow-x-auto text-center text-lg text-white">
