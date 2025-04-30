@@ -44,83 +44,8 @@ export default function AdminReserve() {
     day: number,
     weekday: number
   ) {
-    const clickedTime = new Date()
-    if (day < today.getDate() && weekday > today.getDay() - 1) {
-      // esse -1 é por conta do Date(), ele começar com o index 0 no domingo, no nosso caso, é a segunda
-      clickedTime.setMonth(today.getMonth() + 1)
-      if (today.getMonth() === 11) {
-        clickedTime.setFullYear(today.getFullYear() + 1)
-        clickedTime.setMonth(0) // Janeiro
-      }
-    } else {
-      clickedTime.setMonth(today.getMonth())
-      clickedTime.setFullYear(today.getFullYear())
-    }
-
-    clickedTime.setDate(day)
-    clickedTime.setHours(hour)
-    clickedTime.setMinutes(minute === 0 ? 0 : 30)
-    clickedTime.setSeconds(0)
-    clickedTime.setMilliseconds(0)
-
-    const timestamp = clickedTime.getTime()
-    console.log(
-      'Timestamp: ',
-      new Date(timestamp).toTimeString(),
-      new Date(timestamp).toDateString()
-    )
-    console.log(timestamp)
-
-    if (timestamp < today.getTime()) {
-      console.log('Não é possível fazer reservas em horários passados.')
-      return
-    }
-
-    const occupiedCourts = new Set() // Como se fosse um array para armazenar as quadras ocupadas
-
-    reservasConvertidas
-      .filter((reserva) => reserva.day === day)
-      .forEach((reserva) => {
-        if (timestamp < reserva.endTime && timestamp >= reserva.time) {
-          occupiedCourts.add(reserva.courtNumber) // Adiciona a quadra ao Set de quadras ocupadas
-        }
-      })
-
-    // Se todas as 3 quadras estiverem ocupadas, bloqueia o modal
-    if (occupiedCourts.size >= 3) {
-      console.log(
-        'Todas as quadras estão ocupadas neste horário. Não é possível fazer mais reservas.'
-      )
-    }
-
-    setIsOptionsOpen(true)
-  }
-
-  const formDate = (day: number, hour: number, minute: number) => {
-    const date = new Date(selectedDate) // Use a data selecionada como base
-    date.setDate(day)
-    date.setHours(hour)
-    date.setMinutes(minute === 0 ? 0 : 30)
-    date.setSeconds(0)
-    date.setMilliseconds(0)
-
-    return date.getTime()
-  }
-
-  const selectedWeek = () => {
-    const week = []
-    for (let i = 1; i < 7; i++) {
-      const day = new Date(selectedDate)
-      day.setDate(selectedDate.getDate() - selectedDate.getDay() + i)
-      week.push(day.getDate())
-    }
-    return week
-  }
-
-  const isPassed = (day: number, hour: number, minute: number) => {
-    const date = new Date(selectedDate) // Use a data selecionada como base
-    // Ajustar o mês e o ano se o dia pertencer ao próximo ou ao mês anterior
-    console.log('month', date.getMonth())
+    // Cria a data selecionada
+    const date = new Date(selectedDate)
     if (
       day > selectedDate.getDate() &&
       day > 15 &&
@@ -141,7 +66,69 @@ export default function AdminReserve() {
     date.setMinutes(minute === 0 ? 0 : 30)
     date.setSeconds(0)
     date.setMilliseconds(0)
-    console.log('date', date.toLocaleDateString('pt-BR'))
+
+    // transforma para timestamp
+    const timestamp = date.getTime() // Timestamp da data selecionada
+
+    // Retorna se a data já passou
+    if (isPassed(day, hour, minute)) {
+      console.log('Data já passou')
+      return
+    }
+
+    // Verifica se a quadra está ocupada
+    const occupiedCourts = new Set() // Como se fosse um array para armazenar as quadras ocupadas
+    reservasConvertidas
+      .filter((reserva) => reserva.day === day)
+      .forEach((reserva) => {
+        if (timestamp < reserva.endTime && timestamp >= reserva.time) {
+          occupiedCourts.add(reserva.courtNumber) // Adiciona a quadra ao Set de quadras ocupadas
+        }
+      })
+
+    // Se todas as 3 quadras estiverem ocupadas, bloqueia o modal
+    if (occupiedCourts.size >= 3) {
+      console.log(
+        'Todas as quadras estão ocupadas neste horário. Não é possível fazer mais reservas.'
+      )
+    }
+
+    setIsOptionsOpen(true)
+  }
+
+  const selectedWeek = () => {
+    const week = []
+    for (let i = 1; i < 7; i++) {
+      const day = new Date(selectedDate)
+      day.setDate(selectedDate.getDate() - selectedDate.getDay() + i)
+      week.push(day.getDate())
+    }
+    return week
+  }
+
+  const isPassed = (day: number, hour: number, minute: number) => {
+    const date = new Date(selectedDate) // Use a data selecionada como base
+    // Ajustar o mês e o ano se o dia pertencer ao próximo ou ao mês anterior
+    if (
+      day > selectedDate.getDate() &&
+      day > 15 &&
+      selectedDate.getDate() < 15
+    ) {
+      date.setMonth(date.getMonth() - 1)
+    } else if (
+      day < selectedDate.getDate() &&
+      day < 12 &&
+      selectedDate.getDate() > 15
+    ) {
+      date.setDate(28)
+      date.setMonth(date.getMonth() + 1)
+    }
+
+    date.setDate(day)
+    date.setHours(hour)
+    date.setMinutes(minute === 0 ? 0 : 30)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
     return date.getTime() < today.getTime()
   }
 
@@ -332,7 +319,7 @@ export default function AdminReserve() {
                             handleClickedTime(
                               hour,
                               minute,
-                              thisWeek()[dayIndex],
+                              selectedWeek()[dayIndex],
                               dayIndex + 1
                             )
                           }
