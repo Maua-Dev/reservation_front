@@ -4,6 +4,7 @@ import { CiFilter } from 'react-icons/ci'
 import { useState } from 'react'
 import ReserveOptionsModal from '@/app/components/admin/reserveOptionsModal'
 import MonthCalendarAdmin from '@/app/components/month-calendar-admin'
+import { set } from 'react-hook-form'
 
 const reservas = [
   {
@@ -26,6 +27,7 @@ export default function AdminReserve() {
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
   )
+  const [clickedTime, setClickedTime] = useState<number>(0)
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date)
@@ -38,12 +40,7 @@ export default function AdminReserve() {
   }
 
   // A FUNÇÃO TA ERRADA EU ACHO CORRIGIR DPS
-  function handleClickedTime(
-    hour: number,
-    minute: number,
-    day: number,
-    weekday: number
-  ) {
+  function handleClickedTime(hour: number, minute: number, day: number) {
     // Cria a data selecionada
     const date = new Date(selectedDate)
     if (
@@ -93,6 +90,7 @@ export default function AdminReserve() {
       )
     }
 
+    setClickedTime(timestamp)
     setIsOptionsOpen(true)
   }
 
@@ -223,7 +221,11 @@ export default function AdminReserve() {
     <main className="z-50 flex h-auto w-full flex-col items-center justify-center overflow-x-hidden bg-white pt-24">
       <ReserveOptionsModal
         isOpen={isOptionsOpen}
-        onClose={() => setIsOptionsOpen(false)}
+        onClose={() => {
+          setIsOptionsOpen(false)
+          setClickedTime(0)
+        }}
+        timestamp={clickedTime}
       />
       <div className="flex h-full w-full flex-col items-center justify-center">
         <div className="top-[5.4rem] z-[90] flex w-full flex-col font-poppins text-base font-semibold text-gray-600 md:flex-row">
@@ -319,8 +321,7 @@ export default function AdminReserve() {
                             handleClickedTime(
                               hour,
                               minute,
-                              selectedWeek()[dayIndex],
-                              dayIndex + 1
+                              selectedWeek()[dayIndex]
                             )
                           }
                           className={`relative flex min-w-14 flex-1 gap-2 border-b border-r border-gray-400 lg:min-w-24 ${

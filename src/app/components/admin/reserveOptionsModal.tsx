@@ -7,11 +7,13 @@ import MaintenanceModal from './maintenanceModal'
 interface reserverOptionsModalProps {
   isOpen: boolean
   onClose: () => void
+  timestamp?: number
 }
 
 export default function ReserveOptionsModal({
   isOpen,
-  onClose
+  onClose,
+  timestamp
 }: reserverOptionsModalProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
@@ -54,6 +56,7 @@ export default function ReserveOptionsModal({
           isVisible={modalOpen}
           onClose={() => handleClose()}
           isMaintainance={isMaintainance}
+          timestamp={timestamp}
         />
       )}
       <div

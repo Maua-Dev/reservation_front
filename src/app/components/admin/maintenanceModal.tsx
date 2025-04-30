@@ -5,6 +5,7 @@ interface MaintenanceModalProps {
   isVisible: boolean
   onClose: () => void
   isMaintainance?: boolean
+  timestamp?: number
 }
 
 const modalidade = [
@@ -20,18 +21,17 @@ const modalidade = [
 export default function MaintenanceModal({
   isVisible,
   onClose,
-  isMaintainance
+  isMaintainance,
+  timestamp
 }: MaintenanceModalProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [hour, setHour] = useState('00')
-  const [minute, setMinute] = useState('00')
-
-  const handleMinuteChange = (value: string) => {
-    const regex = /^(0[0-9]|[1-5][0-9])?$/
-    if (regex.test(value)) {
-      setMinute(value)
-    }
-  }
+  const hour = new Date(timestamp || 0).getHours()
+  const minute = new Date(timestamp || 0).getMinutes()
+  const date = new Date(timestamp || 0).toLocaleDateString('pt-BR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  })
 
   useEffect(() => {
     if (isVisible) {
@@ -85,7 +85,7 @@ export default function MaintenanceModal({
             {/* data */}
             <div className="flex h-12 w-full items-center justify-between gap-2 rounded-sm bg-yellow p-2">
               <h1>Data:</h1>
-              <p>09/01/2025</p>
+              <p>{date}</p>
             </div>
             {/* Local */}
             <div className="flex w-full flex-col items-start justify-between gap-2 rounded-sm p-2">
@@ -123,11 +123,11 @@ export default function MaintenanceModal({
                 <div className="flex w-1/4 flex-col items-center rounded-sm border-2 border-black/30 bg-yellow">
                   <div className="flex w-full items-center justify-center gap-2 p-2">
                     <div className="flex h-16 w-1/3 items-center justify-center rounded-md border-2 border-black/20 shadow-inner">
-                      09
+                      {hour < 10 ? `0${hour}` : hour}
                     </div>
                     <div>:</div>
                     <div className="flex h-16 w-1/3 items-center justify-center rounded-md border-2 border-black/20 shadow-inner">
-                      00
+                      {minute < 10 ? `0${minute}` : minute}
                     </div>
                   </div>
                 </div>
