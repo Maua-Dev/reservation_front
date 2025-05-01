@@ -22,7 +22,6 @@ export class IacStack extends cdk.Stack {
       'arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012'
     const alternativeDomain =
       process.env.ALTERNATIVE_DOMAIN_NAME || 'reservation-dev.devmaua.com'
-    const hostedZoneIdValue = process.env.HOSTED_ZONE_ID || 'Z1UJRXOUMOOFQ8'
 
     const s3Bucket = new s3.Bucket(this, 'ReservationFrontBucket' + stage, {
       versioned: true,
@@ -126,18 +125,7 @@ export class IacStack extends cdk.Stack {
       })
     )
 
-    if (stage === 'prod' || stage === 'homolog' || stage === 'dev') {
-      const zone = route53.HostedZone.fromHostedZoneAttributes(
-        this,
-        'ReservationFrontHostedZone-' + stage,
-        {
-          hostedZoneId: hostedZoneIdValue,
-          zoneName: alternativeDomain
-        }
-      )
-
       new route53.ARecord(this, 'ReservationFrontAliasRecord-' + stage, {
-        zone: zone,
         recordName: alternativeDomain,
         target: route53.RecordTarget.fromAlias(
           new route53Targets.CloudFrontTarget(cloudFrontWebDistribution)
