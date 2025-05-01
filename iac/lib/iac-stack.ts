@@ -125,6 +125,7 @@ export class IacStack extends cdk.Stack {
       })
     )
 
+    if (stage === 'prod' || stage === 'homolog' || stage === 'dev') {
       new route53.ARecord(this, 'ReservationFrontAliasRecord-' + stage, {
         recordName: alternativeDomain,
         target: route53.RecordTarget.fromAlias(
