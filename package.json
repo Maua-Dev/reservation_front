@@ -11,6 +11,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@azure/msal-browser": "^4.11.1",
+    "@azure/msal-react": "^3.0.11",
     "@hookform/resolvers": "^3.9.0",
     "axios": "^1.7.3",
     "clsx": "^2.1.1",

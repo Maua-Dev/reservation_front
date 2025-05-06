@@ -1,8 +1,21 @@
 import logobranca from '../assets/logobranca.png'
 import baixados from '../assets/baixados.jpg'
 import { Button } from '../components/button'
+import { useMsal } from '@azure/msal-react'
 
 export function Login() {
+  const { instance } = useMsal()
+
+  const handleLogin = () => {
+    instance
+      .loginRedirect({
+        scopes: ['User.Read']
+      })
+      .catch((error) => {
+        console.error('Login error:', error)
+      })
+  }
+
   return (
     <>
       <div className="absolute left-0 top-0 z-0 flex h-screen w-full bg-quadra bg-cover bg-center brightness-50" />
@@ -21,7 +34,10 @@ export function Login() {
               Microsoft
             </p>
             <div className="flex justify-center">
-              <Button className="flex items-center gap-2 rounded-lg border bg-white p-4 text-center font-poppins text-base font-normal text-black md:text-xl">
+              <Button
+                className="flex items-center gap-2 rounded-lg border bg-white p-4 text-center font-poppins text-base font-normal text-black md:text-xl"
+                onClick={handleLogin}
+              >
                 <img
                   src={baixados}
                   alt="Logo da Microsoft"
