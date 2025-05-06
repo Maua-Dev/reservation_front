@@ -3,8 +3,6 @@ import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 import { Certificate } from 'aws-cdk-lib/aws-certificatemanager'
-import * as route53 from 'aws-cdk-lib/aws-route53'
-import * as route53Targets from 'aws-cdk-lib/aws-route53-targets'
 import * as iam from 'aws-cdk-lib/aws-iam'
 
 import { Construct } from 'constructs'
@@ -20,10 +18,7 @@ export class IacStack extends cdk.Stack {
     const acmCertificateArn =
       process.env.ACM_CERTIFICATE_ARN ||
       'arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012'
-    const alternativeDomain =
-      process.env.ALTERNATIVE_DOMAIN_NAME || 'reservation-dev.devmaua.com'
-    const hostedZoneIdValue = process.env.HOSTED_ZONE_ID || 'Z1UJRXOUMOOFQ8'
-
+  
     const s3Bucket = new s3.Bucket(this, 'ReservationFrontBucket' + stage, {
       versioned: true,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
@@ -51,7 +46,6 @@ export class IacStack extends cdk.Stack {
           acmCertificateArn
         ),
         {
-          aliases: [alternativeDomain],
           securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021
         }
       )
@@ -65,7 +59,6 @@ export class IacStack extends cdk.Stack {
           acmCertificateArn
         ),
         {
-          aliases: [alternativeDomain],
           securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021
         }
       )
@@ -125,25 +118,6 @@ export class IacStack extends cdk.Stack {
         resources: [s3Bucket.arnForObjects('*')]
       })
     )
-
-    if (stage === 'prod' || stage === 'homolog' || stage === 'dev') {
-      const zone = route53.HostedZone.fromHostedZoneAttributes(
-        this,
-        'ReservationFrontHostedZone-' + stage,
-        {
-          hostedZoneId: hostedZoneIdValue,
-          zoneName: alternativeDomain
-        }
-      )
-
-      new route53.ARecord(this, 'ReservationFrontAliasRecord-' + stage, {
-        zone: zone,
-        recordName: alternativeDomain,
-        target: route53.RecordTarget.fromAlias(
-          new route53Targets.CloudFrontTarget(cloudFrontWebDistribution)
-        )
-      })
-    }
 
     new cdk.CfnOutput(this, 'ReservationFrontBucketName-' + stage, {
       value: s3Bucket.bucketName
