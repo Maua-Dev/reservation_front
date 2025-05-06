@@ -1,24 +1,11 @@
-import { Button } from '@/app/components/button'
-import { Modal } from '@/app/components/modal'
-import { useState } from 'react'
-import { Form } from '../components/form'
+import { Court } from '../components/court-calendary'
+import Footer from '../components/footer'
 
 export function FieldBeachReserve() {
-  const [open, setOpen] = useState(false)
-  const modalities = ['Futebol de Campo', 'Rugby']
-  const equipments = ['Bola de Futebol', 'Bola de Rugby']
-  const options = ['Campo', 'Beach Tennis']
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-50">
-      <Button onClick={() => setOpen(true)}>Reserve</Button>
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <Form
-          modalities={modalities}
-          equipments={equipments}
-          options={options}
-          onClose={() => setOpen(false)}
-        />
-      </Modal>
+    <main className="flex min-h-screen flex-col items-center justify-center gap-12 bg-gray-50 pt-24">
+      <Court isField={true} />
+      <Footer />
     </main>
   )
 }

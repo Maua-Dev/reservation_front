@@ -9,13 +9,18 @@ const slides = [maua1, maua2, maua3, maua4]
 
 export function About() {
   return (
-    <div className="flex min-h-screen w-full flex-col items-start justify-start bg-blue-primary pt-16 md:items-center md:justify-center md:py-24 md:pt-64 xl:py-0 xl:pt-0">
-      <div className="flex w-full max-w-7xl flex-col items-center justify-center gap-6 px-0 md:flex-col-reverse md:gap-16 md:px-24 xl:flex-row-reverse">
-        <div className="flex flex-none flex-col sm:w-full md:w-4/5 lg:w-3/5 xl:w-5/12">
+    <div className="flex min-h-screen w-full flex-col items-start justify-start bg-blue-primary pt-16 md:items-center md:justify-center md:py-28 md:pt-64 xl:py-0 xl:pt-0">
+      <div className="flex w-full max-w-7xl flex-col items-center justify-center gap-2 px-0 md:flex-col-reverse md:gap-16 md:px-24 xl:flex-row-reverse xl:px-16">
+        <div className="mt-0 flex min-h-[260px] flex-none flex-col sm:w-full md:mt-20 md:min-h-[400px] md:w-4/5 lg:w-3/5 xl:w-[45%]">
           <div className="pointer-events-auto relative">
             <Carousel>
               {slides.map((s) => (
-                <img key={s} src={s} className="object-cover" alt="slide" />
+                <img
+                  key={s}
+                  src={s}
+                  className="h-full w-full object-cover"
+                  alt="slide"
+                />
               ))}
             </Carousel>
           </div>
@@ -30,7 +35,10 @@ export function About() {
             espaços para estudos, reuniões e eventos acadêmicos.
           </p>
           <div className="flex items-center justify-center xl:items-start xl:justify-start">
-            <Button className="px-4 text-lg font-semibold sm:text-xl">
+            <Button
+              className="px-4 text-lg font-semibold sm:text-xl"
+              // onClick={() => }
+            >
               Menu de Reservas
             </Button>
           </div>

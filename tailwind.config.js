@@ -12,12 +12,14 @@ export default {
         'blue-secondary': '#090CE8',
         'blue-tertiary': '#1011A6',
         yellow: '#D1DC35',
+        'yellow-secondary': '#a0a823',
         'grey-primary': '#999999',
         'grey-secondary': '#656565',
         'white-primary': '#cccccc'
       },
       backgroundImage: {
-        quadra: "url('../assets/imagem-campo.png')"
+        campo: "url('../assets/imagem-campo.png')",
+        quadra: "url('../assets/maua3.1.png')"
       }
     }
   },
