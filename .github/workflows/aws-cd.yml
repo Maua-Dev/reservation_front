@@ -50,6 +50,17 @@ jobs:
       - name: Setting stage and stack name
         run: |
           echo "STAGE=${{ github.ref_name }}"
+          if [[ "${{ github.ref_name }}" == "dev" ]]; then
+            echo "STAGE=dev"
+          elif [[ "${{ github.ref_name }}" == "aws-migration" ]]; then
+            echo "STAGE=aws-migration"
+          elif [[ "${{ github.ref_name }}" == "homolog" ]]; then
+            echo "STAGE=homolog"
+          elif [[ "${{ github.ref_name }}" == "prod" ]]; then
+            echo "STAGE=prod"
+          else
+            echo "Invalid branch name!" && exit 1
+          fi
           echo "STACK_NAME=ReservationStackFront${{github.ref_name}}" >> $GITHUB_ENV
       - name: Installing Dependencies
         run: |
