@@ -5,6 +5,7 @@ on:
       - dev
       - homolog
       - prod
+      - aws-migration
   workflow_dispatch:
   
 jobs:
@@ -20,6 +21,8 @@ jobs:
       - name: Determine AWS Account ID
         run: |
              if [[ "${{ github.ref_name }}" == "dev" ]]; then
+               echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID_DEV }}" >> $GITHUB_ENV
+             elif [[ "${{ github.ref_name }}" == "aws-migration" ]]; then
                echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID_DEV }}" >> $GITHUB_ENV
              elif [[ "${{ github.ref_name }}" == "homolog" ]]; then
                echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID_HOMOLOG }}" >> $GITHUB_ENV
