@@ -8,10 +8,27 @@ import { FaCalendarAlt } from 'react-icons/fa'
 import { BiWorld } from 'react-icons/bi'
 import { FaUserCircle } from 'react-icons/fa'
 import { IoClose } from 'react-icons/io5'
+import { useIsAuthenticated, useMsal } from '@azure/msal-react'
+import { CiLogout } from 'react-icons/ci'
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [fade, setFade] = useState(false)
+
+  const { instance } = useMsal()
+  const isLogedin = useIsAuthenticated()
+  console.log('isLogedin', isLogedin)
+  console.log('Accounts:', instance.getAllAccounts())
+
+  const handleLogout = () => {
+    instance
+      .logoutRedirect({
+        postLogoutRedirectUri: '/'
+      })
+      .catch((error) => {
+        console.error('Logout error:', error)
+      })
+  }
 
   const handleOpenMenu = () => {
     setIsMenuOpen(true)
@@ -110,9 +127,23 @@ export function Navbar() {
             SOBRE NÓS
           </a>
         </div>
-        <a href="/login">
-          <Button className="hidden text-xl md:flex lg:text-2xl">Login</Button>
-        </a>
+        {isLogedin ? (
+          <a href="/profile">
+            <Button
+              className="hidden text-xl md:flex lg:text-2xl"
+              onClick={handleLogout}
+            >
+              <CiLogout />
+            </Button>
+          </a>
+        ) : (
+          <a href="/login">
+            <Button className="hidden text-xl md:flex lg:text-2xl">
+              Login
+            </Button>
+          </a>
+        )}
+
         {isMenuOpen ? (
           <IoClose
             className={`flex cursor-pointer text-5xl text-yellow transition-all duration-500 md:hidden ${fade ? 'opacity-100' : 'rotate-180 opacity-0'}`}

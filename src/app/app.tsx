@@ -11,8 +11,8 @@ export function App() {
   return (
     <>
       <Router>
-        <Navbar />
         <MsalProvider instance={msalInstance}>
+          <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />

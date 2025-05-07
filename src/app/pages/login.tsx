@@ -5,14 +5,27 @@ import { useMsal } from '@azure/msal-react'
 
 export function Login() {
   const { instance } = useMsal()
+  const isLogedin = instance.getAllAccounts().length > 0
+  console.log('isLogedin', isLogedin)
 
   const handleLogin = () => {
     instance
-      .loginRedirect({
-        scopes: ['User.Read']
+      .loginPopup({ scopes: ['User.Read'] })
+      .then((response) => {
+        console.log('Login successful:', response)
       })
       .catch((error) => {
         console.error('Login error:', error)
+      })
+  }
+
+  const handleLogout = () => {
+    instance
+      .logoutRedirect({
+        postLogoutRedirectUri: '/'
+      })
+      .catch((error) => {
+        console.error('Logout error:', error)
       })
   }
 
@@ -44,6 +57,19 @@ export function Login() {
                   className="h-5 w-5 sm:h-6 sm:w-6"
                 />
                 Sign in with Microsoft
+              </Button>
+            </div>
+            <div className="flex justify-center">
+              <Button
+                className="flex items-center gap-2 rounded-lg border bg-white p-4 text-center font-poppins text-base font-normal text-black md:text-xl"
+                onClick={handleLogout}
+              >
+                <img
+                  src={baixados}
+                  alt="Logo da Microsoft"
+                  className="h-5 w-5 sm:h-6 sm:w-6"
+                />
+                Sign out with Microsoft
               </Button>
             </div>
           </div>
