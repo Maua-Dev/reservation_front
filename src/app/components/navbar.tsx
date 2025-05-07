@@ -16,18 +16,13 @@ export function Navbar() {
   const [fade, setFade] = useState(false)
 
   const { instance } = useMsal()
-  const isLogedin = useIsAuthenticated()
-  console.log('isLogedin', isLogedin)
-  console.log('Accounts:', instance.getAllAccounts())
+  const auth = useIsAuthenticated()
+  console.log('auth', auth)
 
   const handleLogout = () => {
-    instance
-      .logoutRedirect({
-        postLogoutRedirectUri: '/'
-      })
-      .catch((error) => {
-        console.error('Logout error:', error)
-      })
+    instance.logoutRedirect({ postLogoutRedirectUri: '/' }).catch((error) => {
+      console.error('Logout error:', error)
+    })
   }
 
   const handleOpenMenu = () => {
@@ -127,18 +122,19 @@ export function Navbar() {
             SOBRE NÓS
           </a>
         </div>
-        {isLogedin ? (
-          <a href="/profile">
-            <Button
-              className="hidden text-xl md:flex lg:text-2xl"
-              onClick={handleLogout}
-            >
-              <CiLogout />
-            </Button>
-          </a>
+        {auth ? (
+          <Button
+            className="hidden text-xl md:flex lg:text-2xl"
+            onClick={handleLogout}
+          >
+            <CiLogout /> Logout
+          </Button>
         ) : (
           <a href="/login">
-            <Button className="hidden text-xl md:flex lg:text-2xl">
+            <Button
+              className="hidden text-xl md:flex lg:text-2xl"
+              // onClick={handleLogout}
+            >
               Login
             </Button>
           </a>

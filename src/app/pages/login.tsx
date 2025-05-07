@@ -1,10 +1,24 @@
 import logobranca from '../assets/logobranca.png'
 import baixados from '../assets/baixados.jpg'
 import { Button } from '../components/button'
-import { useMsal } from '@azure/msal-react'
+import { useIsAuthenticated, useMsal } from '@azure/msal-react'
+import { useNavigate } from 'react-router-dom'
 
 export function Login() {
+  const auth = useIsAuthenticated()
   const { instance } = useMsal()
+  const navigate = useNavigate()
+
+  // SOLUÇÃO TEMPORÁRIA
+  // Por algum motivo, o redirect te leva de volta para a pagina de login
+  // e não para a página inicial. Então, se o usuário já estiver logado,
+  // redirecionamos ele para a página inicial.
+  // Isso deve ser corrigido no futuro.
+  if (auth) {
+    navigate('/')
+    return
+  }
+
   const isLogedin = instance.getAllAccounts().length > 0
   console.log('isLogedin', isLogedin)
 
