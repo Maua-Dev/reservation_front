@@ -61,7 +61,7 @@ jobs:
           else
             echo "Invalid branch name!" && exit 1
           fi
-          echo "STACK_NAME=ReservationStackFront${{github.ref_name}}" >> $GITHUB_ENV
+          echo "STACK_NAME=ReservationStackFront${{env.STAGE}}" >> $GITHUB_ENV
       - name: Installing Dependencies
         run: |
           npm install
@@ -70,13 +70,13 @@ jobs:
         run: |
           npm run build
         env:
-          VITE_STAGE: ${{ github.ref_name }}
+          VITE_STAGE: ${{ env.VITE_STAGE}}
       - name: Setup envs
         run: |
           echo AWS_REGION=${{ vars.AWS_REGION }} >> $GITHUB_ENV
           echo AWS_ACCOUNT_ID=${{ env.AWS_ACCOUNT_ID }} >> $GITHUB_ENV
           echo STACK_NAME=${{ env.STACK_NAME }} >> $GITHUB_ENV
-          echo GITHUB_REF_NAME=${{ github.ref_name }} >> $GITHUB_ENV
+          echo GITHUB_REF_NAME=${{ env.STAGE }} >> $GITHUB_ENV
           echo ACM_CERTIFICATE_ARN=${{ secrets.DEVMAUA_ACM_CERTIFICATE_ARN }} >> $GITHUB_ENV
           echo AWS_BUCKET_ASSETS=${{ vars.AWS_BUCKET_ASSETS }} >> $GITHUB_ENV
           echo VITE_RESERVATION_API=${{ vars.VITE_RESERVATION_API }} >> $GITHUB_ENV
@@ -88,11 +88,11 @@ jobs:
           cdk deploy --require-approval never
       - name: Set CloudFront ID
         run: |
-          CLOUD_FRONT_ID=$(aws cloudformation --region ${{vars.AWS_REGION}} describe-stacks --stack-name ${{env.STACK_NAME}} --query "Stacks[0].Outputs[?OutputKey=='ReservationFrontDistributionId${{github.ref_name}}'].OutputValue" --output text)
+          CLOUD_FRONT_ID=$(aws cloudformation --region ${{vars.AWS_REGION}} describe-stacks --stack-name ${{env.STACK_NAME}} --query "Stacks[0].Outputs[?OutputKey=='ReservationFrontDistributionId${{env.STAGE}}'].OutputValue" --output text)
           echo "CLOUD_FRONT_ID='$CLOUD_FRONT_ID'" >> $GITHUB_ENV
       - name: Set AWS Bucket
         run: |
-          AWS_BUCKET=$(aws cloudformation --region ${{vars.AWS_REGION}} describe-stacks --stack-name ${{env.STACK_NAME}} --query "Stacks[0].Outputs[?OutputKey=='ReservationFrontBucketName${{github.ref_name}}'].OutputValue" --output text)
+          AWS_BUCKET=$(aws cloudformation --region ${{vars.AWS_REGION}} describe-stacks --stack-name ${{env.STACK_NAME}} --query "Stacks[0].Outputs[?OutputKey=='ReservationFrontBucketName${{env.STAGE}}'].OutputValue" --output text)
           echo "AWS_BUCKET='$AWS_BUCKET'" >> $GITHUB_ENV
       - name: Upload to S3
         run: aws s3 cp dist s3://${{env.AWS_BUCKET}}/ --recursive --region ${{ vars.AWS_REGION }}
