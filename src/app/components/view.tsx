@@ -1,7 +1,9 @@
 import { IoClose } from 'react-icons/io5'
 import { ReservationCard } from './reservation-view'
 import { useEffect } from 'react'
+import baixados from '../assets/baixados.jpg'
 import { UseUser } from '../hooks/use-user'
+import { Button } from './button'
 
 interface ViewProps {
   onClose: () => void
@@ -146,8 +148,8 @@ export function View({ onClose }: ViewProps) {
           className="relative max-h-[90vh] w-[70vw] max-w-[70vw] rounded-lg bg-white p-4 font-poppins"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex flex-col justify-between py-2 md:pt-8">
-            <div className="flex items-center justify-between">
+          <div className="flex flex-col items-center justify-between py-2 md:pt-8">
+            <div className="flex items-center justify-center">
               <p className="text-sm font-bold text-black sm:text-base md:text-xl">
                 Você não está logado
               </p>
@@ -155,6 +157,16 @@ export function View({ onClose }: ViewProps) {
                 className="absolute left-[94%] top-2 h-6 w-6 cursor-pointer md:h-10 md:w-16"
                 onClick={handleClose}
               ></IoClose>
+            </div>
+            <div className="flex w-2/3 items-center justify-center">
+              <Button
+                className="mt-4 w-full rounded-lg bg-blue-500 py-2 text-white transition-colors hover:bg-blue-600"
+                onClick={() => {
+                  window.location.href = '/login'
+                }}
+              >
+                Fazer login
+              </Button>
             </div>
           </div>
         </div>
