@@ -1,15 +1,6 @@
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
-type User = {
-  id: number
-  name: string
-  username: string
-  email: string
-  phone: string
-  website: string
-}
-
 export type Post = {
   id: number
   userId: number
@@ -30,7 +21,7 @@ export const useUsersQuery = () => {
     retry: 3,
     queryKey: ['users'],
     queryFn: async () => {
-      const response = await api.get<User[]>('/users')
+      const response = await api.get<Post[]>('/posts')
       await new Promise((resolve) => setTimeout(resolve, 2000))
       return response.data
     }

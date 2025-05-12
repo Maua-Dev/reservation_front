@@ -1,15 +1,16 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Button } from './button'
 import fullLogo from '../assets/logo-completa.svg'
 import shortLogo from '../assets/logo-simplista.svg'
 import { IoMenu } from 'react-icons/io5'
 import { FaHome } from 'react-icons/fa'
 import { FaCalendarAlt } from 'react-icons/fa'
-import { BiWorld } from 'react-icons/bi'
+import { BiLoaderAlt, BiWorld } from 'react-icons/bi'
 import { FaUserCircle } from 'react-icons/fa'
 import { IoClose } from 'react-icons/io5'
 import { useIsAuthenticated, useMsal } from '@azure/msal-react'
 import { CiLogout } from 'react-icons/ci'
+import { UseUser } from '../hooks/use-user'
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -17,7 +18,7 @@ export function Navbar() {
 
   const { instance } = useMsal()
   const auth = useIsAuthenticated()
-  console.log('auth', auth)
+  const { user, isLoading } = UseUser()
 
   const handleLogout = () => {
     instance.logoutRedirect({ postLogoutRedirectUri: '/' }).catch((error) => {
@@ -123,18 +124,21 @@ export function Navbar() {
           </a>
         </div>
         {auth ? (
-          <Button
-            className="hidden text-xl md:flex lg:text-2xl"
-            onClick={handleLogout}
-          >
-            <CiLogout /> Logout
-          </Button>
+          isLoading ? (
+            <Button className="flex h-16 w-40 items-center justify-center text-xl md:flex lg:text-2xl">
+              <BiLoaderAlt className="animate-spin text-2xl" />
+            </Button>
+          ) : (
+            <Button
+              className="flex h-16 w-40 items-center justify-center text-xl md:flex lg:text-2xl"
+              onClick={handleLogout}
+            >
+              <CiLogout className="mr-2" />
+            </Button>
+          )
         ) : (
           <a href="/login">
-            <Button
-              className="hidden text-xl md:flex lg:text-2xl"
-              // onClick={handleLogout}
-            >
+            <Button className="flex h-16 w-40 items-center justify-center text-xl md:flex lg:text-2xl">
               Login
             </Button>
           </a>

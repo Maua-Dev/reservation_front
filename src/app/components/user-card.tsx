@@ -1,5 +1,5 @@
 import { User } from '@/domain/entities/user'
-import { useUsers } from '../hooks/use-users'
+import { useUsers } from '../hooks/use-user'
 
 type UserCardProps = {
   user: User

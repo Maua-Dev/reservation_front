@@ -1,6 +1,7 @@
 import { IoClose } from 'react-icons/io5'
 import { ReservationCard } from './reservation-view'
 import { useEffect } from 'react'
+import { UseUser } from '../hooks/use-user'
 
 interface ViewProps {
   onClose: () => void
@@ -10,6 +11,8 @@ export function View({ onClose }: ViewProps) {
   const handleCancel = (date: string) => {
     console.log(`Cancel reservation on ${date}`)
   }
+
+  const { user, isLogged } = UseUser()
 
   const bookings = [
     {
@@ -82,58 +85,80 @@ export function View({ onClose }: ViewProps) {
   }
 
   useEffect(() => {
-      const handleEscape = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          onClose()
-        }
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
       }
-  
-      document.addEventListener('keydown', handleEscape)
-      
-      return () => {
-        document.removeEventListener('keydown', handleEscape)
-      }
-    }, [onClose])
+    }
+
+    document.addEventListener('keydown', handleEscape)
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [onClose])
 
   return (
     <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
-      <div className="max-h-[90vh] relative w-[70vw] max-w-[70vw] rounded-lg bg-white p-4 font-poppins" onClick={(e) => e.stopPropagation()}>
-        <div className="flex flex-col justify-between py-2 md:pt-8">
-          <div className="flex items-center justify-between">
-            <p className="text-sm font-bold text-black sm:text-base md:text-xl">
-              Daniel Capuzzo
-            </p>
-            <p className="text-sm font-bold text-black sm:text-base md:text-xl">
-              22.001122-0
-            </p>
-            <IoClose
-              className="h-6 w-6 cursor-pointer md:h-10 md:w-16 absolute top-2 left-[94%]"
-              onClick={handleClose}
-            ></IoClose>
+      {isLogged ? (
+        <div
+          className="relative max-h-[90vh] w-[70vw] max-w-[70vw] rounded-lg bg-white p-4 font-poppins"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex flex-col justify-between py-2 md:pt-8">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-bold text-black sm:text-base md:text-xl">
+                {user?.name}
+              </p>
+              <p className="text-sm font-bold text-black sm:text-base md:text-xl">
+                {user?.ra}
+              </p>
+              <IoClose
+                className="absolute left-[94%] top-2 h-6 w-6 cursor-pointer md:h-10 md:w-16"
+                onClick={handleClose}
+              ></IoClose>
+            </div>
+            <hr className="border-t-4 border-black" />
           </div>
-          <hr className="border-t-4 border-black" />
-        </div>
-        <div className="flex h-full max-h-[85%] max-w-[70vw] flex-col items-center gap-4 overflow-y-auto">
-          {bookings.map((booking, index) => (
-            <ReservationCard
-              key={index}
-              startDate={booking.startDate}
-              endDate={booking.endDate}
-              court={booking.court}
-              status={booking.status}
-              onCancel={() => handleCancel(booking.date)}
-            />
-          ))}
-          {bookings.length === 0 && (
-            <p className="text-center font-poppins text-sm font-medium text-black md:text-base">
-              Nenhuma reserva encontrada
+          <div className="flex h-full max-h-[85%] max-w-[70vw] flex-col items-center gap-4 overflow-y-auto">
+            {bookings.map((booking, index) => (
+              <ReservationCard
+                key={index}
+                startDate={booking.startDate}
+                endDate={booking.endDate}
+                court={booking.court}
+                status={booking.status}
+                onCancel={() => handleCancel(booking.date)}
+              />
+            ))}
+            {bookings.length === 0 && (
+              <p className="text-center font-poppins text-sm font-medium text-black md:text-base">
+                Nenhuma reserva encontrada
+              </p>
+            )}
+            <p className="self-end text-end font-poppins text-xs font-medium text-black md:text-base">
+              * Reservas sujeitas a cancelamento
             </p>
-          )}
-          <p className="self-end text-end font-poppins text-xs font-medium text-black md:text-base">
-            * Reservas sujeitas a cancelamento
-          </p>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div
+          className="relative max-h-[90vh] w-[70vw] max-w-[70vw] rounded-lg bg-white p-4 font-poppins"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex flex-col justify-between py-2 md:pt-8">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-bold text-black sm:text-base md:text-xl">
+                Você não está logado
+              </p>
+              <IoClose
+                className="absolute left-[94%] top-2 h-6 w-6 cursor-pointer md:h-10 md:w-16"
+                onClick={handleClose}
+              ></IoClose>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

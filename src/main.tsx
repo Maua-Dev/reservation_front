@@ -11,12 +11,12 @@ const queryClient = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <MsalProvider instance={msalInstance}>
-        <UserProvider>
+    <UserProvider>
+      <QueryClientProvider client={queryClient}>
+        <MsalProvider instance={msalInstance}>
           <App />
-        </UserProvider>
-      </MsalProvider>
-    </QueryClientProvider>
+        </MsalProvider>
+      </QueryClientProvider>
+    </UserProvider>
   </React.StrictMode>
 )
