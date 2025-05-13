@@ -60,7 +60,7 @@ jobs:
           else
             echo "Invalid branch name!" && exit 1
           fi
-          echo "STACK_NAME=ReservationStackFront${{env.STAGE}}" >> $GITHUB_ENV
+          echo "STACK_NAME=ReservationStackFront$STAGE" >> $GITHUB_ENV
       - name: Installing Dependencies
         run: |
           npm install
