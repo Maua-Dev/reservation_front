@@ -92,8 +92,19 @@ jobs:
           echo "CLOUD_FRONT_ID='$CLOUD_FRONT_ID'" >> $GITHUB_ENV
       - name: Set AWS Bucket
         run: |
-          AWS_BUCKET=$(aws cloudformation --region ${{vars.AWS_REGION}} describe-stacks --stack-name ${{env.STACK_NAME}} --query "Stacks[0].Outputs[?OutputKey=='ReservationFrontBucketName${{env.STAGE}}'].OutputValue" --output text)
-          echo "AWS_BUCKET='$AWS_BUCKET'" >> $GITHUB_ENV
+          echo "Stack name: ${{ env.STACK_NAME }}"
+          echo "Stage: ${{ env.STAGE }}"
+          AWS_BUCKET=$(aws cloudformation describe-stacks \
+            --stack-name ${{ env.STACK_NAME }} \
+            --region ${{ vars.AWS_REGION }} \
+            --query "Stacks[0].Outputs[?OutputKey=='ReservationFrontBucketName${{ env.STAGE }}'].OutputValue" \
+            --output text)
+          echo "Extracted AWS_BUCKET: '$AWS_BUCKET'"
+          if [ -z "$AWS_BUCKET" ]; then
+            echo "::error::Bucket name is empty. Check CloudFormation stack outputs."
+            exit 1
+          fi
+          echo "AWS_BUCKET=$AWS_BUCKET" >> $GITHUB_ENV
       - name: Check if bucket exists
         run: |
           if [ -z "$AWS_BUCKET" ]; then
