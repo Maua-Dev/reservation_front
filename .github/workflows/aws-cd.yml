@@ -53,7 +53,7 @@ jobs:
           if [[ "${{ github.ref_name }}" == "dev" ]]; then
             echo "STAGE=dev"
           elif [[ "${{ github.ref_name }}" == "aws-migration" ]]; then
-            echo "STAGE=aws-migration"
+            echo "STAGE=dev"
           elif [[ "${{ github.ref_name }}" == "homolog" ]]; then
             echo "STAGE=homolog"
           elif [[ "${{ github.ref_name }}" == "prod" ]]; then
