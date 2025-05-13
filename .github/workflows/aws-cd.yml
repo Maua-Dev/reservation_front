@@ -73,6 +73,7 @@ jobs:
           VITE_STAGE: ${{ env.VITE_STAGE}}
       - name: Setup envs
         run: |
+          echo "Stage: ${{ env.STAGE }}"
           echo AWS_REGION=${{ vars.AWS_REGION }} >> $GITHUB_ENV
           echo AWS_ACCOUNT_ID=${{ env.AWS_ACCOUNT_ID }} >> $GITHUB_ENV
           echo STACK_NAME=${{ env.STACK_NAME }} >> $GITHUB_ENV
