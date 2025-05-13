@@ -7,7 +7,7 @@ on:
       - prod
       - aws-migration
   workflow_dispatch:
-  
+
 jobs:
   DeployToAWS:
     environment:
@@ -20,17 +20,17 @@ jobs:
       - uses: actions/checkout@v2
       - name: Determine AWS Account ID
         run: |
-             if [[ "${{ github.ref_name }}" == "dev" ]]; then
-               echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID_DEV }}" >> $GITHUB_ENV
-             elif [[ "${{ github.ref_name }}" == "aws-migration" ]]; then
-               echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID_DEV }}" >> $GITHUB_ENV
-             elif [[ "${{ github.ref_name }}" == "homolog" ]]; then
-               echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID_HOMOLOG }}" >> $GITHUB_ENV
-             elif [[ "${{ github.ref_name }}" == "prod" ]]; then
-               echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID_PROD }}" >> $GITHUB_ENV
-             else
-               echo "Invalid branch name!" && exit 1
-             fi
+          if [[ "${{ github.ref_name }}" == "dev" ]]; then
+            echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID_DEV }}" >> $GITHUB_ENV
+          elif [[ "${{ github.ref_name }}" == "aws-migration" ]]; then
+            echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID_DEV }}" >> $GITHUB_ENV
+          elif [[ "${{ github.ref_name }}" == "homolog" ]]; then
+            echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID_HOMOLOG }}" >> $GITHUB_ENV
+          elif [[ "${{ github.ref_name }}" == "prod" ]]; then
+            echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID_PROD }}" >> $GITHUB_ENV
+          else
+            echo "Invalid branch name!" && exit 1
+          fi
       - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
@@ -86,6 +86,8 @@ jobs:
           npm install
           cdk synth
           cdk deploy --require-approval never
+      - name: Debug AWS_BUCKET
+        run: 'echo "AWS_BUCKET is: ${{ env.AWS_BUCKET }}"'
       - name: Set CloudFront ID
         run: |
           CLOUD_FRONT_ID=$(aws cloudformation --region ${{vars.AWS_REGION}} describe-stacks --stack-name ${{env.STACK_NAME}} --query "Stacks[0].Outputs[?OutputKey=='ReservationFrontDistributionId${{env.STAGE}}'].OutputValue" --output text)
