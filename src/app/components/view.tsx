@@ -1,8 +1,7 @@
 import { IoClose } from 'react-icons/io5'
 import { ReservationCard } from './reservation-view'
 import { useEffect } from 'react'
-import baixados from '../assets/baixados.jpg'
-import { UseUser } from '../hooks/use-user'
+import { useUser } from '../hooks/use-user'
 import { Button } from './button'
 
 interface ViewProps {
@@ -14,7 +13,10 @@ export function View({ onClose }: ViewProps) {
     console.log(`Cancel reservation on ${date}`)
   }
 
-  const { user, isLogged } = UseUser()
+  const { user } = useUser()
+  console.log(user)
+
+  const isLogged = user !== null
 
   const bookings = [
     {

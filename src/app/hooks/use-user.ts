@@ -4,18 +4,7 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 import { UserContext } from '../contexts/user-context'
 import { useIsAuthenticated, useMsal } from '@azure/msal-react'
 import { loginRequest } from '../auth/auth-config'
-
-export interface UserResponse {
-  user: {
-    user_id: string
-    name: string
-    ra: string
-    email: string
-    role: string
-    confirm_user: boolean
-  }
-  message: string
-}
+import { useAccessToken, UserService } from '@/services/user-service'
 
 export interface User {
   user_id: string
@@ -26,70 +15,29 @@ export interface User {
   confirm_user: boolean
 }
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_USER_URL
-})
-
-export const useGetUser = (accessToken: string | null) => {
-  return useQuery({
-    queryKey: ['user'],
-    retry: 2,
-    enabled: !!accessToken, // Só executa se o accessToken estiver disponível
-    queryFn: async () => {
-      const response = await api.get<UserResponse>('/get-user', {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      })
-      return response.data
-    }
-  })
-}
-
-export const UseUser = () => {
-  const { instance } = useMsal()
+export const useUser = () => {
   const context = useContext(UserContext)
+
+  if (!context) {
+    throw new Error('useUser must be used within a UserProvider')
+  }
+
+  const { user, setUser } = context
   const isAuth = useIsAuthenticated()
 
-  const getAccessToken = useCallback(async () => {
+  const { getAccessToken } = useAccessToken()
+
+  async function getUser() {
     try {
-      const accounts = instance.getAllAccounts()
-      if (accounts.length === 0) {
-        throw new Error('No accounts found')
-      }
-
-      const response = await instance.acquireTokenSilent({
-        ...loginRequest,
-        account: accounts[0]
-      })
-
-      return response.accessToken
+      const accessToken = await getAccessToken()
+      const userData = await UserService.getUser(accessToken)
+      console.log('User data getUser:', userData)
+      setUser(userData.user)
+      return userData
     } catch (error) {
-      console.error('Error acquiring token silently:', error)
-      throw error
+      console.error('Failed to fetch user:', error)
     }
-  }, [instance])
+  }
 
-  const [accessToken, setAccessToken] = useState<string | null>(null)
-
-  useEffect(() => {
-    const fetchToken = async () => {
-      const token = await getAccessToken()
-      setAccessToken(token)
-    }
-
-    if (isAuth) {
-      fetchToken()
-    }
-  }, [isAuth, getAccessToken])
-
-  const { data: userData, isLoading } = useGetUser(accessToken)
-
-  useEffect(() => {
-    if (context && userData) {
-      context.setUser(userData.user)
-    }
-  }, [userData, context])
-
-  const isLogged = !!userData?.user
-
-  return { user: context?.user, isLoading, getAccessToken, isLogged }
+  return { user, getUser, isAuth }
 }

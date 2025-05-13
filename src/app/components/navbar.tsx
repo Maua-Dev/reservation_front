@@ -10,7 +10,7 @@ import { FaUserCircle } from 'react-icons/fa'
 import { IoClose } from 'react-icons/io5'
 import { useIsAuthenticated, useMsal } from '@azure/msal-react'
 import { CiLogout } from 'react-icons/ci'
-import { UseUser } from '../hooks/use-user'
+import { useUser } from '../hooks/use-user'
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -18,7 +18,17 @@ export function Navbar() {
 
   const { instance } = useMsal()
   const auth = useIsAuthenticated()
-  const { user, isLoading } = UseUser()
+  const isLoading = false
+  const { getUser } = useUser()
+
+  const handleSetProfile = async () => {
+    const user = await getUser()
+    console.log('User data:', user)
+  }
+
+  if (auth) {
+    handleSetProfile()
+  }
 
   const handleLogout = () => {
     instance.logoutRedirect({ postLogoutRedirectUri: '/' }).catch((error) => {
