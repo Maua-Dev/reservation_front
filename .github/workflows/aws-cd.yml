@@ -67,8 +67,6 @@ jobs:
           npm install -g aws-cdk
       - name: Build and Export
         run: |
-          echo "Building and exporting for stage: ${{ env.STAGE }}"
-          echo "VITE_STAGE=${{ env.VITE_STAGE }}"
           npm run build
         env:
           VITE_STAGE: ${{ env.VITE_STAGE}}
@@ -95,14 +93,10 @@ jobs:
       - name: Set AWS Bucket
         run: |
           echo "Setting AWS Bucket"
-          echo "AWS_REGION=${{ env.AWS_REGION }}"
-          echo "STACK_NAME=${{ env.STACK_NAME }}"
-          echo "STAGE=${{ env.STAGE }}"
           AWS_BUCKET=$(aws cloudformation --region ${{env.AWS_REGION}} describe-stacks --stack-name ${{env.STACK_NAME}} --query "Stacks[0].Outputs[?OutputKey=='ReservationFrontBucketName${{env.STAGE}}'].OutputValue" --output text)
           echo "AWS_BUCKET='$AWS_BUCKET'" >> $GITHUB_ENV
       - name: Check if bucket exists
         run: |
-          echo "Bucket: ${{env.AWS_BUCKET}}"
           if [ -z "${{env.AWS_BUCKET}}" ]; then
             echo "Bucket name is empty!"
             exit 1
@@ -110,7 +104,6 @@ jobs:
           aws s3 ls s3://${{env.AWS_BUCKET}} || (echo "Bucket does not exist or is inaccessible" && exit 1)
       - name: Upload to S3
         run: |
-          echo "Uploading to S3 bucket: ${{env.AWS_BUCKET}}"
           aws s3 cp dist s3://${{env.AWS_BUCKET}}/ --recursive --region ${{ env.AWS_REGION }}
       - name: Clear CDN cache
         run: aws cloudfront create-invalidation --distribution-id ${{env.CLOUD_FRONT_ID}} --paths "/*" --region us-east-1
