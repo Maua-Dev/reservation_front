@@ -88,11 +88,11 @@ jobs:
           cdk deploy --require-approval never
       - name: Set CloudFront ID
         run: |
-          CLOUD_FRONT_ID=$(aws cloudformation --region ${{vars.AWS_REGION}} describe-stacks --stack-name ${{env.STACK_NAME}} --query "Stacks[0].Outputs[?OutputKey=='ReservationFrontDistributionId${{env.STAGE}}'].OutputValue" --output text)
+          CLOUD_FRONT_ID=$(aws cloudformation --region ${{env.AWS_REGION}} describe-stacks --stack-name ${{env.STACK_NAME}} --query "Stacks[0].Outputs[?OutputKey=='ReservationFrontDistributionId${{env.STAGE}}'].OutputValue" --output text)
           echo "CLOUD_FRONT_ID='$CLOUD_FRONT_ID'" >> $GITHUB_ENV
       - name: Set AWS Bucket
         run: |
-          AWS_BUCKET=$(aws cloudformation --region ${{vars.AWS_REGION}} describe-stacks --stack-name ${{env.STACK_NAME}} --query "Stacks[0].Outputs[?OutputKey=='ReservationFrontBucketName${{env.STAGE}}'].OutputValue" --output text)
+          AWS_BUCKET=$(aws cloudformation --region ${{env.AWS_REGION}} describe-stacks --stack-name ${{env.STACK_NAME}} --query "Stacks[0].Outputs[?OutputKey=='ReservationFrontBucketName${{env.STAGE}}'].OutputValue" --output text)
           echo "AWS_BUCKET='$AWS_BUCKET'" >> $GITHUB_ENV
       - name: Check if bucket exists
         run: |
@@ -105,6 +105,6 @@ jobs:
       - name: Upload to S3
         run: |
           echo "Uploading to S3 bucket: ${{env.AWS_BUCKET}}"
-          aws s3 cp dist s3://${{env.AWS_BUCKET}}/ --recursive --region ${{ vars.AWS_REGION }}
+          aws s3 cp dist s3://${{env.AWS_BUCKET}}/ --recursive --region ${{ env.AWS_REGION }}
       - name: Clear CDN cache
         run: aws cloudfront create-invalidation --distribution-id ${{env.CLOUD_FRONT_ID}} --paths "/*" --region us-east-1
