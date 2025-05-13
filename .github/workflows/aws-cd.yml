@@ -86,8 +86,6 @@ jobs:
           npm install
           cdk synth
           cdk deploy --require-approval never
-      - name: Debug AWS_BUCKET
-        run: 'echo "AWS_BUCKET is: ${{ env.AWS_BUCKET }}"'
       - name: Set CloudFront ID
         run: |
           CLOUD_FRONT_ID=$(aws cloudformation --region ${{vars.AWS_REGION}} describe-stacks --stack-name ${{env.STACK_NAME}} --query "Stacks[0].Outputs[?OutputKey=='ReservationFrontDistributionId${{env.STAGE}}'].OutputValue" --output text)
@@ -96,6 +94,13 @@ jobs:
         run: |
           AWS_BUCKET=$(aws cloudformation --region ${{vars.AWS_REGION}} describe-stacks --stack-name ${{env.STACK_NAME}} --query "Stacks[0].Outputs[?OutputKey=='ReservationFrontBucketName${{env.STAGE}}'].OutputValue" --output text)
           echo "AWS_BUCKET='$AWS_BUCKET'" >> $GITHUB_ENV
+      - name: Check if bucket exists
+        run: |
+          if [ -z "$AWS_BUCKET" ]; then
+            echo "Bucket name is empty!"
+            exit 1
+          fi
+          aws s3 ls s3://$AWS_BUCKET || (echo "Bucket does not exist or is inaccessible" && exit 1)
       - name: Upload to S3
         run: aws s3 cp dist s3://${{env.AWS_BUCKET}}/ --recursive --region ${{ vars.AWS_REGION }}
       - name: Clear CDN cache
