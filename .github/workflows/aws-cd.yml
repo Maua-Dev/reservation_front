@@ -88,6 +88,8 @@ jobs:
           cdk deploy --require-approval never
       - name: Set CloudFront ID
         run: |
+          echo "Stack name: ${{ env.STACK_NAME }}"
+          echo "Stage: ${{ env.STAGE }}"
           CLOUD_FRONT_ID=$(aws cloudformation --region ${{vars.AWS_REGION}} describe-stacks --stack-name ${{env.STACK_NAME}} --query "Stacks[0].Outputs[?OutputKey=='ReservationFrontDistributionId${{env.STAGE}}'].OutputValue" --output text)
           echo "CLOUD_FRONT_ID='$CLOUD_FRONT_ID'" >> $GITHUB_ENV
       - name: Set AWS Bucket
