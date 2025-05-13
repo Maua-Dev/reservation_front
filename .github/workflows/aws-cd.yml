@@ -67,6 +67,8 @@ jobs:
           npm install -g aws-cdk
       - name: Build and Export
         run: |
+          echo "Building and exporting for stage: ${{ env.STAGE }}"
+          echo "VITE_STAGE=${{ env.VITE_STAGE }}" >> $GITHUB_ENV
           npm run build
         env:
           VITE_STAGE: ${{ env.VITE_STAGE}}
