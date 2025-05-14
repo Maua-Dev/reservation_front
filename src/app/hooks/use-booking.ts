@@ -56,8 +56,8 @@ import {
 export const queryClient = new QueryClient()
 
 export const useBookingsQuery = () => {
-  const getBookingsQuery = useQuery<MyBookingsResponse, Error>({
-    queryKey: ['bookings'],
+  const getMyBookingsQuery = useQuery<MyBookingsResponse, Error>({
+    queryKey: ['myBookings'],
     queryFn: async () => {
       const userId = localStorage.getItem('userId')
       if (!userId) throw new Error('User ID not found')
@@ -68,7 +68,7 @@ export const useBookingsQuery = () => {
         throw new Error('Failed to fetch bookings')
       }
     },
-    retry: false,
+    retry: 2,
     staleTime: 1000 * 60 * 5 // 5 minutos
   })
 
@@ -81,7 +81,7 @@ export const useBookingsQuery = () => {
   })
 
   return {
-    getBookingsQuery,
+    getMyBookingsQuery,
     createBookingMutation
   }
 }

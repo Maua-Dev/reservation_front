@@ -17,9 +17,9 @@ export function View({ onClose }: ViewProps) {
     console.log(`Cancel reservation on ${date}`)
   }
 
-  const { getBookingsQuery } = useBookingsQuery()
+  const { getMyBookingsQuery } = useBookingsQuery()
 
-  const bookings = getBookingsQuery.data?.bookings || []
+  const bookings = getMyBookingsQuery.data?.bookings || []
 
   const handleClose = () => {
     onClose()
@@ -39,7 +39,7 @@ export function View({ onClose }: ViewProps) {
     }
   }, [onClose])
 
-  if (getBookingsQuery.isLoading) {
+  if (getMyBookingsQuery.isLoading) {
     return (
       <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
         <div className="relative max-h-[90vh] w-[70vw] max-w-[70vw] rounded-lg bg-white p-4 font-poppins">
@@ -50,8 +50,8 @@ export function View({ onClose }: ViewProps) {
   }
 
   if (
-    getBookingsQuery.isError &&
-    getBookingsQuery.error.message == 'User ID not found'
+    getMyBookingsQuery.isError &&
+    getMyBookingsQuery.error.message == 'User ID not found'
   ) {
     console.log(localStorage.getItem('userId'))
     return (
@@ -66,11 +66,11 @@ export function View({ onClose }: ViewProps) {
     )
   }
 
-  if (getBookingsQuery.isError) {
+  if (getMyBookingsQuery.isError) {
     return (
       <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
         <div className="relative max-h-[90vh] w-[70vw] max-w-[70vw] rounded-lg bg-white p-4 font-poppins">
-          <p>Erro ao carregar reservas: {getBookingsQuery.error.message}</p>
+          <p>Erro ao carregar reservas: {getMyBookingsQuery.error.message}</p>
         </div>
       </div>
     )
