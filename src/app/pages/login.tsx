@@ -4,6 +4,7 @@ import { Button } from '../components/button'
 import { useIsAuthenticated, useMsal } from '@azure/msal-react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../hooks/use-user'
+import { loginRequest } from '../auth/auth-config'
 
 export function Login() {
   const auth = useIsAuthenticated()
@@ -16,7 +17,20 @@ export function Login() {
   // redirecionamos ele para a página inicial.
   // Isso deve ser corrigido no futuro.
 
+  const fetchAccessToken = async () => {
+    const accounts = instance.getAllAccounts()
+    const accessToken = (
+      await instance.acquireTokenSilent({
+        ...loginRequest,
+        account: accounts[0]
+      })
+    ).accessToken
+    localStorage.setItem('accessToken', accessToken)
+    return accessToken
+  }
+
   if (auth) {
+    fetchAccessToken()
     navigate('/')
     return
   }

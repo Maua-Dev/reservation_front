@@ -3,86 +3,23 @@ import { ReservationCard } from './reservation-view'
 import { useEffect } from 'react'
 import { useUser } from '../hooks/use-user'
 import { Button } from './button'
+import { useBookingsQuery } from '../hooks/use-booking'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 interface ViewProps {
   onClose: () => void
 }
 
 export function View({ onClose }: ViewProps) {
+  const { user } = useUser()
+  const isLogged = user !== null
   const handleCancel = (date: string) => {
     console.log(`Cancel reservation on ${date}`)
   }
 
-  const { user } = useUser()
-  console.log(user)
+  const { getBookingsQuery } = useBookingsQuery()
 
-  const isLogged = user !== null
-
-  const bookings = [
-    {
-      startDate: 1733929200000,
-      endDate: 1733932800000,
-      court: '1',
-      status: 'Aprovado',
-      date: '12/12'
-    },
-    {
-      startDate: 1733929200000,
-      endDate: 1733932800000,
-      court: '1',
-      status: 'Aprovado',
-      date: '12/12'
-    },
-    {
-      startDate: 1734372000000,
-      endDate: 1734375600000,
-      court: '1',
-      status: 'Aprovado',
-      date: '16/12'
-    },
-    {
-      startDate: 1734699600000,
-      endDate: 1734703200000,
-      court: '2',
-      status: 'Aprovado',
-      date: '20/12'
-    },
-    {
-      startDate: 1734699600000,
-      endDate: 1734703200000,
-      court: '2',
-      status: 'Aprovado',
-      date: '20/12'
-    },
-    {
-      startDate: 1734699600000,
-      endDate: 1734703200000,
-      court: '2',
-      status: 'Aprovado',
-      date: '20/12'
-    },
-    {
-      startDate: 1734699600000,
-      endDate: 1734703200000,
-      court: '2',
-      status: 'Aprovado',
-      date: '20/12'
-    },
-    {
-      startDate: 1734699600000,
-      endDate: 1734703200000,
-      court: '2',
-      status: 'Aprovado',
-      date: '20/12'
-    },
-    {
-      startDate: 1734699600000,
-      endDate: 1734703200000,
-      court: '2',
-      status: 'Aprovado',
-      date: '20/12'
-    }
-  ]
+  const bookings = getBookingsQuery.data?.bookings || []
 
   const handleClose = () => {
     onClose()
@@ -101,6 +38,43 @@ export function View({ onClose }: ViewProps) {
       document.removeEventListener('keydown', handleEscape)
     }
   }, [onClose])
+
+  if (getBookingsQuery.isLoading) {
+    return (
+      <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
+        <div className="relative max-h-[90vh] w-[70vw] max-w-[70vw] rounded-lg bg-white p-4 font-poppins">
+          <AiOutlineLoading3Quarters className="animate-spin" />
+        </div>
+      </div>
+    )
+  }
+
+  if (
+    getBookingsQuery.isError &&
+    getBookingsQuery.error.message == 'User ID not found'
+  ) {
+    console.log(localStorage.getItem('userId'))
+    return (
+      <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="relative max-h-[90vh] w-[70vw] max-w-[70vw] rounded-lg bg-white p-4 font-poppins"
+        >
+          <p>Você não está logado</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (getBookingsQuery.isError) {
+    return (
+      <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
+        <div className="relative max-h-[90vh] w-[70vw] max-w-[70vw] rounded-lg bg-white p-4 font-poppins">
+          <p>Erro ao carregar reservas: {getBookingsQuery.error.message}</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
@@ -125,21 +99,23 @@ export function View({ onClose }: ViewProps) {
             <hr className="border-t-4 border-black" />
           </div>
           <div className="flex h-full max-h-[85%] max-w-[70vw] flex-col items-center gap-4 overflow-y-auto">
-            {bookings.map((booking, index) => (
-              <ReservationCard
-                key={index}
-                startDate={booking.startDate}
-                endDate={booking.endDate}
-                court={booking.court}
-                status={booking.status}
-                onCancel={() => handleCancel(booking.date)}
-              />
-            ))}
-            {bookings.length === 0 && (
-              <p className="text-center font-poppins text-sm font-medium text-black md:text-base">
-                Nenhuma reserva encontrada
-              </p>
-            )}
+            {bookings &&
+              (bookings.length === 0 ? (
+                <p className="text-center font-poppins text-sm font-medium text-black md:text-base">
+                  Nenhuma reserva encontrada
+                </p>
+              ) : (
+                bookings.map((booking, index) => (
+                  <ReservationCard
+                    key={index}
+                    startDate={booking.start_date}
+                    endDate={booking.end_date}
+                    court={booking.court_number.toString()}
+                    // status={booking.status}
+                    onCancel={() => handleCancel(booking.start_date.toString())}
+                  />
+                ))
+              ))}
             <p className="self-end text-end font-poppins text-xs font-medium text-black md:text-base">
               * Reservas sujeitas a cancelamento
             </p>

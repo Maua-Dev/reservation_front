@@ -42,9 +42,11 @@
 
 // export const userService = new UserService()
 
-import { loginRequest } from '@/app/auth/auth-config'
+// import { loginRequest } from '@/app/auth/auth-config'
+import { User } from '@/app/hooks/use-user'
 import { api } from '@/infrastructure/http/api'
-import { useMsal } from '@azure/msal-react'
+// import { useMsal } from '@azure/msal-react'
+// import { access } from 'fs'
 
 export interface UserResponse {
   user: {
@@ -55,31 +57,42 @@ export interface UserResponse {
     role: string
     confirm_user: boolean
   }
+  created: boolean
   message: string
 }
 
-export const useAccessToken = () => {
-  const { instance } = useMsal()
+// export const useAccessToken = () => {
+//   const { instance } = useMsal()
 
-  const getAccessToken = async () => {
-    const accounts = instance.getAllAccounts()
-    const accessToken = (
-      await instance.acquireTokenSilent({
-        ...loginRequest,
-        account: accounts[0]
-      })
-    ).accessToken
-    return accessToken
-  }
+//   const getAccessToken = async () => {
+//     const accounts = instance.getAllAccounts()
+//     const accessToken = (
+//       await instance.acquireTokenSilent({
+//         ...loginRequest,
+//         account: accounts[0]
+//       })
+//     ).accessToken
+//     return accessToken
+//   }
 
-  return { getAccessToken }
-}
+//   return { getAccessToken }
+// }
 
 export const UserService = {
-  getUser: async (accessToken: string): Promise<UserResponse> => {
-    const response = await api.get<UserResponse>('/get-user', {
+  getUser: async (): Promise<User> => {
+    const accessToken = localStorage.getItem('accessToken')
+    const response = await api.get<UserResponse>('/auth-user', {
       headers: { Authorization: `Bearer ${accessToken}` }
     })
-    return response.data
+    const data = response.data
+
+    return {
+      userId: data.user.user_id,
+      name: data.user.name,
+      ra: data.user.ra,
+      email: data.user.email,
+      role: data.user.role,
+      confirmUser: data.user.confirm_user
+    }
   }
 }

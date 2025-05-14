@@ -6,6 +6,9 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { IoClose } from 'react-icons/io5'
+import { useBookingsQuery } from '../hooks/use-booking'
+import { useUser } from '../hooks/use-user'
+import { useIsAuthenticated } from '@azure/msal-react'
 
 type FormProps = {
   modalities: string[]
@@ -49,10 +52,21 @@ export const Form = ({
   const [open, setOpen] = useState(false)
   const [selectedModality, setSelectedModality] = useState('')
   const [selectedEquipment, setSelectedEquipment] = useState('')
+  const [courtNumber, setCourtNumber] = useState('')
   const selectedDate = new Date(timestamp)
+  const { createBookingMutation } = useBookingsQuery()
+  const { user } = useUser()
+  const isAuth = useIsAuthenticated()
 
-  const onSubmit = (data: FormData) => {
-    console.log(data)
+  const onSubmit = async (data: FormData) => {
+    const bookingData = {
+      start_date: timestamp,
+      end_date: timestamp + 3600000,
+      court_number: Number(courtNumber),
+      sport: selectedModality,
+      materials: [selectedEquipment]
+    }
+    await createBookingMutation.mutateAsync(bookingData)
     onClose()
   }
   const handleClose = () => {
@@ -75,6 +89,19 @@ export const Form = ({
 
   const formatDate = (date: number) => date.toString().padStart(2, '0')
 
+  if (!isAuth) {
+    return (
+      <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="relative max-h-[90vh] w-[70vw] max-w-[70vw] rounded-lg bg-white p-4 font-poppins"
+        >
+          <p>Você não está logado</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <form
       onSubmit={(e) => {
@@ -87,10 +114,10 @@ export const Form = ({
       <div className="flex flex-col justify-between border-b-2 border-slate-700">
         <div className="flex justify-between">
           <p className="font-poppins text-2xl font-bold md:text-3xl">
-            Daniel Capuzzo
+            {user?.name}
           </p>
           <p className="mr-4 font-poppins text-2xl font-bold md:text-3xl">
-            22.001122-0
+            {user?.ra}
           </p>
           <IoClose
             className="absolute left-[95%] top-1 mr-1 h-8 w-8 cursor-pointer px-2 md:h-10 md:w-16"
@@ -106,7 +133,13 @@ export const Form = ({
       <div className="flex w-full flex-col justify-start font-medium md:flex-row">
         <div className="flex w-40 items-center justify-between rounded md:w-48">
           <label className="flex-grow text-center font-poppins text-lg text-white">
-            <select className="inline-flex items-start justify-start rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2">
+            <select
+              onChange={(e) => {
+                const selectedOption = e.target.value.split(' ')[1]
+                setCourtNumber(selectedOption)
+              }}
+              className="inline-flex items-start justify-start rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2"
+            >
               {options.map((option) => (
                 <option key={option}>{option}</option>
               ))}

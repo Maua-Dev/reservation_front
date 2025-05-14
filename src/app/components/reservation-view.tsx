@@ -3,9 +3,9 @@ import { Button } from './button'
 interface ReservationCardProps {
   startDate: number
   endDate: number
-  court: string
-  status: string
-  onCancel: () => void
+  court?: string
+  status?: string
+  onCancel?: () => void
 }
 
 export function ReservationCard({

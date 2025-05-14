@@ -5,6 +5,7 @@ import { Form } from './form'
 import { View } from './view'
 import { ReservationDetails } from './reservation-details'
 import { cn } from '../utils/cn'
+import { useUserQuery } from '../hooks/use-user'
 
 const reservas = [
   // Caso com 1 reserva
@@ -104,8 +105,19 @@ export function Court({ isField }: CourtProps) {
   >(undefined)
   const [selectedBookingVisible, setSelectedBookingVisible] = useState(false)
   const [selectedTime, setSelectedTime] = useState<number | null>(null)
+
+  const { data } = useUserQuery()
+
+  console.log('User data:', data)
+
   const today = new Date()
-  const modalities = ['Basquete', 'Handbol', 'Futsal', 'Vôlei', 'Tênis']
+  const modalities = [
+    'Tennis',
+    'Handball',
+    'Footbal',
+    'Basketball',
+    'Volleyball'
+  ]
   const equipments = [
     'Bola de futsal',
     'Bola de handol',

@@ -6,7 +6,6 @@ import { Login } from './pages/login'
 import { Home } from './pages/home'
 import { MsalProvider } from '@azure/msal-react'
 import { msalInstance } from './auth/auth-config'
-import { Test } from './pages/test'
 
 export function App() {
   return (
@@ -19,7 +18,6 @@ export function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/court-reserve" element={<CourtReserve />} />
             <Route path="/fieldbeach-reserve" element={<FieldBeachReserve />} />
-            <Route path="/test" element={<Test />} />
             <Route path="*" element={<h1>Not Found</h1>} />
           </Routes>
         </MsalProvider>

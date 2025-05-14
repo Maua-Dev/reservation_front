@@ -1,67 +1,87 @@
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
-import axios from 'axios'
+// import { useIsAuthenticated } from '@azure/msal-react'
+// import { BookingsContext } from '../contexts/bookings-context'
+// import { useContext } from 'react'
+// import { BookingsService } from '@/services/bookings-service'
 
-export type Post = {
-  id: number
-  userId: number
-  title: string
-  body: string
+export interface Booking {
+  start_date: number
+  end_date: number
+  court_number: number
+  sport: string
+  user_id?: string
+  booking_id?: string
+  materials: string[]
 }
 
-const apiUrl = 'https://jsonplaceholder.typicode.com'
-const api = axios.create({
-  baseURL: apiUrl,
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})
+// export const useBookings = () => {
+//   const context = useContext(BookingsContext)
 
-export const useUsersQuery = () => {
-  return useQuery({
-    retry: 3,
-    queryKey: ['users'],
+//   if (!context) {
+//     throw new Error('useBookings must be used within a BookingsProvider')
+//   }
+
+//   const { setAllBookings, setMyBookings } = context
+
+//   async function getMyBookings() {
+//     try {
+//       const myBookings = await BookingsService.getMyBookings()
+//       console.log('User Bookings:', myBookings)
+//       setMyBookings(myBookings.bookings)
+//       return myBookings.bookings
+//     } catch (error) {
+//       console.error('Failed to fetch user:', error)
+//     }
+//   }
+
+//   async function createBooking(booking: Booking) {
+//     try {
+//       const newBooking = await BookingsService.createBooking(booking)
+//       setAllBookings((prevBookings) => [...prevBookings, newBooking])
+//       return newBooking
+//     } catch (error) {
+//       console.error('Failed to create booking:', error)
+//     }
+//   }
+
+//   return { getMyBookings, createBooking }
+// }
+
+// src/app/hooks/use-bookings-query.ts
+import { useQuery, useMutation, QueryClient } from '@tanstack/react-query'
+import {
+  BookingsService,
+  MyBookingsResponse
+} from '@/services/bookings-service'
+
+export const queryClient = new QueryClient()
+
+export const useBookingsQuery = () => {
+  const getBookingsQuery = useQuery<MyBookingsResponse, Error>({
+    queryKey: ['bookings'],
     queryFn: async () => {
-      const response = await api.get<Post[]>('/posts')
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-      return response.data
-    }
-  })
-}
+      const userId = localStorage.getItem('userId')
+      if (!userId) throw new Error('User ID not found')
 
-export const usePostByIdQuery = (postId: number) => {
-  return useQuery({
-    retry: 3,
-    queryKey: ['post', postId],
-    queryFn: async () => {
-      const response = await api.get<Post[]>(`/posts${postId}`)
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      return response.data
-    }
-  })
-}
-
-export const usePostsQuery = () => {
-  return useQuery({
-    retry: 3,
-    queryKey: ['posts'],
-    queryFn: async () => {
-      const response = await api.get<Post[]>('/posts')
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      return response.data
-    }
-  })
-}
-
-export const useCreatePostMutation = () => {
-  const queryClient = new QueryClient()
-
-  return useMutation({
-    mutationFn: async (post: Omit<Post, 'id'>) => {
-      const response = await api.post<Post>('/posts', post)
-      return response.data
+      try {
+        return await BookingsService.getMyBookings()
+      } catch (error) {
+        throw new Error('Failed to fetch bookings')
+      }
     },
+    retry: false,
+    staleTime: 1000 * 60 * 5 // 5 minutos
+  })
+
+  const createBookingMutation = useMutation<Booking, Error, Booking>({
+    mutationFn: (booking) => BookingsService.createBooking(booking),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] })
+      // Invalida a query de reservas para refetch após criar uma nova
+      queryClient.invalidateQueries({ queryKey: ['bookings'] })
     }
   })
+
+  return {
+    getBookingsQuery,
+    createBookingMutation
+  }
 }

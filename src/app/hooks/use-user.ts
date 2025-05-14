@@ -1,18 +1,23 @@
-import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useContext } from 'react'
 import { UserContext } from '../contexts/user-context'
-import { useIsAuthenticated, useMsal } from '@azure/msal-react'
-import { loginRequest } from '../auth/auth-config'
-import { useAccessToken, UserService } from '@/services/user-service'
+import { useIsAuthenticated } from '@azure/msal-react'
+import { UserService } from '@/services/user-service'
+import { useQuery } from '@tanstack/react-query'
+import { set } from 'react-hook-form'
 
 export interface User {
-  user_id: string
+  userId: string
   name: string
   ra: string
   email: string
   role: string
-  confirm_user: boolean
+  confirmUser: boolean
+}
+
+interface getUserResponse {
+  user: User
+  created: boolean
+  message: string
 }
 
 export const useUser = () => {
@@ -25,19 +30,38 @@ export const useUser = () => {
   const { user, setUser } = context
   const isAuth = useIsAuthenticated()
 
-  const { getAccessToken } = useAccessToken()
+  // async function getUser() {
+  //   try {
+  //     const userData = await UserService.getUser()
+  //     console.log('User data getUser:', userData)
+  //     setUser(userData.user)
+  //     return userData.user
+  //   } catch (error) {
+  //     console.error('Failed to fetch user:', error)
+  //   }
+  // }
 
-  async function getUser() {
-    try {
-      const accessToken = await getAccessToken()
-      const userData = await UserService.getUser(accessToken)
-      console.log('User data getUser:', userData)
-      setUser(userData.user)
-      return userData
-    } catch (error) {
-      console.error('Failed to fetch user:', error)
-    }
+  return { user, useUserQuery, isAuth }
+}
+
+export const useUserQuery = () => {
+  const context = useContext(UserContext)
+
+  if (!context) {
+    throw new Error('useUser must be used within a UserProvider')
   }
 
-  return { user, getUser, isAuth }
+  const { setUser } = context
+
+  return useQuery({
+    queryKey: ['user'],
+    queryFn: async () => {
+      const user = await UserService.getUser()
+      localStorage.setItem('userId', user.userId)
+      setUser(user)
+      return user
+    },
+    retry: 2,
+    staleTime: 1000 * 60 * 5
+  })
 }
