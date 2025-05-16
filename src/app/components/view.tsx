@@ -13,9 +13,6 @@ interface ViewProps {
 export function View({ onClose }: ViewProps) {
   const { user } = useUser()
   const isLogged = user !== null
-  const handleCancel = (date: string) => {
-    console.log(`Cancel reservation on ${date}`)
-  }
 
   const { getMyBookingsQuery } = useBookingsQuery()
 
@@ -111,8 +108,7 @@ export function View({ onClose }: ViewProps) {
                     startDate={booking.start_date}
                     endDate={booking.end_date}
                     court={booking.court_number.toString()}
-                    // status={booking.status}
-                    onCancel={() => handleCancel(booking.start_date.toString())}
+                    bookingId={booking.booking_id}
                   />
                 ))
               ))}

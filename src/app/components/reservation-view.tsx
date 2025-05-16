@@ -1,3 +1,4 @@
+import { FiLoader } from 'react-icons/fi'
 import { useBookingsQuery } from '../hooks/use-booking'
 import { Button } from './button'
 
@@ -18,9 +19,9 @@ export function ReservationCard({
 }: ReservationCardProps) {
   const { deleteBookingMutation } = useBookingsQuery()
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
     if (bookingId) {
-      deleteBookingMutation.mutate(bookingId)
+      await deleteBookingMutation.mutateAsync(bookingId)
     }
   }
   return (
@@ -49,7 +50,11 @@ export function ReservationCard({
           onClick={handleCancel}
           disabled={deleteBookingMutation.isPending}
         >
-          {deleteBookingMutation.isPending ? 'Cancelando...' : 'Cancelar'}
+          {deleteBookingMutation.isPending ? (
+            <FiLoader className="animate-spin" />
+          ) : (
+            'Cancelar'
+          )}
         </Button>
       </div>
     </div>

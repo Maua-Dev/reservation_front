@@ -9,12 +9,13 @@ export interface MyBookingsResponse {
 
 export const BookingsService = {
   getMyBookings: async (): Promise<MyBookingsResponse> => {
-    const userId = await localStorage.getItem('userId')
+    const accessToken = await localStorage.getItem('accessToken')
     try {
       const response = await bookingsApi.get<MyBookingsResponse>(
         '/get-bookings',
         {
-          params: { user_id: userId }
+          headers: { Authorization: `Bearer ${accessToken}` },
+          params: { user_id: 'true' }
         }
       )
       return response.data
@@ -55,12 +56,15 @@ export const BookingsService = {
   },
 
   createBooking: async (booking: Booking): Promise<Booking> => {
-    const userId = await localStorage.getItem('userId')
     try {
-      const response = await bookingsApi.post<Booking>('/create-booking', {
-        ...booking,
-        user_id: userId
-      })
+      const accessToken = await localStorage.getItem('accessToken')
+      const response = await bookingsApi.post<Booking>(
+        '/create-booking',
+        { ...booking },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        }
+      )
       return response.data
     } catch (error) {
       throw new Error('Failed to create booking')
@@ -68,11 +72,13 @@ export const BookingsService = {
   },
 
   deleteBooking: async (bookingId: string): Promise<void> => {
-    const userId = await localStorage.getItem('userId')
     try {
-      await bookingsApi.delete(`/delete-booking/${bookingId}`, {
-        data: { user_id: userId }
+      const response = await bookingsApi.delete(`/delete-booking`, {
+        params: {
+          booking_id: bookingId
+        }
       })
+      return response.data
     } catch (error) {
       throw new Error('Failed to delete booking')
     }

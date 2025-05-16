@@ -76,7 +76,7 @@ export const useBookingsQuery = () => {
     mutationFn: (booking) => BookingsService.createBooking(booking),
     onSuccess: () => {
       // Invalida a query de reservas para refetch após criar uma nova
-      queryClient.invalidateQueries({ queryKey: ['bookings'] })
+      queryClient.invalidateQueries({ queryKey: ['bookingsOfTheWeek'] })
     }
   })
 
@@ -84,7 +84,8 @@ export const useBookingsQuery = () => {
     mutationFn: (bookingId) => BookingsService.deleteBooking(bookingId),
     onSuccess: () => {
       // Invalida a query de reservas para refetch após deletar uma
-      queryClient.invalidateQueries({ queryKey: ['bookings'] })
+      queryClient.invalidateQueries({ queryKey: ['bookingsOfTheWeek'] })
+      queryClient.invalidateQueries({ queryKey: ['myBookings'] })
     }
   })
 
