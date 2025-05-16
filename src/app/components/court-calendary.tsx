@@ -32,6 +32,7 @@ export function Court({ isField }: CourtProps) {
   >(undefined)
   const [selectedBookingVisible, setSelectedBookingVisible] = useState(false)
   const [selectedTime, setSelectedTime] = useState<number | null>(null)
+  const [availableCourts, setAvailableCourts] = useState<number[]>([])
 
   const { data } = useUserQuery()
 
@@ -60,7 +61,6 @@ export function Court({ isField }: CourtProps) {
     'Raquete de tênis',
     'Bola de basquete'
   ]
-  const options = ['Quadra 1', 'Quadra 2', 'Quadra 3']
 
   const startOfTheWeek = () => {
     const now = new Date()
@@ -249,28 +249,29 @@ export function Court({ isField }: CourtProps) {
       return
     }
 
-    const occupiedCourts = new Set() // Como se fosse um array para armazenar as quadras ocupadas
+    const occupiedCourts = new Set<number>()
+    reservasConvertidas.forEach((reserva) => {
+      if (
+        reserva.day === day &&
+        timestamp < reserva.end_date &&
+        timestamp >= reserva.start_date
+      ) {
+        occupiedCourts.add(reserva.court_number)
+      }
+    })
+    const availableCourts = [1, 2, 3].filter(
+      (court) => !occupiedCourts.has(court)
+    )
 
-    reservasConvertidas
-      .filter((reserva) => reserva.day === day)
-      .forEach((reserva) => {
-        if (timestamp < reserva.end_date && timestamp >= reserva.start_date) {
-          occupiedCourts.add(reserva.court_number) // Adiciona a quadra ao Set de quadras ocupadas
-        }
-      })
-
-    // Se todas as 3 quadras estiverem ocupadas, bloqueia o modal
-    if (occupiedCourts.size >= 3) {
+    if (availableCourts.length === 0) {
       console.log(
         'Todas as quadras estão ocupadas neste horário. Não é possível fazer mais reservas.'
       )
-    } else {
-      handleOpenModal()
-      setSelectedTime(timestamp)
-      setTimeout(() => {
-        setBookingModalVisible(true)
-      }, 100)
+      return
     }
+    setAvailableCourts(availableCourts)
+    setSelectedTime(timestamp)
+    handleOpenModal()
   }
 
   function handleOpenModal() {
@@ -440,7 +441,7 @@ export function Court({ isField }: CourtProps) {
             timestamp={selectedTime}
             modalities={modalities}
             equipments={equipments}
-            options={options}
+            options={availableCourts.map((court) => `Quadra ${court}`)}
           />
         </div>
       )}
