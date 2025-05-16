@@ -15,6 +15,7 @@ export interface Reservation {
   modality: string
   time: number
   duration: number
+  materials: string[]
 }
 
 interface CourtProps {
@@ -290,6 +291,7 @@ export function Court({ isField }: CourtProps) {
 
   function handleSelectingBooking(booking: Reservation) {
     setSelectedBooking(booking)
+    console.log(booking)
     setTimeout(() => {
       setSelectedBookingVisible(true)
     }, 100)
@@ -416,7 +418,8 @@ export function Court({ isField }: CourtProps) {
                                 time: reserva.start_date,
                                 duration:
                                   (reserva.end_date - reserva.start_date) /
-                                  (1000 * 60 * 60)
+                                  (1000 * 60 * 60),
+                                materials: reserva.materials
                               })
                             }
                           />
@@ -473,7 +476,7 @@ export function Court({ isField }: CourtProps) {
           <ReservationDetails
             location={selectedBooking.court}
             modality={selectedBooking.modality}
-            equipments={equipments}
+            equipments={selectedBooking.materials}
             time={selectedBooking.time}
             isChecked={[true, false]}
             onClose={() => handleDiselectingBooking()}

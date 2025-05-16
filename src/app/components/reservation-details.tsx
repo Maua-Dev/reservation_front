@@ -44,30 +44,22 @@ export const ReservationDetails = ({
         className={`relative max-h-[90vh] w-[90%] max-w-[70vw] overflow-y-auto overflow-x-hidden rounded-xl bg-white text-slate-700 shadow-lg sm:w-[70%]`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex flex-col gap-4 p-10 tracking-wide">
+        <div className="flex flex-col gap-4 p-5 tracking-wide">
           <div className="flex flex-col justify-between border-b-2 border-slate-700 pb-4">
-            <div className="flex justify-between">
-              <p className="mt-3 font-poppins text-2xl font-bold md:text-3xl">
-                Daniel Capuzzo
-              </p>
-              <p className="mt-3 font-poppins text-2xl font-bold md:text-3xl">
-                22.001122-0
-              </p>
-            </div>
             <IoClose
               className="absolute right-2 top-2 h-8 w-8 cursor-pointer md:h-10 md:w-16"
               onClick={onClose}
             ></IoClose>
             <p className="mt-1 font-poppins text-2xl font-medium">
-              data: 17/09
+              Data: 17/09
             </p>
           </div>
 
-          <div className="flex w-full flex-col justify-start gap-10 pt-4 font-poppins text-lg font-medium text-white md:text-2xl lg:flex-row">
-            <h1 className="inline-flex items-center justify-center text-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-8 py-4">
+          <div className="flex w-full flex-col justify-start gap-10 font-poppins text-xl font-medium text-white lg:flex-row">
+            <h1 className="inline-flex h-16 w-36 items-center justify-center text-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4">
               {location}
             </h1>
-            <h1 className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-12 py-4">
+            <h1 className="inline-flex h-16 w-56 items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4">
               Horário: {formattedTime} -{' '}
               {new Date(date.getTime() + 60 * 60 * 1000).toLocaleTimeString(
                 'pt-BR',
@@ -78,11 +70,11 @@ export const ReservationDetails = ({
 
           <div className="flex flex-col">
             <div className="flex justify-start">
-              <p className="pt-4 text-left font-poppins text-3xl font-bold">
+              <p className="text-left font-poppins text-2xl font-bold">
                 Modalidade:
               </p>
             </div>
-            <div className="mt-3 flex flex-wrap gap-2 pt-4 text-2xl">
+            <div className="flex flex-wrap gap-2 pt-3 text-xl">
               <h1
                 className={
                   'inline-flex items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4 font-poppins text-lg font-medium text-white md:text-xl'
@@ -95,12 +87,12 @@ export const ReservationDetails = ({
 
           <div className="flex flex-col">
             <div className="flex justify-start">
-              <p className="mt-3 text-left font-poppins text-3xl font-bold">
+              <p className="text-left font-poppins text-2xl font-bold">
                 Equipamentos:
               </p>
             </div>
             <div className="flex items-center">
-              <div className="mt-3 flex flex-wrap gap-2 pt-4">
+              <div className="flex flex-wrap gap-2 pt-3">
                 {equipments?.map((equipment) => (
                   <h1
                     key={equipment}
