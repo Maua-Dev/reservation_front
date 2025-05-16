@@ -20,8 +20,8 @@ type FormProps = {
 }
 
 const formSchema = z.object({
-  modality: z.string(),
-  equipment: z.string(),
+  modality: z.string().min(1, 'Selecione uma modalidade'),
+  equipment: z.string().min(1, 'Selecione pelo menos um equipamento'),
   needsVest: z.boolean(),
   shareCourt: z.boolean()
 })

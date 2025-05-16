@@ -37,7 +37,22 @@ export function About() {
           <div className="flex items-center justify-center xl:items-start xl:justify-start">
             <Button
               className="px-4 text-lg font-semibold sm:text-xl"
-              // onClick={() => }
+              onClick={(e) => {
+                e.preventDefault()
+                const destinationUrl = '/#reservation'
+                if (window.location.pathname === '/') {
+                  const targetElement = document.querySelector(
+                    '#reservation'
+                  ) as HTMLElement | null
+                  if (targetElement) {
+                    targetElement.scrollIntoView({
+                      behavior: 'smooth'
+                    })
+                  }
+                } else {
+                  window.location.href = destinationUrl
+                }
+              }}
             >
               Menu de Reservas
             </Button>
