@@ -6,80 +6,81 @@ import { View } from './view'
 import { ReservationDetails } from './reservation-details'
 import { cn } from '../utils/cn'
 import { useUserQuery } from '../hooks/use-user'
+import { useBookingsQuery } from '../hooks/use-booking'
 
-const reservas = [
-  // Caso com 1 reserva
-  {
-    id: 1,
-    court: 'Quadra 1',
-    courtNumber: 1,
-    modality: 'Basquete',
-    time: new Date(2025, 3, 26, 10, 0).getTime(), // 26/04 10:00
-    duration: 1
-  },
+// const reservas = [
+//   // Caso com 1 reserva
+//   {
+//     id: 1,
+//     court: 'Quadra 1',
+//     courtNumber: 1,
+//     modality: 'Basquete',
+//     time: new Date(2025, 3, 26, 10, 0).getTime(), // 26/04 10:00
+//     duration: 1
+//   },
 
-  // Caso com 2 reservas no mesmo horário
-  {
-    id: 2,
-    court: 'Quadra 2',
-    courtNumber: 2,
-    modality: 'Vôlei',
-    time: new Date(2025, 3, 26, 11, 0).getTime(), // 26/04 11:00
-    duration: 1
-  },
-  {
-    id: 3,
-    court: 'Quadra 3',
-    courtNumber: 3,
-    modality: 'Futsal',
-    time: new Date(2025, 3, 26, 11, 0).getTime(), // 26/04 11:00
-    duration: 1
-  },
+//   // Caso com 2 reservas no mesmo horário
+//   {
+//     id: 2,
+//     court: 'Quadra 2',
+//     courtNumber: 2,
+//     modality: 'Vôlei',
+//     time: new Date(2025, 3, 26, 11, 0).getTime(), // 26/04 11:00
+//     duration: 1
+//   },
+//   {
+//     id: 3,
+//     court: 'Quadra 3',
+//     courtNumber: 3,
+//     modality: 'Futsal',
+//     time: new Date(2025, 3, 26, 11, 0).getTime(), // 26/04 11:00
+//     duration: 1
+//   },
 
-  // Caso com 3 reservas no mesmo horário (manhã)
-  {
-    id: 4,
-    court: 'Quadra 1',
-    courtNumber: 1,
-    modality: 'Vôlei',
-    time: new Date(2025, 3, 26, 9, 0).getTime(), // 26/04 09:00
-    duration: 1
-  },
-  {
-    id: 5,
-    court: 'Quadra 2',
-    courtNumber: 2,
-    modality: 'Basquete',
-    time: new Date(2025, 3, 26, 9, 0).getTime(), // 26/04 09:00
-    duration: 1
-  },
-  {
-    id: 6,
-    court: 'Quadra 3',
-    courtNumber: 3,
-    modality: 'Futsal',
-    time: new Date(2025, 3, 26, 9, 0).getTime(), // 26/04 09:00
-    duration: 1
-  },
+//   // Caso com 3 reservas no mesmo horário (manhã)
+//   {
+//     id: 4,
+//     court: 'Quadra 1',
+//     courtNumber: 1,
+//     modality: 'Vôlei',
+//     time: new Date(2025, 3, 26, 9, 0).getTime(), // 26/04 09:00
+//     duration: 1
+//   },
+//   {
+//     id: 5,
+//     court: 'Quadra 2',
+//     courtNumber: 2,
+//     modality: 'Basquete',
+//     time: new Date(2025, 3, 26, 9, 0).getTime(), // 26/04 09:00
+//     duration: 1
+//   },
+//   {
+//     id: 6,
+//     court: 'Quadra 3',
+//     courtNumber: 3,
+//     modality: 'Futsal',
+//     time: new Date(2025, 3, 26, 9, 0).getTime(), // 26/04 09:00
+//     duration: 1
+//   },
 
-  // Outras reservas variadas
-  {
-    id: 7,
-    court: 'Quadra 2',
-    courtNumber: 2,
-    modality: 'Vôlei',
-    time: new Date(2025, 3, 26, 15, 0).getTime(), // 26/04 15:00
-    duration: 1
-  },
-  {
-    id: 8,
-    court: 'Quadra 1',
-    courtNumber: 1,
-    modality: 'Futsal',
-    time: new Date(2025, 3, 29, 16, 30).getTime(), // 29/04 16:30
-    duration: 0.5
-  }
-]
+//   // Outras reservas variadas
+//   {
+//     id: 7,
+//     court: 'Quadra 2',
+//     courtNumber: 2,
+//     modality: 'Vôlei',
+//     time: new Date(2025, 3, 26, 15, 0).getTime(), // 26/04 15:00
+//     duration: 1
+//   },
+//   {
+//     id: 8,
+//     court: 'Quadra 1',
+//     courtNumber: 1,
+//     modality: 'Futsal',
+//     time: new Date(2025, 3, 29, 16, 30).getTime(), // 29/04 16:30
+//     duration: 0.5
+//   }
+// ]
 
 export interface Reservation {
   id: number
@@ -110,6 +111,13 @@ export function Court({ isField }: CourtProps) {
 
   console.log('User data:', data)
 
+  const { getBookingsOfTheWeek } = useBookingsQuery()
+
+  const bookings = getBookingsOfTheWeek?.data?.bookings || []
+
+  const reservas = bookings
+  console.log('reservas', reservas)
+
   const today = new Date()
   const modalities = [
     'Tennis',
@@ -123,9 +131,37 @@ export function Court({ isField }: CourtProps) {
     'Bola de handol',
     'Bola de tênis',
     'Bola de vôlei',
-    'Raquete de tênis'
+    'Raquete de tênis',
+    'Bola de basquete'
   ]
   const options = ['Quadra 1', 'Quadra 2', 'Quadra 3']
+
+  const startOfTheWeek = () => {
+    const now = new Date()
+    // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+    const dayOfWeek = now.getDay()
+    // Calculate how many days to subtract to get to Monday
+    const diffToMonday = (dayOfWeek + 6) % 7
+    const monday = new Date(now)
+    monday.setDate(now.getDate() - diffToMonday)
+    monday.setHours(8, 0, 0, 0)
+    return monday.getTime()
+  }
+
+  const endOfTheWeek = () => {
+    const now = new Date()
+    // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+    const dayOfWeek = now.getDay()
+    // Calculate how many days to add to get to Sunday
+    const diffToSunday = (dayOfWeek + 1) % 7
+    const sunday = new Date(now)
+    sunday.setDate(now.getDate() + diffToSunday)
+    sunday.setHours(23, 59, 59, 999)
+    return sunday.getTime()
+  }
+
+  localStorage.setItem('end_date', endOfTheWeek().toString())
+  localStorage.setItem('start_date', startOfTheWeek().toString())
 
   const thisWeek = () => {
     const week = []
@@ -144,10 +180,10 @@ export function Court({ isField }: CourtProps) {
       .filter((reserva) => Number(reserva.day) === day)
       .forEach((reserva) => {
         if (
-          (timestamp < reserva.endTime && timestamp >= reserva.time) ||
-          (endTime <= reserva.endTime && endTime > reserva.time)
+          (timestamp < reserva.end_date && timestamp >= reserva.start_date) ||
+          (endTime <= reserva.end_date && endTime > reserva.start_date)
         ) {
-          sameTimeReservations.add(reserva.courtNumber)
+          sameTimeReservations.add(reserva.court_number)
         }
       })
 
@@ -177,10 +213,10 @@ export function Court({ isField }: CourtProps) {
       .filter((reserva) => Number(reserva.day) === day)
       .forEach((reserva) => {
         if (
-          (timestamp < reserva.endTime && timestamp >= reserva.time) ||
-          (endTime <= reserva.endTime && endTime > reserva.time)
+          (timestamp < reserva.end_date && timestamp >= reserva.start_date) ||
+          (endTime <= reserva.end_date && endTime > reserva.start_date)
         ) {
-          sameTimeReservations.add(reserva.courtNumber)
+          sameTimeReservations.add(reserva.court_number)
         }
       })
 
@@ -211,13 +247,13 @@ export function Court({ isField }: CourtProps) {
   }
 
   const reservasConvertidas = reservas.map((reserva) => {
-    const date = new Date(Number(reserva.time))
+    const date = new Date(Number(reserva.start_date))
     return {
       ...reserva,
       day: date.getDate(),
       hour: date.getHours(),
       minute: date.getMinutes(),
-      endTime: reserva.time + reserva.duration * 60 * 60 * 1000
+      endTime: reserva.end_date
     }
   })
 
@@ -292,8 +328,8 @@ export function Court({ isField }: CourtProps) {
     reservasConvertidas
       .filter((reserva) => reserva.day === day)
       .forEach((reserva) => {
-        if (timestamp < reserva.endTime && timestamp >= reserva.time) {
-          occupiedCourts.add(reserva.courtNumber) // Adiciona a quadra ao Set de quadras ocupadas
+        if (timestamp < reserva.end_date && timestamp >= reserva.start_date) {
+          occupiedCourts.add(reserva.court_number) // Adiciona a quadra ao Set de quadras ocupadas
         }
       })
 
@@ -417,34 +453,45 @@ export function Court({ isField }: CourtProps) {
                     ) {
                       return (
                         <div
-                          key={reserva.id}
+                          key={reserva.booking_id}
                           onClick={(e) => e.stopPropagation()}
                           className={cn(
                             'absolute flex',
                             specialWidth(
-                              Number(reserva.time),
-                              Number(reserva.endTime),
+                              Number(reserva.start_date),
+                              Number(reserva.end_date),
                               thisWeek()[dayIndex]
                             ),
                             deslocation(
-                              reserva.courtNumber,
-                              Number(reserva.time),
+                              reserva.court_number,
+                              Number(reserva.start_date),
                               Number(reserva.endTime),
                               thisWeek()[dayIndex]
                             )
                           )}
                           style={{
-                            height: `${reserva.duration * 50 * 2}px`
+                            height: `${1 * 50 * 2}px`
                           }}
                         >
                           <CalendaryCard
-                            court={reserva.courtNumber}
-                            location={reserva.court}
-                            modality={reserva.modality}
+                            court={reserva.court_number}
+                            location={`Quadra ${reserva.court_number}`}
+                            modality={reserva.sport}
                             equipments={equipments}
-                            time={reserva.time}
+                            time={reserva.start_date}
                             isChecked={[true, false]}
-                            openModal={() => handleSelectingBooking(reserva)}
+                            openModal={() =>
+                              handleSelectingBooking({
+                                id: Number(reserva.booking_id) ?? 0,
+                                court: `Quadra ${reserva.court_number}`,
+                                courtNumber: reserva.court_number,
+                                modality: reserva.sport,
+                                time: reserva.start_date,
+                                duration:
+                                  (reserva.end_date - reserva.start_date) /
+                                  (1000 * 60 * 60)
+                              })
+                            }
                           />
                         </div>
                       )

@@ -63,7 +63,7 @@ export const useBookingsQuery = () => {
       if (!userId) throw new Error('User ID not found')
 
       try {
-        return await BookingsService.getMyBookings()
+        return await BookingsService.getMyBookings() //Criar uma função para o meu try
       } catch (error) {
         throw new Error('Failed to fetch bookings')
       }
@@ -80,8 +80,31 @@ export const useBookingsQuery = () => {
     }
   })
 
+  const deleteBookingMutation = useMutation<void, Error, string>({
+    mutationFn: (bookingId) => BookingsService.deleteBooking(bookingId),
+    onSuccess: () => {
+      // Invalida a query de reservas para refetch após deletar uma
+      queryClient.invalidateQueries({ queryKey: ['bookings'] })
+    }
+  })
+
+  const getBookingsOfTheWeek = useQuery({
+    queryKey: ['bookingsOfTheWeek'],
+    queryFn: async () => {
+      try {
+        return await BookingsService.getBookingsOfTheWeek() //Criar uma função para o meu try
+      } catch (error) {
+        throw new Error('Failed to fetch bookings')
+      }
+    },
+    retry: 2,
+    staleTime: 1000 * 60 * 5 // 5 minutos
+  })
+
   return {
     getMyBookingsQuery,
-    createBookingMutation
+    createBookingMutation,
+    getBookingsOfTheWeek,
+    deleteBookingMutation
   }
 }

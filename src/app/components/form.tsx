@@ -109,7 +109,7 @@ export const Form = ({
         e.preventDefault()
       }}
       onClick={(e) => e.stopPropagation()}
-      className="relative flex max-h-[90vh] w-[90%] max-w-[70vw] flex-col gap-5 overflow-x-hidden overflow-y-visible rounded-xl bg-white px-4 py-6 tracking-wide text-slate-700 shadow-lg sm:w-[70%]"
+      className="relative flex max-h-[90vh] w-[90%] max-w-[70vw] flex-col gap-3 overflow-x-hidden overflow-y-visible rounded-xl bg-white px-4 py-6 tracking-wide text-slate-700 shadow-lg sm:w-[70%]"
     >
       <div className="flex flex-col justify-between border-b-2 border-slate-700">
         <div className="flex justify-between">
@@ -120,7 +120,7 @@ export const Form = ({
             {user?.ra}
           </p>
           <IoClose
-            className="absolute left-[95%] top-1 mr-1 h-8 w-8 cursor-pointer px-2 md:h-10 md:w-16"
+            className="absolute left-[95%] top-1 mr-1 h-8 w-8 cursor-pointer md:h-10 md:w-16"
             onClick={handleClose}
           ></IoClose>
         </div>
@@ -131,7 +131,7 @@ export const Form = ({
       </div>
 
       <div className="flex w-full flex-col justify-start font-medium md:flex-row">
-        <div className="flex w-40 items-center justify-between rounded md:w-48">
+        <div className="flex w-40 items-center justify-between rounded md:w-32">
           <label className="flex-grow text-center font-poppins text-lg text-white">
             <select
               onChange={(e) => {
@@ -197,7 +197,7 @@ export const Form = ({
           </p>
         </div>
         <div className="flex items-center">
-          <div className="flex flex-wrap gap-2 py-2">
+          <div className="flex flex-wrap gap-2 py-1">
             {equipments.map((equipment) => (
               <button
                 key={equipment}
@@ -222,7 +222,7 @@ export const Form = ({
         <input
           type="checkbox"
           {...register('needsVest')}
-          className="h-6 w-7 border border-slate-500 p-1 md:w-8"
+          className="h-6 w-7 border border-slate-500 p-1 md:w-6"
         />
         <p className="text-md font-poppins font-medium md:text-xl">
           Preciso de colete
@@ -234,7 +234,7 @@ export const Form = ({
           <input
             type="checkbox"
             {...register('shareCourt')}
-            className="h-6 w-7 border border-slate-500 p-1 md:w-8"
+            className="h-6 w-5 border border-slate-500 p-1 md:w-6"
           />
           <p className="text-md font-poppins font-medium md:text-xl">
             Aceito compartilhar quadra

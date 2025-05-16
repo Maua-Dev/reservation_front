@@ -1,3 +1,4 @@
+import { useBookingsQuery } from '../hooks/use-booking'
 import { Button } from './button'
 
 interface ReservationCardProps {
@@ -5,7 +6,7 @@ interface ReservationCardProps {
   endDate: number
   court?: string
   status?: string
-  onCancel?: () => void
+  bookingId?: string
 }
 
 export function ReservationCard({
@@ -13,8 +14,15 @@ export function ReservationCard({
   endDate,
   court,
   status,
-  onCancel
+  bookingId
 }: ReservationCardProps) {
+  const { deleteBookingMutation } = useBookingsQuery()
+
+  const handleCancel = () => {
+    if (bookingId) {
+      deleteBookingMutation.mutate(bookingId)
+    }
+  }
   return (
     <div className="flex h-36 w-full cursor-pointer flex-row items-start rounded-lg bg-blue-primary p-4 md:h-44">
       <div className="flex flex-col gap-1">
@@ -38,9 +46,10 @@ export function ReservationCard({
       <div className="ml-auto flex flex-col justify-end">
         <Button
           className="h-8 w-20 bg-white p-2 text-sm font-bold text-black transition-colors hover:bg-red-400 md:w-36 lg:h-10 lg:text-lg"
-          onClick={onCancel}
+          onClick={handleCancel}
+          disabled={deleteBookingMutation.isPending}
         >
-          Cancelar
+          {deleteBookingMutation.isPending ? 'Cancelando...' : 'Cancelar'}
         </Button>
       </div>
     </div>

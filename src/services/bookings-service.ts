@@ -29,6 +29,30 @@ export const BookingsService = {
       throw new Error('Failed to fetch bookings')
     }
   },
+  getBookingsOfTheWeek: async (): Promise<MyBookingsResponse> => {
+    const start_date = await localStorage.getItem('start_date')
+    const end_date = await localStorage.getItem('end_date')
+    const accessToken = await localStorage.getItem('accessToken')
+    try {
+      const response = await bookingsApi.get<MyBookingsResponse>(
+        '/get-bookings',
+        {
+          params: { start_date: start_date, end_date: end_date },
+          headers: { Authorization: `Bearer ${accessToken}` }
+        }
+      )
+      return response.data
+    } catch (error) {
+      const axiosError = error as AxiosError
+      if (axiosError.response?.status === 404) {
+        return {
+          bookings: [],
+          message: 'No bookings found'
+        }
+      }
+      throw new Error('Failed to fetch bookings')
+    }
+  },
 
   createBooking: async (booking: Booking): Promise<Booking> => {
     const userId = await localStorage.getItem('userId')
@@ -40,6 +64,17 @@ export const BookingsService = {
       return response.data
     } catch (error) {
       throw new Error('Failed to create booking')
+    }
+  },
+
+  deleteBooking: async (bookingId: string): Promise<void> => {
+    const userId = await localStorage.getItem('userId')
+    try {
+      await bookingsApi.delete(`/delete-booking/${bookingId}`, {
+        data: { user_id: userId }
+      })
+    } catch (error) {
+      throw new Error('Failed to delete booking')
     }
   }
 }
