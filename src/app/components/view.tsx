@@ -18,6 +18,10 @@ export function View({ onClose }: ViewProps) {
 
   const { myBookings, setMyBookings } = useBookings()
 
+  const sortedBookings = myBookings
+    .slice()
+    .sort((a, b) => b.start_date - a.start_date)
+
   setMyBookings(getMyBookingsQuery.data?.bookings || [])
 
   const fetchBookings = async () => {
@@ -84,6 +88,9 @@ export function View({ onClose }: ViewProps) {
       </div>
     )
   }
+  function reloadBooking(): void {
+    fetchBookings()
+  }
 
   return (
     <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
@@ -114,14 +121,14 @@ export function View({ onClose }: ViewProps) {
                   Nenhuma reserva encontrada
                 </p>
               ) : (
-                myBookings.map((booking, index) => (
+                sortedBookings.map((booking) => (
                   <ReservationCard
-                    key={index}
+                    key={booking.booking_id}
                     startDate={booking.start_date}
                     endDate={booking.end_date}
                     court={booking.court_number.toString()}
                     bookingId={booking.booking_id}
-                    reload={fetchBookings}
+                    reload={reloadBooking}
                   />
                 ))
               ))}
