@@ -3,7 +3,7 @@ import { ReservationCard } from './reservation-view'
 import { useEffect } from 'react'
 import { useUser } from '../hooks/use-user'
 import { Button } from './button'
-import { useBookingsQuery } from '../hooks/use-booking'
+import { useBookings, useBookingsQuery } from '../hooks/use-booking'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 interface ViewProps {
@@ -16,9 +16,21 @@ export function View({ onClose }: ViewProps) {
 
   const { getMyBookingsQuery } = useBookingsQuery()
 
-  const bookings = getMyBookingsQuery.data?.bookings || []
+  const { myBookings, setMyBookings } = useBookings()
+
+  setMyBookings(getMyBookingsQuery.data?.bookings || [])
+
+  const fetchBookings = async () => {
+    try {
+      const refetchResult = await getMyBookingsQuery.refetch()
+      setMyBookings(refetchResult.data?.bookings || [])
+    } catch (error) {
+      console.error('Error fetching bookings:', error)
+    }
+  }
 
   const handleClose = () => {
+    window.location.reload()
     onClose()
   }
 
@@ -96,19 +108,20 @@ export function View({ onClose }: ViewProps) {
             <hr className="border-t-4 border-black" />
           </div>
           <div className="flex h-full max-h-[85%] max-w-[70vw] flex-col items-center gap-4 overflow-y-auto">
-            {bookings &&
-              (bookings.length === 0 ? (
+            {myBookings &&
+              (myBookings.length === 0 ? (
                 <p className="text-center font-poppins text-sm font-medium text-black md:text-base">
                   Nenhuma reserva encontrada
                 </p>
               ) : (
-                bookings.map((booking, index) => (
+                myBookings.map((booking, index) => (
                   <ReservationCard
                     key={index}
                     startDate={booking.start_date}
                     endDate={booking.end_date}
                     court={booking.court_number.toString()}
                     bookingId={booking.booking_id}
+                    reload={fetchBookings}
                   />
                 ))
               ))}

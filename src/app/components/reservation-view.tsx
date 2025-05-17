@@ -8,6 +8,7 @@ interface ReservationCardProps {
   court?: string
   status?: string
   bookingId?: string
+  reload: () => void
 }
 
 export function ReservationCard({
@@ -15,13 +16,15 @@ export function ReservationCard({
   endDate,
   court,
   status,
-  bookingId
+  bookingId,
+  reload
 }: ReservationCardProps) {
   const { deleteBookingMutation } = useBookingsQuery()
 
   const handleCancel = async () => {
     if (bookingId) {
       await deleteBookingMutation.mutateAsync(bookingId)
+      reload()
     }
   }
   return (
@@ -46,7 +49,7 @@ export function ReservationCard({
       </div>
       <div className="ml-auto flex flex-col justify-end">
         <Button
-          className="h-8 w-20 bg-white p-2 text-sm font-bold text-black transition-colors hover:bg-red-400 md:w-36 lg:h-10 lg:text-lg"
+          className="flex h-8 w-20 items-center justify-center bg-white p-2 text-sm font-bold text-black transition-colors hover:bg-red-400 md:w-36 lg:h-10 lg:text-lg"
           onClick={handleCancel}
           disabled={deleteBookingMutation.isPending}
         >

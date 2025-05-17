@@ -456,6 +456,7 @@ export function Court({ isField }: CourtProps) {
             setIsMyBookingsModalVisible(false)
             setTimeout(() => {
               setIsMyBookingsModalOpen(false)
+              window.location.reload()
             }, 200)
           }}
         >

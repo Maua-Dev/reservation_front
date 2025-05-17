@@ -30,17 +30,6 @@ export const useUser = () => {
   const { user, setUser } = context
   const isAuth = useIsAuthenticated()
 
-  // async function getUser() {
-  //   try {
-  //     const userData = await UserService.getUser()
-  //     console.log('User data getUser:', userData)
-  //     setUser(userData.user)
-  //     return userData.user
-  //   } catch (error) {
-  //     console.error('Failed to fetch user:', error)
-  //   }
-  // }
-
   return { user, useUserQuery, isAuth }
 }
 
