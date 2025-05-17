@@ -38,13 +38,13 @@ export function Court({ isField }: CourtProps) {
   const { data } = useUserQuery()
 
   console.log('User data:', data)
+  localStorage.setItem('user_id', data?.userId.toString() || '')
 
   const { getBookingsOfTheWeek } = useBookingsQuery()
 
   const bookings = getBookingsOfTheWeek?.data?.bookings || []
 
   const reservas = bookings
-  console.log('reservas', reservas)
 
   const today = new Date()
   const modalities = [

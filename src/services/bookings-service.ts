@@ -9,13 +9,12 @@ export interface MyBookingsResponse {
 
 export const BookingsService = {
   getMyBookings: async (): Promise<MyBookingsResponse> => {
-    const accessToken = await localStorage.getItem('accessToken')
+    const userId = await localStorage.getItem('user_id')
     try {
       const response = await bookingsApi.get<MyBookingsResponse>(
         '/get-bookings',
         {
-          headers: { Authorization: `Bearer ${accessToken}` },
-          params: { user_id: 'true' }
+          params: { user_id: userId },
         }
       )
       return response.data
@@ -74,6 +73,9 @@ export const BookingsService = {
   deleteBooking: async (bookingId: string): Promise<void> => {
     try {
       const response = await bookingsApi.delete(`/delete-booking`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
         params: {
           booking_id: bookingId
         }
