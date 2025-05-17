@@ -218,7 +218,7 @@ export const Form = ({
         </div>
       </div>
 
-      <div className="flex flex-row items-center gap-2">
+      {/* <div className="flex flex-row items-center gap-2">
         <input
           type="checkbox"
           {...register('needsVest')}
@@ -227,10 +227,10 @@ export const Form = ({
         <p className="text-md font-poppins font-medium md:text-xl">
           Preciso de colete
         </p>
-      </div>
+      </div> */}
 
       <div className="flex flex-row items-center justify-between">
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <input
             type="checkbox"
             {...register('shareCourt')}
@@ -239,7 +239,7 @@ export const Form = ({
           <p className="text-md font-poppins font-medium md:text-xl">
             Aceito compartilhar quadra
           </p>
-        </div>
+        </div> */}
         <div className="flex w-40 items-center justify-between rounded p-1">
           <Button className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary px-5 py-2 font-poppins text-lg text-white active:border-b-2">
             Salvar

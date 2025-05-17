@@ -39,8 +39,16 @@ export function ReservationCard({
           })}
         </p>
         <p className="text-xs font-normal text-white sm:text-base md:text-lg">
-          Hora: {new Date(startDate).getHours()}:00 -{' '}
-          {new Date(endDate).getHours()}:00
+          Hora:{' '}
+          {new Date(startDate).toLocaleTimeString('pt-BR', {
+            hour: '2-digit',
+            minute: '2-digit'
+          })}{' '}
+          -{' '}
+          {new Date(endDate).toLocaleTimeString('pt-BR', {
+            hour: '2-digit',
+            minute: '2-digit'
+          })}
         </p>
         <p className="text-xs font-normal text-white sm:text-base md:text-lg">
           Quadra: {court}

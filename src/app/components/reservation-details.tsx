@@ -15,10 +15,14 @@ export const ReservationDetails = ({
   location,
   modality,
   time,
-  isChecked,
+  //isChecked,
   onClose
 }: ReservationDetailsProps) => {
   const date = new Date(time)
+  const formattedDate = date.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit'
+  })
   const formattedTime = date.toLocaleTimeString('pt-BR', {
     hour: '2-digit',
     minute: '2-digit'
@@ -51,7 +55,7 @@ export const ReservationDetails = ({
               onClick={onClose}
             ></IoClose>
             <p className="mt-1 font-poppins text-2xl font-medium">
-              Data: 17/09
+              Data: {formattedDate}
             </p>
           </div>
 
@@ -59,7 +63,7 @@ export const ReservationDetails = ({
             <h1 className="inline-flex h-16 w-36 items-center justify-center text-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4">
               {location}
             </h1>
-            <h1 className="inline-flex h-16 w-56 items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4">
+            <h1 className="inline-flex h-16 w-60 items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4">
               Horário: {formattedTime} -{' '}
               {new Date(date.getTime() + 60 * 60 * 1000).toLocaleTimeString(
                 'pt-BR',
@@ -107,7 +111,7 @@ export const ReservationDetails = ({
             </div>
           </div>
 
-          <div className="mt-3 flex flex-row items-center gap-2">
+          {/* <div className="mt-3 flex flex-row items-center gap-2">
             <div
               className={`size-8 rounded border border-slate-400 p-1 md:w-8 ${isChecked?.[0] ? 'bg-yellow' : 'bg-white'}`}
             />
@@ -125,7 +129,7 @@ export const ReservationDetails = ({
                 Aceito compartilhar quadra
               </p>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
