@@ -18,6 +18,7 @@ export function CalendaryCard({
   const courtColors: {
     [key: number]: string
   } = {
+    0: 'border-yellow text-black z-[2]',
     1: 'border-blue-primary text-blue-primary z-[2]',
     2: 'border-blue-secondary text-blue-secondary z-[3]',
     3: 'border-blue-tertiary text-blue-tertiary z-[4]'
@@ -33,7 +34,7 @@ export function CalendaryCard({
           courtColors[court]
         )}
       >
-        <p>Quadra {court}</p>
+        <p>{court == 0 ? 'Campo' : `Quadra ${court}`}</p>
         <p>{modality}</p>
       </div>
     </>

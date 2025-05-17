@@ -20,6 +20,8 @@ export function ReservationCard({
   reload
 }: ReservationCardProps) {
   const { deleteBookingMutation } = useBookingsQuery()
+  const today = new Date().getTime()
+  const isPassed = startDate < today
 
   const handleCancel = async () => {
     if (bookingId) {
@@ -49,8 +51,14 @@ export function ReservationCard({
       </div>
       <div className="ml-auto flex flex-col justify-end">
         <Button
-          className="flex h-8 w-20 items-center justify-center bg-white p-2 text-sm font-bold text-black transition-colors hover:bg-red-400 md:w-36 lg:h-10 lg:text-lg"
-          onClick={handleCancel}
+          className={`flex h-8 w-20 items-center justify-center bg-white p-2 text-sm font-bold text-black transition-colors ${isPassed ? 'bg-gray-300' : 'hover:bg-red-400'} md:w-36 lg:h-10 lg:text-lg`}
+          onClick={() => {
+            if (isPassed) {
+              console.log('mto tarde agr')
+            } else {
+              handleCancel()
+            }
+          }}
           disabled={deleteBookingMutation.isPending}
         >
           {deleteBookingMutation.isPending ? (

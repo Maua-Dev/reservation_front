@@ -52,7 +52,7 @@ export const Form = ({
   const [open, setOpen] = useState(false)
   const [selectedModality, setSelectedModality] = useState('')
   const [selectedEquipment, setSelectedEquipment] = useState('')
-  const [courtNumber, setCourtNumber] = useState('')
+  const [courtNumber, setCourtNumber] = useState(options[0].split(' ')[1])
   const selectedDate = new Date(timestamp)
   const { createBookingMutation } = useBookingsQuery()
   const { user } = useUser()
@@ -134,14 +134,14 @@ export const Form = ({
         <div className="flex w-40 items-center justify-between rounded md:w-32">
           <label className="flex-grow text-center font-poppins text-lg text-white">
             <select
-              onChange={(e) => {
-                const selectedOption = e.target.value.split(' ')[1]
-                setCourtNumber(selectedOption)
-              }}
+              defaultValue={1}
+              onChange={(e) => setCourtNumber(e.target.value)}
               className="inline-flex items-start justify-start rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2"
             >
               {options.map((option) => (
-                <option key={option}>{option}</option>
+                <option key={option} value={option.split(' ')[1]}>
+                  {option}
+                </option>
               ))}
             </select>
           </label>

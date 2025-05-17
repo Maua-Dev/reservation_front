@@ -50,7 +50,7 @@ export function Court({ isField }: CourtProps) {
   const modalities = [
     'Tennis',
     'Handball',
-    'Footbal',
+    'Football',
     'Basketball',
     'Volleyball'
   ]
@@ -174,16 +174,20 @@ export function Court({ isField }: CourtProps) {
     }
   }
 
-  const reservasConvertidas = reservas.map((reserva) => {
-    const date = new Date(Number(reserva.start_date))
-    return {
-      ...reserva,
-      day: date.getDate(),
-      hour: date.getHours(),
-      minute: date.getMinutes(),
-      endTime: reserva.end_date
-    }
-  })
+  const reservasConvertidas = reservas
+    .filter((reserva) =>
+      isField ? reserva.court_number === 0 : reserva.court_number !== 0
+    )
+    .map((reserva) => {
+      const date = new Date(Number(reserva.start_date))
+      return {
+        ...reserva,
+        day: date.getDate(),
+        hour: date.getHours(),
+        minute: date.getMinutes(),
+        endTime: reserva.end_date
+      }
+    })
 
   const isPassed = (
     day: number,
@@ -443,9 +447,17 @@ export function Court({ isField }: CourtProps) {
             isOpen={isReservationModalOpen}
             onClose={handleCloseModal}
             timestamp={selectedTime}
-            modalities={modalities}
-            equipments={equipments}
-            options={availableCourts.map((court) => `Quadra ${court}`)}
+            modalities={isField ? ['Rugby', 'Football'] : modalities}
+            equipments={
+              isField
+                ? ['Bola de futebol', 'Bola de rugby', 'Material próprio']
+                : equipments
+            }
+            options={
+              isField
+                ? ['Campo']
+                : availableCourts.map((court) => `Quadra ${court}`)
+            }
           />
         </div>
       )}
