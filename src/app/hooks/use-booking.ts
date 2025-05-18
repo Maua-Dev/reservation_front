@@ -5,6 +5,7 @@ import {
 } from '@/services/bookings-service'
 import { useContext } from 'react'
 import { BookingsContext } from '../contexts/bookings-context'
+import { toast } from 'react-toastify'
 
 export interface Booking {
   start_date: number
@@ -41,7 +42,7 @@ export const useBookingsQuery = () => {
       // Invalida a query de reservas para refetch após criar uma nova
       queryClient.invalidateQueries({ queryKey: ['bookingsOfTheWeek'] })
       queryClient.invalidateQueries({ queryKey: ['myBookings'] })
-      window.location.reload()
+      toast.success('Reserva criada com sucesso!')
     }
   })
 
@@ -51,6 +52,7 @@ export const useBookingsQuery = () => {
       // Invalida a query de reservas para refetch após deletar uma
       queryClient.invalidateQueries({ queryKey: ['bookingsOfTheWeek'] })
       queryClient.invalidateQueries({ queryKey: ['myBookings'] })
+      toast.success('Reserva cancelada com sucesso!')
     }
   })
 

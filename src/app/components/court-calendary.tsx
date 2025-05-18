@@ -316,6 +316,7 @@ export function Court({ isField }: CourtProps) {
     setBookingModalVisible(false)
     setTimeout(() => {
       setIsReservationModalOpen(false)
+      fetchBookingsOfTheWeek()
     }, 200)
   }
 
