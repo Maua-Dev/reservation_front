@@ -20,7 +20,7 @@ export function Navbar() {
   const isLoading = false
 
   const handleLogout = () => {
-    localStorage.removeItem('userId')
+    localStorage.removeItem('user_id')
     localStorage.removeItem('accessToken')
     instance.logoutRedirect({ postLogoutRedirectUri: '/' }).catch((error) => {
       console.error('Logout error:', error)

@@ -7,6 +7,7 @@ import { ReservationDetails } from './reservation-details'
 import { cn } from '../utils/cn'
 import { useUserQuery } from '../hooks/use-user'
 import { useBookingsQuery } from '../hooks/use-booking'
+import { useIsAuthenticated } from '@azure/msal-react'
 
 export interface Reservation {
   id: number
@@ -34,6 +35,7 @@ export function Court({ isField }: CourtProps) {
   const [selectedBookingVisible, setSelectedBookingVisible] = useState(false)
   const [selectedTime, setSelectedTime] = useState<number | null>(null)
   const [availableCourts, setAvailableCourts] = useState<number[]>([])
+  const isAuth = useIsAuthenticated()
 
   const { data } = useUserQuery()
 
@@ -91,7 +93,6 @@ export function Court({ isField }: CourtProps) {
       startOfWeek.setDate(sunday)
       startOfWeek.setHours(0, 0, 0, 0)
     }
-    console.log('startOfWeek', startOfWeek)
     return startOfWeek.getTime()
   }
 
@@ -108,7 +109,6 @@ export function Court({ isField }: CourtProps) {
       endOfTheWeek.setDate(nextSunday)
       endOfTheWeek.setHours(0, 0, 0, 0)
     }
-    console.log('endOfTheWeek', endOfTheWeek)
     return endOfTheWeek.getTime()
   }
 
@@ -246,6 +246,32 @@ export function Court({ isField }: CourtProps) {
     return date.getTime() < today.getTime()
   }
 
+  const cannotReserve = (day: number, hour: number, minute: number) => {
+    const userId = localStorage.getItem('user_id')
+
+    const userReservations = reservasConvertidas.filter(
+      (reserva) => reserva.user_id === userId && reserva.day === day
+    )
+
+    const tryingDate = new Date()
+    tryingDate.setDate(day)
+    tryingDate.setHours(hour)
+    tryingDate.setMinutes(minute === 0 ? 0 : 30)
+
+    const timestamp = tryingDate.getTime()
+
+    return userReservations.some((reserva) => {
+      // Verifica se o horário desejado está dentro da janela de 1 hora antes ou depois
+      return (
+        (timestamp >= reserva.start_date - 60 * 60 * 1000 &&
+          timestamp < reserva.start_date) || // 1h antes
+        (timestamp >= reserva.end_date &&
+          timestamp < reserva.end_date + 60 * 60 * 1000) || // 1h depois
+        (timestamp >= reserva.start_date && timestamp < reserva.end_date) // Dentro do horário reservado
+      )
+    })
+  }
+
   function handleClickedTime(
     hour: number,
     minute: number,
@@ -273,12 +299,6 @@ export function Court({ isField }: CourtProps) {
 
     const timestamp = clickedTime.getTime()
     const oneHourLater = timestamp + 60 * 60 * 1000
-    console.log(
-      'Timestamp: ',
-      new Date(timestamp).toTimeString(),
-      new Date(timestamp).toDateString()
-    )
-    console.log(timestamp)
 
     if (timestamp < today.getTime()) {
       console.log('Não é possível fazer reservas em horários passados.')
@@ -369,9 +389,11 @@ export function Court({ isField }: CourtProps) {
             </p>
           </div>
           <div className="absolute bottom-0 right-0 p-8">
-            <Button onClick={handleOpeMyBookings} className="h-12 w-52 p-1">
-              Minhas Reservas
-            </Button>
+            {isAuth && (
+              <Button onClick={handleOpeMyBookings} className="h-12 w-52 p-1">
+                Minhas Reservas
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -404,14 +426,18 @@ export function Court({ isField }: CourtProps) {
                 <div
                   key={dayIndex}
                   onClick={() =>
-                    handleClickedTime(
-                      hour,
-                      minute,
-                      thisWeek()[dayIndex],
-                      dayIndex
-                    )
+                    isPassed(thisWeek()[dayIndex], dayIndex, hour, minute)
+                      ? null
+                      : cannotReserve(thisWeek()[dayIndex], hour, minute)
+                        ? null
+                        : handleClickedTime(
+                            hour,
+                            minute,
+                            thisWeek()[dayIndex],
+                            dayIndex
+                          )
                   }
-                  className={`relative flex min-w-[90px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
+                  className={`relative flex min-w-[90px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? 'bg-gray-300' : cannotReserve(thisWeek()[dayIndex], hour, minute) ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
                   style={{
                     borderBottomStyle: isHourSeparator ? 'dashed' : 'solid',
                     borderRightStyle: 'solid'
