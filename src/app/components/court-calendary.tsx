@@ -1,6 +1,6 @@
 import { Button } from './button'
 import { CalendaryCard } from './calendary-card'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Form } from './form'
 import { View } from './view'
 import { ReservationDetails } from './reservation-details'
@@ -37,14 +37,28 @@ export function Court({ isField }: CourtProps) {
 
   const { data } = useUserQuery()
 
-  console.log('User data:', data)
-  localStorage.setItem('user_id', data?.userId.toString() || '')
+  useEffect(() => {
+    if (data?.userId) {
+      localStorage.setItem('user_id', data.userId.toString())
+    }
+  }, [data?.userId])
+
+  useEffect(() => {
+    localStorage.setItem('end_date', endOfTheWeek().toString())
+    localStorage.setItem('start_date', startOfTheWeek().toString())
+  }, []) // Apenas uma vez no mount
 
   const { getBookingsOfTheWeek } = useBookingsQuery()
 
   const bookings = getBookingsOfTheWeek?.data?.bookings || []
+  let reservas = bookings
 
-  const reservas = bookings
+  const fetchBookingsOfTheWeek = async () => {
+    const result = await getBookingsOfTheWeek?.refetch()
+    if (result && 'data' in result && result.data?.bookings) {
+      reservas = result.data.bookings
+    }
+  }
 
   const today = new Date()
   const modalities = [
@@ -66,9 +80,7 @@ export function Court({ isField }: CourtProps) {
 
   const startOfTheWeek = () => {
     const now = new Date()
-    // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
     const dayOfWeek = now.getDay()
-    // Calculate how many days to subtract to get to Monday
     const diffToMonday = (dayOfWeek + 6) % 7
     const monday = new Date(now)
     monday.setDate(now.getDate() - diffToMonday)
@@ -87,9 +99,6 @@ export function Court({ isField }: CourtProps) {
     sunday.setHours(23, 59, 59, 999)
     return sunday.getTime()
   }
-
-  localStorage.setItem('end_date', endOfTheWeek().toString())
-  localStorage.setItem('start_date', startOfTheWeek().toString())
 
   const thisWeek = () => {
     const week = []
@@ -123,10 +132,19 @@ export function Court({ isField }: CourtProps) {
   }
 
   function handleOpeMyBookings() {
+    if (isMyBookingsModalOpen) return
     setIsMyBookingsModalOpen(true)
     setTimeout(() => {
       setIsMyBookingsModalVisible(true)
     }, 100)
+  }
+
+  const handleCloseMyBookings = () => {
+    setIsMyBookingsModalVisible(false)
+    setTimeout(() => {
+      setIsMyBookingsModalOpen(false)
+      fetchBookingsOfTheWeek()
+    }, 200)
   }
 
   const deslocation = (
@@ -184,8 +202,7 @@ export function Court({ isField }: CourtProps) {
         ...reserva,
         day: date.getDate(),
         hour: date.getHours(),
-        minute: date.getMinutes(),
-        endTime: reserva.end_date
+        minute: date.getMinutes()
       }
     })
 
@@ -407,7 +424,7 @@ export function Court({ isField }: CourtProps) {
                             deslocation(
                               reserva.court_number,
                               Number(reserva.start_date),
-                              Number(reserva.endTime),
+                              Number(reserva.end_date),
                               thisWeek()[dayIndex]
                             )
                           )}
@@ -472,22 +489,9 @@ export function Court({ isField }: CourtProps) {
       {isMyBookingsModalOpen && (
         <div
           className={`duration-250 fixed inset-0 z-[999] flex items-center justify-center bg-black/50 transition-all ${isMyBookingsModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
-          onClick={() => {
-            setIsMyBookingsModalVisible(false)
-            setTimeout(() => {
-              setIsMyBookingsModalOpen(false)
-              window.location.reload()
-            }, 200)
-          }}
+          onClick={handleCloseMyBookings}
         >
-          <View
-            onClose={() => {
-              setIsMyBookingsModalVisible(false)
-              setTimeout(() => {
-                setIsMyBookingsModalOpen(false)
-              }, 200)
-            }}
-          />
+          <View onClose={handleCloseMyBookings} />
         </div>
       )}
       {selectedBooking && (

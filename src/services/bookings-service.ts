@@ -10,11 +10,17 @@ export interface MyBookingsResponse {
 export const BookingsService = {
   getMyBookings: async (): Promise<MyBookingsResponse> => {
     const userId = await localStorage.getItem('user_id')
+    const start_date = await localStorage.getItem('start_date')
+    const end_date = await localStorage.getItem('end_date')
     try {
       const response = await bookingsApi.get<MyBookingsResponse>(
         '/get-bookings',
         {
-          params: { user_id: userId },
+          params: {
+            user_id: userId,
+            start_date: start_date,
+            end_date: end_date
+          }
         }
       )
       return response.data
@@ -32,13 +38,11 @@ export const BookingsService = {
   getBookingsOfTheWeek: async (): Promise<MyBookingsResponse> => {
     const start_date = await localStorage.getItem('start_date')
     const end_date = await localStorage.getItem('end_date')
-    const accessToken = await localStorage.getItem('accessToken')
     try {
       const response = await bookingsApi.get<MyBookingsResponse>(
         '/get-bookings',
         {
-          params: { start_date: start_date, end_date: end_date },
-          headers: { Authorization: `Bearer ${accessToken}` }
+          params: { start_date: start_date, end_date: end_date }
         }
       )
       return response.data
@@ -74,7 +78,7 @@ export const BookingsService = {
     try {
       const response = await bookingsApi.delete(`/delete-booking`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         },
         params: {
           booking_id: bookingId

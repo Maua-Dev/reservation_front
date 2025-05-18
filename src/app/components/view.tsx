@@ -34,7 +34,6 @@ export function View({ onClose }: ViewProps) {
   }
 
   const handleClose = () => {
-    window.location.reload()
     onClose()
   }
 

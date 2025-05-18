@@ -36,7 +36,6 @@ export const Form = ({
   onClose
 }: FormProps) => {
   const {
-    //register,
     handleSubmit,
     formState: { errors },
     setValue
@@ -257,6 +256,7 @@ export const Form = ({
             <Confirm
               onClose={() => setOpen(false)}
               onConfirm={handleSubmit(onSubmit)}
+              isLoading={createBookingMutation.status === 'pending'}
             />
           </Modal>
         </div>
