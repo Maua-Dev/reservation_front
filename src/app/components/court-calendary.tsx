@@ -87,7 +87,11 @@ export function Court({ isField }: CourtProps) {
       startOfWeek.setMonth(now.getMonth() - 1)
       startOfWeek.setDate(sunday + 31)
       startOfWeek.setHours(0, 0, 0, 0)
+    } else {
+      startOfWeek.setDate(sunday)
+      startOfWeek.setHours(0, 0, 0, 0)
     }
+    console.log('startOfWeek', startOfWeek)
     return startOfWeek.getTime()
   }
 
@@ -100,7 +104,11 @@ export function Court({ isField }: CourtProps) {
       endOfTheWeek.setMonth(now.getMonth() + 1)
       endOfTheWeek.setDate(nextSunday - 31)
       endOfTheWeek.setHours(0, 0, 0, 0)
+    } else {
+      endOfTheWeek.setDate(nextSunday)
+      endOfTheWeek.setHours(0, 0, 0, 0)
     }
+    console.log('endOfTheWeek', endOfTheWeek)
     return endOfTheWeek.getTime()
   }
 
