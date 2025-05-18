@@ -81,23 +81,27 @@ export function Court({ isField }: CourtProps) {
   const startOfTheWeek = () => {
     const now = new Date()
     const dayOfWeek = now.getDay()
-    const diffToMonday = (dayOfWeek + 6) % 7
-    const monday = new Date(now)
-    monday.setDate(now.getDate() - diffToMonday)
-    monday.setHours(8, 0, 0, 0)
-    return monday.getTime()
+    const sunday = now.getDate() - dayOfWeek
+    const startOfWeek = new Date(now)
+    if (sunday < 1) {
+      startOfWeek.setMonth(now.getMonth() - 1)
+      startOfWeek.setDate(sunday + 31)
+      startOfWeek.setHours(0, 0, 0, 0)
+    }
+    return startOfWeek.getTime()
   }
 
   const endOfTheWeek = () => {
     const now = new Date()
-    // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
     const dayOfWeek = now.getDay()
-    // Calculate how many days to add to get to Sunday
-    const diffToSunday = (dayOfWeek + 1) % 7
-    const sunday = new Date(now)
-    sunday.setDate(now.getDate() + diffToSunday)
-    sunday.setHours(23, 59, 59, 999)
-    return sunday.getTime()
+    const nextSunday = now.getDate() + (7 - dayOfWeek)
+    const endOfTheWeek = new Date(now)
+    if (nextSunday > 31) {
+      endOfTheWeek.setMonth(now.getMonth() + 1)
+      endOfTheWeek.setDate(nextSunday - 31)
+      endOfTheWeek.setHours(0, 0, 0, 0)
+    }
+    return endOfTheWeek.getTime()
   }
 
   const thisWeek = () => {
