@@ -243,6 +243,7 @@ export function Court({ isField }: CourtProps) {
     clickedTime.setMilliseconds(0)
 
     const timestamp = clickedTime.getTime()
+    const oneHourLater = timestamp + 60 * 60 * 1000
     console.log(
       'Timestamp: ',
       new Date(timestamp).toTimeString(),
@@ -265,10 +266,17 @@ export function Court({ isField }: CourtProps) {
         occupiedCourts.add(reserva.court_number)
       }
     })
-    const availableCourts = [1, 2, 3].filter(
-      (court) => !occupiedCourts.has(court)
-    )
-
+    const allCourts = [1, 2, 3]
+    const availableCourts = allCourts.filter((court) => {
+      const reservasDaQuadra = reservasConvertidas.filter(
+        (reserva) => reserva.court_number === court && reserva.day === day
+      )
+      const hasConflict = reservasDaQuadra.some(
+        (reserva) =>
+          reserva.start_date < oneHourLater && reserva.end_date > timestamp
+      )
+      return !hasConflict
+    })
     if (availableCourts.length === 0) {
       console.log(
         'Todas as quadras estão ocupadas neste horário. Não é possível fazer mais reservas.'

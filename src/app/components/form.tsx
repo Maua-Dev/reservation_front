@@ -21,7 +21,7 @@ type FormProps = {
 
 const formSchema = z.object({
   modality: z.string().min(1, 'Selecione uma modalidade'),
-  equipment: z.string().min(1, 'Selecione pelo menos um equipamento'),
+  equipment: z.array(z.string()).min(1, 'Selecione pelo menos um equipamento'),
   needsVest: z.boolean(),
   shareCourt: z.boolean()
 })
@@ -36,7 +36,7 @@ export const Form = ({
   onClose
 }: FormProps) => {
   const {
-    register,
+    //register,
     handleSubmit,
     formState: { errors },
     setValue
@@ -44,14 +44,14 @@ export const Form = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       modality: '',
-      equipment: '',
+      equipment: [],
       needsVest: false,
       shareCourt: false
     }
   })
   const [open, setOpen] = useState(false)
   const [selectedModality, setSelectedModality] = useState('')
-  const [selectedEquipment, setSelectedEquipment] = useState('')
+  const [selectedEquipments, setSelectedEquipments] = useState<string[]>([])
   const [courtNumber, setCourtNumber] = useState(options[0].split(' ')[1])
   const selectedDate = new Date(timestamp)
   const { createBookingMutation } = useBookingsQuery()
@@ -64,13 +64,21 @@ export const Form = ({
       end_date: timestamp + 3600000,
       court_number: Number(courtNumber),
       sport: selectedModality,
-      materials: [selectedEquipment]
+      materials: selectedEquipments
     }
     await createBookingMutation.mutateAsync(bookingData)
     onClose()
   }
   const handleClose = () => {
     onClose()
+  }
+  const toggleEquipment = (equipment: string) => {
+    setSelectedEquipments((prev) =>
+      prev.includes(equipment)
+        ? prev.filter((e) => e !== equipment)
+        : [...prev, equipment]
+    )
+    setValue('equipment', [...selectedEquipments, equipment]) // Atualiza no react-hook-form
   }
 
   useEffect(() => {
@@ -202,11 +210,12 @@ export const Form = ({
               <button
                 key={equipment}
                 type="button"
-                onClick={() => {
-                  setSelectedEquipment(equipment)
-                  setValue('equipment', equipment)
-                }}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-2 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 ${selectedEquipment === equipment ? 'border-yellow bg-yellow/10 text-yellow-secondary hover:bg-yellow/10' : ''}`}
+                onClick={() => toggleEquipment(equipment)}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-2 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 ${
+                  selectedEquipments.includes(equipment)
+                    ? 'border-yellow bg-yellow/10 text-yellow-secondary hover:bg-yellow/10'
+                    : ''
+                }`}
               >
                 {equipment}
               </button>
