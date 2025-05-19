@@ -101,9 +101,9 @@ export const Form = ({
       <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
         <div
           onClick={(e) => e.stopPropagation()}
-          className="relative max-h-[90vh] w-[70vw] max-w-[70vw] rounded-lg bg-white p-4 font-poppins"
+          className="relative flex max-h-[90vh] min-h-[30vh] w-[50vw] max-w-[70vw] items-center justify-center rounded-lg bg-white p-4 font-poppins"
         >
-          <p>Você não está logado</p>
+          <p className="text-3xl">Você não está logado</p>
         </div>
       </div>
     )

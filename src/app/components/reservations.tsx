@@ -1,5 +1,7 @@
+import { useMsal } from '@azure/msal-react'
 import imgCampo from '../assets/imagem-campo.png'
 import imgQuadra from '../assets/imagem-quadra.png'
+import { loginRequest } from '../auth/auth-config'
 import { ReservationCard } from './reservation-card'
 
 const reservations = [
@@ -20,6 +22,19 @@ const reservations = [
 ]
 
 export function Reservations() {
+  const { instance } = useMsal()
+  const fetchAccessToken = async () => {
+    const accounts = instance.getAllAccounts()
+    const accessToken = (
+      await instance.acquireTokenSilent({
+        ...loginRequest,
+        account: accounts[0]
+      })
+    ).accessToken
+    localStorage.setItem('accessToken', accessToken)
+    return accessToken
+  }
+  fetchAccessToken()
   return (
     <section id="reservation" className="scroll-smooth">
       <div className="flex h-auto min-h-screen max-w-7xl flex-col items-center justify-center gap-10 px-6 py-24 md:gap-24 md:px-12">
