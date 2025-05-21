@@ -400,7 +400,7 @@ export function Court({ isField }: CourtProps) {
         </div>
       </div>
 
-      <div className="sticky top-[88px] z-[48] mb-12 flex max-w-[100vw] font-poppins text-base font-semibold text-gray-600">
+      <div className="sticky top-[88px] z-50 mb-12 flex max-w-[100vw] font-poppins text-base font-semibold text-gray-600">
         <div className="w-16 bg-blue-primary px-2 py-4 text-xl text-white">
           Hora
         </div>
