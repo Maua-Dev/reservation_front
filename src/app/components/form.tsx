@@ -249,10 +249,19 @@ export const Form = ({
             Aceito compartilhar quadra
           </p>
         </div> */}
-        <div className="flex items-center justify-between rounded p-1">
+        <div className="flex w-full items-center justify-between rounded p-1">
           <Button className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary px-5 py-2 font-poppins text-lg text-white active:border-b-2">
             Salvar
           </Button>
+          {selectedModality == 'Volleyball' && (
+            <div className="flex w-1/2 items-center gap-2">
+              {/* <input type="checkbox" className="h-10 w-10" /> */}
+              <p className="text-md w-full text-center font-poppins font-medium text-red-600 md:text-xl">
+                *<span className="font-extrabold">Aviso:</span> a rede de vôlei
+                precisa de no mínimo 6 pessoas para ser montada
+              </p>
+            </div>
+          )}
           <Modal open={open} onClose={() => setOpen(false)}>
             <Confirm
               onClose={() => setOpen(false)}

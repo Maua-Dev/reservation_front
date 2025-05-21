@@ -28,6 +28,7 @@ export const useBookingsQuery = () => {
       try {
         return await BookingsService.getMyBookings() //Criar uma função para o meu try
       } catch (error) {
+        toast.error('Erro ao buscar reservas!: ' + error)
         throw new Error('Failed to fetch bookings')
       }
     },
@@ -43,6 +44,13 @@ export const useBookingsQuery = () => {
       queryClient.invalidateQueries({ queryKey: ['myBookings'] })
       getMyBookingsQuery.refetch()
       toast.success('Reserva criada com sucesso!')
+    },
+    onError: (error) => {
+      if (error.message === 'Booking already exists') {
+        toast.error('Já existe uma reserva para esse horário!')
+      } else {
+        toast.error('Erro ao criar reserva!')
+      }
     }
   })
 
@@ -53,6 +61,13 @@ export const useBookingsQuery = () => {
       queryClient.invalidateQueries({ queryKey: ['bookingsOfTheWeek'] })
       queryClient.invalidateQueries({ queryKey: ['myBookings'] })
       toast.success('Reserva cancelada com sucesso!')
+    },
+    onError: (error) => {
+      if (error.message === 'Booking not found') {
+        toast.error('Reserva não encontrada!')
+      } else {
+        toast.error('Erro ao cancelar reserva!')
+      }
     }
   })
 
@@ -62,6 +77,7 @@ export const useBookingsQuery = () => {
       try {
         return await BookingsService.getBookingsOfTheWeek() //Criar uma função para o meu try
       } catch (error) {
+        toast.error('Erro ao buscar reservas!: ' + error)
         throw new Error('Failed to fetch bookings')
       }
     },

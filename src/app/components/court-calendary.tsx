@@ -67,7 +67,13 @@ export function Court({ isField }: CourtProps) {
   }
 
   const today = new Date()
-  const modalities = Object.keys(ModalityName)
+  const modalities = isField
+    ? Object.keys(ModalityName).filter(
+        (mod) => mod === 'Football' || mod === 'Rugby'
+      )
+    : Object.keys(ModalityName).filter(
+        (mod) => mod !== 'Football' && mod !== 'Rugby'
+      )
   const equipments = [
     'Bola de futsal',
     'Bola de handebol',
@@ -260,7 +266,7 @@ export function Court({ isField }: CourtProps) {
     return userReservations.some((reserva) => {
       // Verifica se o horário desejado está dentro da janela de 1 hora antes ou depois
       return (
-        (timestamp >= reserva.start_date - 60 * 60 * 1000 &&
+        (timestamp >= reserva.start_date - 90 * 60 * 1000 &&
           timestamp < reserva.start_date) || // 1h antes
         (timestamp >= reserva.end_date &&
           timestamp < reserva.end_date + 60 * 60 * 1000) || // 1h depois
@@ -424,6 +430,13 @@ export function Court({ isField }: CourtProps) {
               {[...Array(6)].map((_, dayIndex) => (
                 <div
                   key={dayIndex}
+                  title={
+                    isPassed(thisWeek()[dayIndex], dayIndex, hour, minute)
+                      ? 'Esse horário já passou'
+                      : cannotReserve(thisWeek()[dayIndex], hour, minute)
+                        ? 'Você não pode reservar dentro de uma hora de outra reserva sua'
+                        : ''
+                  }
                   onClick={() =>
                     isPassed(thisWeek()[dayIndex], dayIndex, hour, minute)
                       ? null
@@ -473,7 +486,11 @@ export function Court({ isField }: CourtProps) {
                           <CalendaryCard
                             court={reserva.court_number}
                             location={`Quadra ${reserva.court_number}`}
-                            modality={reserva.sport}
+                            modality={
+                              ModalityName[
+                                reserva.sport as keyof typeof ModalityName
+                              ]
+                            }
                             equipments={equipments}
                             time={reserva.start_date}
                             isChecked={[true, false]}
@@ -511,15 +528,14 @@ export function Court({ isField }: CourtProps) {
             isOpen={isReservationModalOpen}
             onClose={handleCloseModal}
             timestamp={selectedTime}
-            modalities={isField ? ['Rugby', 'Football'] : modalities}
+            // se for field, soh vai ter football e rugby
+            modalities={modalities}
             equipments={
-              isField
-                ? ['Bola de futebol', 'Bola de rugby', 'Material próprio']
-                : equipments
+              isField ? ['Bola de futebol', 'Bola de rugby'] : equipments
             }
             options={
               isField
-                ? ['Campo']
+                ? ['Campo', 'Beach']
                 : availableCourts.map((court) => `Quadra ${court}`)
             }
           />
@@ -540,7 +556,11 @@ export function Court({ isField }: CourtProps) {
         >
           <ReservationDetails
             location={selectedBooking.court}
-            modality={selectedBooking.modality}
+            modality={
+              ModalityName[
+                selectedBooking.modality as keyof typeof ModalityName
+              ]
+            }
             equipments={selectedBooking.materials}
             time={selectedBooking.time}
             isChecked={[true, false]}
