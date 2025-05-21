@@ -3,12 +3,13 @@ import { Confirm } from '@/app/components/confirm'
 import { Modal } from '@/app/components/modal'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { set, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { IoClose } from 'react-icons/io5'
 import { useBookingsQuery } from '../hooks/use-booking'
 import { useUser } from '../hooks/use-user'
 import { useIsAuthenticated } from '@azure/msal-react'
+import { ModalityName } from '@/utils/enums/modality'
 
 type FormProps = {
   modalities: string[]
@@ -188,7 +189,7 @@ export const Form = ({
               }}
               className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-2 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 ${selectedModality === modality ? 'border-yellow bg-yellow/10 text-yellow-secondary hover:bg-yellow/10' : 'text-slate-700'}`}
             >
-              {modality}
+              {ModalityName[modality as keyof typeof ModalityName]}
             </button>
           ))}
           {errors.modality && (

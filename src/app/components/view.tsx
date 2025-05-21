@@ -22,18 +22,12 @@ export function View({ onClose }: ViewProps) {
     .slice()
     .sort((a, b) => b.start_date - a.start_date)
 
-  setMyBookings(getMyBookingsQuery.data?.bookings || [])
-
   const fetchBookings = async () => {
-    try {
-      const refetchResult = await getMyBookingsQuery.refetch()
-      setMyBookings(refetchResult.data?.bookings || [])
-    } catch (error) {
-      console.error('Error fetching bookings:', error)
-    }
+    const bookings = await getMyBookingsQuery.refetch()
+    setMyBookings(bookings.data?.bookings || [])
   }
 
-  fetchBookings()
+  setMyBookings(getMyBookingsQuery.data?.bookings || [])
 
   const handleClose = () => {
     onClose()
@@ -89,6 +83,7 @@ export function View({ onClose }: ViewProps) {
       </div>
     )
   }
+
   function reloadBooking(): void {
     fetchBookings()
   }

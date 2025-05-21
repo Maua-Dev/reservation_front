@@ -25,7 +25,6 @@ export const useBookingsQuery = () => {
     queryFn: async () => {
       const userId = localStorage.getItem('userId')
       if (!userId) throw new Error('User ID not found')
-
       try {
         return await BookingsService.getMyBookings() //Criar uma função para o meu try
       } catch (error) {
@@ -42,6 +41,7 @@ export const useBookingsQuery = () => {
       // Invalida a query de reservas para refetch após criar uma nova
       queryClient.invalidateQueries({ queryKey: ['bookingsOfTheWeek'] })
       queryClient.invalidateQueries({ queryKey: ['myBookings'] })
+      getMyBookingsQuery.refetch()
       toast.success('Reserva criada com sucesso!')
     }
   })

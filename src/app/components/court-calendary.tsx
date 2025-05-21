@@ -8,6 +8,7 @@ import { cn } from '../utils/cn'
 import { useUserQuery } from '../hooks/use-user'
 import { useBookingsQuery } from '../hooks/use-booking'
 import { useIsAuthenticated } from '@azure/msal-react'
+import { ModalityName } from '@/utils/enums/modality'
 
 export interface Reservation {
   id: number
@@ -66,13 +67,7 @@ export function Court({ isField }: CourtProps) {
   }
 
   const today = new Date()
-  const modalities = [
-    'Tennis',
-    'Handball',
-    'Football',
-    'Basketball',
-    'Volleyball'
-  ]
+  const modalities = Object.keys(ModalityName)
   const equipments = [
     'Bola de futsal',
     'Bola de handebol',

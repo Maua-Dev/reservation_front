@@ -1,9 +1,8 @@
 export enum ModalityName {
-  TENNIS = 'Tênis',
-  FOOTBALL = 'Futebol',
-  BASKETBALL = 'Basquete',
-  VOLLEYBALL = 'Vôlei',
-  HANDBALL = 'Handebol',
-  FUTSAL = 'Futsal',
-  RUGBY = 'Rugby'
+  'Tennis' = 'Tênis',
+  'Basketball' = 'Basquete',
+  'Volleyball' = 'Vôlei',
+  'Handball' = 'Handebol',
+  'Futsal' = 'Futsal',
+  'Rugby' = 'Rugby',
 }
