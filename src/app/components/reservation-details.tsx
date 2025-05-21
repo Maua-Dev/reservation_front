@@ -8,6 +8,9 @@ type ReservationDetailsProps = {
   time: number
   isChecked: boolean[]
   onClose: () => void
+  bookingUserId?: string | number
+  currentUserId?: string | number
+  currentUserName?: string
 }
 
 export const ReservationDetails = ({
@@ -16,7 +19,10 @@ export const ReservationDetails = ({
   modality,
   time,
   //isChecked,
-  onClose
+  onClose,
+  bookingUserId,
+  currentUserId,
+  currentUserName
 }: ReservationDetailsProps) => {
   const date = new Date(time)
   const formattedDate = date.toLocaleDateString('pt-BR', {
@@ -54,6 +60,11 @@ export const ReservationDetails = ({
               className="absolute right-2 top-2 h-8 w-8 cursor-pointer md:h-10 md:w-16"
               onClick={onClose}
             ></IoClose>
+            {bookingUserId?.toString() === currentUserId?.toString() && (
+              <p className="mt-1 font-poppins text-2xl font-medium">
+                {currentUserName}
+              </p>
+            )}
             <p className="mt-1 font-poppins text-2xl font-medium">
               Data: {formattedDate}
             </p>

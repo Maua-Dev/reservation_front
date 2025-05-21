@@ -15,7 +15,7 @@ export function App() {
       <Router>
         <MsalProvider instance={msalInstance}>
           <ToastContainer
-            position="bottom-right"
+            position="top-right"
             autoClose={3000}
             hideProgressBar={false}
             newestOnTop={true}
@@ -24,6 +24,7 @@ export function App() {
             pauseOnFocusLoss
             draggable
             pauseOnHover
+            theme="colored"
           />
           <Navbar />
           <Routes>

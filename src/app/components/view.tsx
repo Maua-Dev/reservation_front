@@ -33,6 +33,8 @@ export function View({ onClose }: ViewProps) {
     }
   }
 
+  fetchBookings()
+
   const handleClose = () => {
     onClose()
   }

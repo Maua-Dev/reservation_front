@@ -17,6 +17,7 @@ export interface Reservation {
   time: number
   duration: number
   materials: string[]
+  userId: string
 }
 
 interface CourtProps {
@@ -38,6 +39,8 @@ export function Court({ isField }: CourtProps) {
   const isAuth = useIsAuthenticated()
 
   const { data } = useUserQuery()
+  const userId = data?.userId.toString()
+  const userName = data?.name
 
   useEffect(() => {
     if (data?.userId) {
@@ -72,12 +75,11 @@ export function Court({ isField }: CourtProps) {
   ]
   const equipments = [
     'Bola de futsal',
-    'Bola de handol',
+    'Bola de handebol',
     'Bola de tênis',
     'Bola de vôlei',
     'Raquete de tênis',
-    'Bola de basquete',
-    'Material Próprio'
+    'Bola de basquete'
   ]
 
   const startOfTheWeek = () => {
@@ -398,8 +400,10 @@ export function Court({ isField }: CourtProps) {
         </div>
       </div>
 
-      <div className="sticky top-20 z-[90] mb-12 flex max-w-[100vw] font-poppins text-base font-semibold text-gray-600">
-        <div className="w-16 bg-blue-primary p-4 text-xl text-white">Hora</div>
+      <div className="sticky top-[88px] z-[48] mb-12 flex max-w-[100vw] font-poppins text-base font-semibold text-gray-600">
+        <div className="w-16 bg-blue-primary px-2 py-4 text-xl text-white">
+          Hora
+        </div>
         <div className="flex flex-1 text-center text-lg text-white">
           {thisWeek().map((date, index) => (
             <div
@@ -488,7 +492,8 @@ export function Court({ isField }: CourtProps) {
                                 duration:
                                   (reserva.end_date - reserva.start_date) /
                                   (1000 * 60 * 60),
-                                materials: reserva.materials
+                                materials: reserva.materials,
+                                userId: reserva.user_id ?? ''
                               })
                             }
                           />
@@ -545,6 +550,9 @@ export function Court({ isField }: CourtProps) {
             time={selectedBooking.time}
             isChecked={[true, false]}
             onClose={() => handleDiselectingBooking()}
+            bookingUserId={selectedBooking.userId}
+            currentUserId={userId}
+            currentUserName={userName}
           />
         </div>
       )}
