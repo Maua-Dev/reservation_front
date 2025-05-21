@@ -10,7 +10,7 @@ type ConfirmProps = {
 
 export function Confirm({ onClose, onConfirm, isLoading }: ConfirmProps) {
   return (
-    <div className="flex h-40 w-full flex-col items-center justify-center gap-4 rounded-xl bg-white px-0 pt-4 md:h-full md:w-full">
+    <div className="flex h-40 w-full flex-col items-center justify-center gap-4 rounded-xl bg-white px-0 pt-4 md:h-56 md:w-96">
       <div className="flex flex-grow items-center justify-center px-8 py-2">
         <p className="text-center font-poppins text-sm font-medium text-black md:text-xl">
           Declaro estar de acordo com as normas internas do CEAF para utilização

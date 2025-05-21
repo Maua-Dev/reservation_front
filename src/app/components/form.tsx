@@ -249,7 +249,7 @@ export const Form = ({
             Aceito compartilhar quadra
           </p>
         </div> */}
-        <div className="flex w-40 items-center justify-between rounded p-1">
+        <div className="flex items-center justify-between rounded p-1">
           <Button className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary px-5 py-2 font-poppins text-lg text-white active:border-b-2">
             Salvar
           </Button>
