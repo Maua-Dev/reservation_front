@@ -61,7 +61,6 @@ export function View({ onClose }: ViewProps) {
     getMyBookingsQuery.isError &&
     getMyBookingsQuery.error.message == 'User ID not found'
   ) {
-    console.log(localStorage.getItem('userId'))
     return (
       <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
         <div

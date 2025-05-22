@@ -138,7 +138,6 @@ export const Form = ({
             <select
               defaultValue={1}
               onChange={(e) => {
-                console.log(e.target.value)
                 setCourtNumber(e.target.value)
               }}
               className="inline-flex items-start justify-start rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2"

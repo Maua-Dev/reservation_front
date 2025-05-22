@@ -10,6 +10,7 @@ import { useBookingsQuery } from '../hooks/use-booking'
 import { useIsAuthenticated } from '@azure/msal-react'
 import { ModalityName } from '@/utils/enums/modality'
 import { FiLoader } from 'react-icons/fi'
+import { toast } from 'react-toastify'
 
 export interface Reservation {
   id: number
@@ -326,7 +327,6 @@ export function Court({ isField }: CourtProps) {
     const oneHourLater = timestamp + 60 * 60 * 1000
 
     if (timestamp < today.getTime()) {
-      console.log('Não é possível fazer reservas em horários passados.')
       return
     }
 
@@ -352,9 +352,7 @@ export function Court({ isField }: CourtProps) {
       return !hasConflict
     })
     if (availableCourts.length === 0) {
-      console.log(
-        'Todas as quadras estão ocupadas neste horário. Não é possível fazer mais reservas.'
-      )
+      toast.info("Todas as quadras ja estão reservadas nesse horário")
       return
     }
     setAvailableCourts(availableCourts)
@@ -379,7 +377,6 @@ export function Court({ isField }: CourtProps) {
 
   function handleSelectingBooking(booking: Reservation) {
     setSelectedBooking(booking)
-    console.log(booking)
     setTimeout(() => {
       setSelectedBookingVisible(true)
     }, 100)

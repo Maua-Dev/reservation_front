@@ -3,7 +3,6 @@ import baixados from '../assets/baixados.jpg'
 import { Button } from '../components/button'
 import { useIsAuthenticated, useMsal } from '@azure/msal-react'
 import { useNavigate } from 'react-router-dom'
-import { useUser } from '../hooks/use-user'
 import { loginRequest } from '../auth/auth-config'
 
 export function Login() {
@@ -35,18 +34,10 @@ export function Login() {
     return
   }
 
-  const isLogedin = instance.getAllAccounts().length > 0
-  console.log('isLogedin', isLogedin)
-
   const handleLogin = () => {
-    instance
-      .loginPopup({ scopes: ['User.Read'] })
-      .then((response) => {
-        console.log('Login successful:', response)
-      })
-      .catch((error) => {
-        console.error('Login error:', error)
-      })
+    instance.loginPopup({ scopes: ['User.Read'] }).catch((error) => {
+      console.error('Login error:', error)
+    })
   }
 
   return (

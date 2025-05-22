@@ -9,7 +9,7 @@ export const msalConfig = {
     redirectUri: '/'
   },
   cache: {
-    cacheLocation: 'localStorage', // Armazena o token na LocalStorage
+    cacheLocation: 'localStorage',
     storeAuthStateInCookie: false
   }
 }

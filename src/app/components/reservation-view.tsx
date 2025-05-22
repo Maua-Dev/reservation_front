@@ -1,6 +1,7 @@
 import { FiLoader } from 'react-icons/fi'
 import { useBookingsQuery } from '../hooks/use-booking'
 import { Button } from './button'
+import { toast } from 'react-toastify'
 
 interface ReservationCardProps {
   startDate: number
@@ -62,7 +63,7 @@ export function ReservationCard({
           className={`flex h-8 w-20 items-center justify-center bg-white p-2 text-sm font-bold text-black transition-colors ${isPassed ? 'bg-gray-300' : 'hover:bg-red-400'} md:w-36 lg:h-10 lg:text-lg`}
           onClick={() => {
             if (isPassed) {
-              console.log('mto tarde agr')
+              toast.info('Não é possível cancelar uma reserva já passada')
             } else {
               handleCancel()
             }
