@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useUser } from '../hooks/use-user'
 import { Button } from './button'
 import { useBookings, useBookingsQuery } from '../hooks/use-booking'
-import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { FiLoader } from 'react-icons/fi'
 
 interface ViewProps {
   onClose: () => void
@@ -51,7 +51,7 @@ export function View({ onClose }: ViewProps) {
     return (
       <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
         <div className="relative max-h-[90vh] w-[70vw] max-w-[70vw] rounded-lg bg-white p-4 font-poppins">
-          <AiOutlineLoading3Quarters className="animate-spin" />
+          <FiLoader className="animate-spin" />
         </div>
       </div>
     )
@@ -110,7 +110,7 @@ export function View({ onClose }: ViewProps) {
             </div>
             <hr className="border-t-4 border-black" />
           </div>
-          <div className="flex h-full max-h-[85%] max-w-[70vw] flex-col items-center gap-4 overflow-y-auto">
+          <div className="flex h-full max-h-[85%] min-h-[30vh] max-w-[70vw] flex-col items-center gap-4 overflow-y-auto">
             {myBookings &&
               (myBookings.length === 0 ? (
                 <p className="text-center font-poppins text-sm font-medium text-black md:text-base">

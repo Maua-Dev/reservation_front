@@ -9,6 +9,8 @@ import { useUserQuery } from '../hooks/use-user'
 import { useBookingsQuery } from '../hooks/use-booking'
 import { useIsAuthenticated } from '@azure/msal-react'
 import { ModalityName } from '@/utils/enums/modality'
+import { get } from 'http'
+import { FiLoader } from 'react-icons/fi'
 
 export interface Reservation {
   id: number
@@ -372,7 +374,12 @@ export function Court({ isField }: CourtProps) {
   }
 
   return (
-    <div className="w-full max-w-[100vw]">
+    <div className="relative w-full max-w-[100vw]">
+      {getBookingsOfTheWeek?.isLoading && (
+        <div className="absolute inset-0 z-20 flex h-full w-full justify-center bg-white/20 pt-[30%] backdrop-blur-sm">
+          <FiLoader className="animate-spin" color="black" size={64} />
+        </div>
+      )}
       <div
         className={`relative h-44 w-full ${isField ? 'bg-campo' : 'bg-quadra'} bg-cover bg-center`}
       >

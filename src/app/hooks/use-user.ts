@@ -4,6 +4,7 @@ import { useIsAuthenticated } from '@azure/msal-react'
 import { UserService } from '@/services/user-service'
 import { useQuery } from '@tanstack/react-query'
 import { set } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
 export interface User {
   userId: string
@@ -45,10 +46,21 @@ export const useUserQuery = () => {
   return useQuery({
     queryKey: ['user'],
     queryFn: async () => {
-      const user = await UserService.getUser()
-      localStorage.setItem('userId', user.userId)
-      setUser(user)
-      return user
+      try {
+        const user = await UserService.getUser()
+        localStorage.setItem('userId', user.userId)
+        setUser(user)
+        return user
+      } catch (error) {
+        if (error instanceof Error) {
+          toast.error('Error fetching user: ' + error.message)
+          console.error('Error fetching user:', error.message)
+          return null
+        }
+        toast.error('Error fetching user')
+        console.error('Error fetching user:', error)
+        return null
+      }
     },
     retry: 2,
     staleTime: 1000 * 60 * 5
