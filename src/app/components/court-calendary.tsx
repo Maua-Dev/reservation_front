@@ -9,7 +9,6 @@ import { useUserQuery } from '../hooks/use-user'
 import { useBookingsQuery } from '../hooks/use-booking'
 import { useIsAuthenticated } from '@azure/msal-react'
 import { ModalityName } from '@/utils/enums/modality'
-import { get } from 'http'
 import { FiLoader } from 'react-icons/fi'
 
 export interface Reservation {
@@ -212,7 +211,9 @@ export function Court({ isField }: CourtProps) {
 
   const reservasConvertidas = reservas
     .filter((reserva) =>
-      isField ? reserva.court_number === 0 : reserva.court_number !== 0
+      isField
+        ? reserva.court_number === 0 || reserva.court_number === 6
+        : reserva.court_number !== 0
     )
     .map((reserva) => {
       const date = new Date(Number(reserva.start_date))
@@ -321,7 +322,7 @@ export function Court({ isField }: CourtProps) {
         occupiedCourts.add(reserva.court_number)
       }
     })
-    const allCourts = [1, 2, 3]
+    const allCourts = isField ? [6, 0] : [1, 2, 3]
     const availableCourts = allCourts.filter((court) => {
       const reservasDaQuadra = reservasConvertidas.filter(
         (reserva) => reserva.court_number === court && reserva.day === day
@@ -538,14 +539,13 @@ export function Court({ isField }: CourtProps) {
             timestamp={selectedTime}
             // se for field, soh vai ter football e rugby
             modalities={modalities}
+            isField={isField}
             equipments={
               isField ? ['Bola de futebol', 'Bola de rugby'] : equipments
             }
-            options={
-              isField
-                ? ['Campo', 'Beach']
-                : availableCourts.map((court) => `Quadra ${court}`)
-            }
+            options={availableCourts.map((court) =>
+              isField ? (court === -1 ? `Beach` : `Campo`) : `Quadra ${court}`
+            )}
           />
         </div>
       )}

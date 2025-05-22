@@ -8,6 +8,7 @@ export default {
         poppins: ['Poppins', 'sans-serif']
       },
       colors: {
+        sand: '#E5CBA8',
         'blue-primary': '#0080F5',
         'blue-secondary': '#090CE8',
         'blue-tertiary': '#1011A6',

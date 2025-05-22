@@ -18,6 +18,7 @@ type FormProps = {
   onClose: () => void
   isOpen: boolean
   timestamp: number
+  isField: boolean
 }
 
 const formSchema = z.object({
@@ -34,6 +35,7 @@ export const Form = ({
   equipments,
   timestamp,
   options,
+  isField,
   onClose
 }: FormProps) => {
   const {
@@ -62,7 +64,7 @@ export const Form = ({
     const bookingData = {
       start_date: timestamp,
       end_date: timestamp + 3600000,
-      court_number: Number(courtNumber) || 0,
+      court_number: Number(courtNumber),
       sport: selectedModality,
       materials: selectedEquipments
     }
@@ -135,11 +137,23 @@ export const Form = ({
           <label className="flex-grow text-center font-poppins text-lg text-white">
             <select
               defaultValue={1}
-              onChange={(e) => setCourtNumber(e.target.value)}
+              onChange={(e) => {
+                console.log(e.target.value)
+                setCourtNumber(e.target.value)
+              }}
               className="inline-flex items-start justify-start rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2"
             >
               {options.map((option) => (
-                <option key={option} value={option.split(' ')[1]}>
+                <option
+                  key={option}
+                  value={
+                    isField
+                      ? option === 'Beach'
+                        ? 6
+                        : 0
+                      : option.split(' ')[1]
+                  }
+                >
                   {option}
                 </option>
               ))}
