@@ -31,7 +31,7 @@ export function ReservationCard({
     }
   }
   return (
-    <div className="flex h-36 w-full cursor-pointer flex-row items-start rounded-lg bg-blue-primary p-4 md:h-44">
+    <div className="flex h-36 w-full flex-row items-start rounded-lg bg-blue-primary p-4 md:h-44">
       <div className="flex flex-col gap-1">
         <p className="text-xl font-bold text-white md:text-2xl">
           {new Date(startDate).toLocaleDateString('pt-BR', {
@@ -54,9 +54,9 @@ export function ReservationCard({
         <p className="text-xs font-normal text-white sm:text-base md:text-lg">
           Quadra: {court}
         </p>
-        <p className="text-xs font-normal text-white sm:text-base md:text-lg">
+        {/* <p className="text-xs font-normal text-white sm:text-base md:text-lg">
           Status: {status}
-        </p>
+        </p> */}
       </div>
       <div className="ml-auto flex flex-col justify-end">
         <Button

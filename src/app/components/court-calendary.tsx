@@ -352,7 +352,6 @@ export function Court({ isField }: CourtProps) {
       return !hasConflict
     })
     if (availableCourts.length === 0) {
-      toast.info("Todas as quadras ja estão reservadas nesse horário")
       return
     }
     setAvailableCourts(availableCourts)
@@ -463,9 +462,11 @@ export function Court({ isField }: CourtProps) {
                   }
                   onClick={() =>
                     isPassed(thisWeek()[dayIndex], dayIndex, hour, minute)
-                      ? null
+                      ? toast.info('Esse horário já passou')
                       : cannotReserve(thisWeek()[dayIndex], hour, minute)
-                        ? null
+                        ? toast.info(
+                            'Você não pode reservar dentro de uma hora de outra reserva sua'
+                          )
                         : handleClickedTime(
                             hour,
                             minute,

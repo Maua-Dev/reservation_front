@@ -54,7 +54,9 @@ export const Form = ({
   const [open, setOpen] = useState(false)
   const [selectedModality, setSelectedModality] = useState('')
   const [selectedEquipments, setSelectedEquipments] = useState<string[]>([])
-  const [courtNumber, setCourtNumber] = useState(options[0].split(' ')[1])
+  const [courtNumber, setCourtNumber] = useState(
+    isField ? (options[0] == 'Beach' ? 6 : 0) : options[0].split(' ')[1]
+  )
   const selectedDate = new Date(timestamp)
   const { createBookingMutation } = useBookingsQuery()
   const { user } = useUser()
@@ -64,7 +66,7 @@ export const Form = ({
     const bookingData = {
       start_date: timestamp,
       end_date: timestamp + 3600000,
-      court_number: Number(courtNumber) || options[0] === 'Beach' ? 6 : 0,
+      court_number: Number(courtNumber),
       sport: selectedModality,
       materials: selectedEquipments
     }
@@ -111,7 +113,7 @@ export const Form = ({
         e.preventDefault()
       }}
       onClick={(e) => e.stopPropagation()}
-      className="relative flex max-h-[90vh] w-[90%] max-w-[70vw] flex-col gap-3 overflow-x-hidden overflow-y-visible rounded-xl bg-white px-4 py-6 tracking-wide text-slate-700 shadow-lg sm:w-[70%]"
+      className="relative flex max-h-[90vh] w-[90%] max-w-[70vw] cursor-default flex-col gap-3 overflow-x-hidden overflow-y-visible rounded-xl bg-white px-4 py-6 tracking-wide text-slate-700 shadow-lg sm:w-[70%]"
     >
       <div className="flex flex-col justify-between border-b-2 border-slate-700">
         <div className="flex justify-between">
@@ -136,7 +138,7 @@ export const Form = ({
         <div className="flex w-40 items-center justify-between rounded md:w-32">
           <label className="flex-grow text-center font-poppins text-lg text-white">
             <select
-              defaultValue={1}
+              defaultValue={courtNumber}
               onChange={(e) => {
                 setCourtNumber(e.target.value)
               }}
