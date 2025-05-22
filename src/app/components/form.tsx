@@ -3,7 +3,7 @@ import { Confirm } from '@/app/components/confirm'
 import { Modal } from '@/app/components/modal'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useState } from 'react'
-import { set, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { IoClose } from 'react-icons/io5'
 import { useBookingsQuery } from '../hooks/use-booking'
@@ -72,14 +72,6 @@ export const Form = ({
   const handleClose = () => {
     onClose()
   }
-  const toggleEquipment = (equipment: string) => {
-    setSelectedEquipments((prev) =>
-      prev.includes(equipment)
-        ? prev.filter((e) => e !== equipment)
-        : [...prev, equipment]
-    )
-    setValue('equipment', [...selectedEquipments, equipment]) // Atualiza no react-hook-form
-  }
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -124,11 +116,11 @@ export const Form = ({
           <p className="font-poppins text-2xl font-bold md:text-3xl">
             {user?.name}
           </p>
-          <p className="mr-4 font-poppins text-2xl font-bold md:text-3xl">
+          <p className="absolute left-[75%] mr-4 font-poppins text-2xl font-bold md:text-3xl">
             {user?.ra}
           </p>
           <IoClose
-            className="absolute left-[95%] top-1 mr-1 h-8 w-8 cursor-pointer md:h-10 md:w-16"
+            className="absolute left-[94%] top-2 mr-1 h-8 w-8 cursor-pointer md:h-10 md:w-16"
             onClick={handleClose}
           ></IoClose>
         </div>
@@ -156,6 +148,7 @@ export const Form = ({
         </div>
         <div className="flex items-start justify-start gap-1">
           <label className="flex items-center justify-center gap-1 font-poppins text-xl">
+            <span></span>
             <p>Horário</p>
             <div className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2 text-white">
               {formatDate(selectedDate.getHours())}:
@@ -210,7 +203,10 @@ export const Form = ({
               <button
                 key={equipment}
                 type="button"
-                onClick={() => toggleEquipment(equipment)}
+                onClick={() => {
+                  setSelectedEquipments([equipment])
+                  setValue('equipment', [equipment])
+                }}
                 className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-2 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 ${
                   selectedEquipments.includes(equipment)
                     ? 'border-yellow bg-yellow/10 text-yellow-secondary hover:bg-yellow/10'
@@ -257,8 +253,8 @@ export const Form = ({
             <div className="flex w-1/2 items-center gap-2">
               {/* <input type="checkbox" className="h-10 w-10" /> */}
               <p className="text-md w-full text-center font-poppins font-medium text-red-600 md:text-xl">
-                *<span className="font-extrabold">Aviso:</span> a rede de vôlei
-                precisa de no mínimo 6 pessoas para ser montada
+                <span className="font-extrabold">Aviso:</span> a rede de vôlei
+                para ser montada precisa de no mínimo 6 pessoas para ser montada
               </p>
             </div>
           )}
