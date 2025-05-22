@@ -79,8 +79,9 @@ export function Court({ isField }: CourtProps) {
     'Bola de handebol',
     'Bola e Raquete de tênis',
     'Bola de vôlei',
-    'Raquete de tênis',
-    'Bola de basquete'
+    'Bola de basquete',
+    'Raquete de beach',
+    'Tamboréu'
   ]
 
   const startOfTheWeek = () => {

@@ -5,5 +5,6 @@ export enum ModalityName {
   'Volleyball' = 'Vôlei',
   'Handball' = 'Handebol',
   'Futsal' = 'Futsal',
-  'Rugby' = 'Rugby'
+  'Rugby' = 'Rugby',
+  'Beach Tennis' = 'Beach Tênis'
 }
