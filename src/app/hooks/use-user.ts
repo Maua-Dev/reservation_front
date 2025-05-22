@@ -36,6 +36,7 @@ export const useUser = () => {
 
 export const useUserQuery = () => {
   const context = useContext(UserContext)
+  const isAuth = useIsAuthenticated()
 
   if (!context) {
     throw new Error('useUser must be used within a UserProvider')
@@ -52,12 +53,9 @@ export const useUserQuery = () => {
         setUser(user)
         return user
       } catch (error) {
-        if (error instanceof Error) {
-          toast.error('Error fetching user: ' + error.message)
-          console.error('Error fetching user:', error.message)
-          return null
+        if (isAuth) {
+          toast.error('Error fetching user')
         }
-        toast.error('Error fetching user')
         console.error('Error fetching user:', error)
         return null
       }
