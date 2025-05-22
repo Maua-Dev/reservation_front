@@ -23,7 +23,7 @@ export const useBookingsQuery = () => {
   const getMyBookingsQuery = useQuery<MyBookingsResponse, Error>({
     queryKey: ['myBookings'],
     queryFn: async () => {
-      const userId = localStorage.getItem('userId')
+      const userId = localStorage.getItem('user_id')
       if (!userId) throw new Error('User ID not found')
       try {
         return await BookingsService.getMyBookings() //Criar uma função para o meu try

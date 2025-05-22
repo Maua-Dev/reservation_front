@@ -48,7 +48,7 @@ export const useUserQuery = () => {
     queryFn: async () => {
       try {
         const user = await UserService.getUser()
-        localStorage.setItem('userId', user.userId)
+        localStorage.setItem('user_id', user.userId)
         setUser(user)
         return user
       } catch (error) {

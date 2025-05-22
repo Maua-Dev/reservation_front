@@ -395,7 +395,7 @@ export function Court({ isField }: CourtProps) {
   return (
     <div className="relative w-full max-w-[100vw]">
       {getBookingsOfTheWeek?.isLoading && (
-        <div className="absolute inset-0 z-20 flex h-full w-full justify-center bg-white/20 pt-[30%] backdrop-blur-sm">
+        <div className="absolute inset-0 z-[60] flex h-full w-full justify-center bg-white/20 pt-[30%] backdrop-blur-sm">
           <FiLoader className="animate-spin" color="black" size={64} />
         </div>
       )}
