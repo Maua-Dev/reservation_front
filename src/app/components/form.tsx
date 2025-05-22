@@ -64,7 +64,7 @@ export const Form = ({
     const bookingData = {
       start_date: timestamp,
       end_date: timestamp + 3600000,
-      court_number: Number(courtNumber),
+      court_number: Number(courtNumber) || options[0] === 'Beach' ? 6 : 0,
       sport: selectedModality,
       materials: selectedEquipments
     }

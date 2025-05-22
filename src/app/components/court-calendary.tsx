@@ -141,6 +141,10 @@ export function Court({ isField }: CourtProps) {
         }
       })
 
+    if (isField) {
+      return sameTimeReservations.size > 1 ? 'xl:w-[50%]' : 'xl:w-[86%]'
+    }
+
     return sameTimeReservations.size > 1
       ? sameTimeReservations.size > 2
         ? 'xl:w-2/5'
@@ -183,8 +187,24 @@ export function Court({ isField }: CourtProps) {
         }
       })
 
-    const isItOne = sameTimeReservations.has(1)
+    if (isField) {
+      // Campo: court_number 0 (Campo) e 6 (Beach)
+      switch (courtNumber) {
+        case 0:
+          // Campo principal
+          return 'absolute w-20 h-20 left-[4%]'
+        case 6:
+          // Beach Tennis
+          return sameTimeReservations.size > 1
+            ? 'absolute w-20 h-20 left-[45%]'
+            : 'absolute w-20 h-20 left-[4%]'
+        default:
+          return ''
+      }
+    }
 
+    // Quadras normais
+    const isItOne = sameTimeReservations.has(1)
     switch (courtNumber) {
       case 1:
         return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
@@ -196,16 +216,14 @@ export function Court({ isField }: CourtProps) {
               : 'absolute w-20 h-20 left-[4%]'
             : 'absolute w-20 h-20 left-[25%]'
           : 'absolute w-20 h-20 left-[4%]'
-      // return 'absolute w-20 h-20 left-[30%]'
       case 3:
         return sameTimeReservations.size > 1
           ? sameTimeReservations.size == 2
             ? 'absolute w-20 h-20 left-[25%]'
             : 'absolute w-20 h-20 left-[50%]'
           : 'absolute w-20 h-20 left-[4%]'
-      // return 'absolute w-20 h-20 left-[56%]'
       default:
-        return 4
+        return ''
     }
   }
 
@@ -322,7 +340,7 @@ export function Court({ isField }: CourtProps) {
         occupiedCourts.add(reserva.court_number)
       }
     })
-    const allCourts = isField ? [6, 0] : [1, 2, 3]
+    const allCourts = isField ? [0, 6] : [1, 2, 3]
     const availableCourts = allCourts.filter((court) => {
       const reservasDaQuadra = reservasConvertidas.filter(
         (reserva) => reserva.court_number === court && reserva.day === day
@@ -544,7 +562,7 @@ export function Court({ isField }: CourtProps) {
               isField ? ['Bola de futebol', 'Bola de rugby'] : equipments
             }
             options={availableCourts.map((court) =>
-              isField ? (court === -1 ? `Beach` : `Campo`) : `Quadra ${court}`
+              isField ? (court === 6 ? `Beach` : `Campo`) : `Quadra ${court}`
             )}
           />
         </div>

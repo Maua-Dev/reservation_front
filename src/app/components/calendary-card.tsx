@@ -18,6 +18,7 @@ export function CalendaryCard({
   const courtColors: {
     [key: number]: string
   } = {
+    // BEACH AS COURT 6 MUST BE A TEMPORARY FIX
     6: 'border-[#E5CBA8] text-black z-[1]',
     0: 'border-yellow text-black z-[2]',
     1: 'border-blue-primary text-blue-primary z-[1]',
