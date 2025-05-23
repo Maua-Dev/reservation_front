@@ -52,7 +52,7 @@ export function Court({ isField }: CourtProps) {
   useEffect(() => {
     localStorage.setItem('end_date', endOfTheWeek().toString())
     localStorage.setItem('start_date', startOfTheWeek().toString())
-  }, []) 
+  }, [])
 
   const { getBookingsOfTheWeek } = useBookingsQuery()
 
@@ -296,6 +296,14 @@ export function Court({ isField }: CourtProps) {
     })
   }
 
+  const isLastHalfHour = (hour: number, minute: number) => {
+    if (isField) {
+      return hour === 17 && minute === 0
+    } else {
+      return hour === 20 && minute === 1
+    }
+  }
+
   function handleClickedTime(
     hour: number,
     minute: number,
@@ -465,14 +473,18 @@ export function Court({ isField }: CourtProps) {
                         ? toast.info(
                             'Você não pode reservar dentro de uma hora de outra reserva sua'
                           )
-                        : handleClickedTime(
-                            hour,
-                            minute,
-                            thisWeek()[dayIndex],
-                            dayIndex
-                          )
+                        : isLastHalfHour(hour, minute)
+                          ? toast.info(
+                              'Esse horário não está disponível para reserva'
+                            )
+                          : handleClickedTime(
+                              hour,
+                              minute,
+                              thisWeek()[dayIndex],
+                              dayIndex
+                            )
                   }
-                  className={`relative flex min-w-[90px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? 'bg-gray-300' : cannotReserve(thisWeek()[dayIndex], hour, minute) ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
+                  className={`relative flex min-w-[90px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? 'bg-gray-300' : cannotReserve(thisWeek()[dayIndex], hour, minute) ? 'bg-gray-300' : isLastHalfHour(hour, minute) ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
                   style={{
                     borderBottomStyle: isHourSeparator ? 'dashed' : 'solid',
                     borderRightStyle: 'solid'
