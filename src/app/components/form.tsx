@@ -77,6 +77,14 @@ export const Form = ({
     onClose()
   }
 
+  const sports = () => {
+    if (courtNumber == 0) {
+      return modalities.filter((mod) => mod == 'Rugby' || mod == 'Football')
+    } else {
+      return modalities.filter((mod) => mod == 'Beach Tennis')
+    }
+  }
+
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -187,7 +195,7 @@ export const Form = ({
           </p>
         </div>
         <div className="flex flex-wrap gap-2 py-1">
-          {modalities.map((modality) => (
+          {sports().map((modality) => (
             <button
               key={modality}
               type="button"

@@ -69,10 +69,10 @@ export function Court({ isField }: CourtProps) {
   const today = new Date()
   const modalities = isField
     ? Object.keys(ModalityName).filter(
-        (mod) => mod === 'Football' || mod === 'Rugby'
+        (mod) => mod === 'Football' || mod === 'Rugby' || mod === 'Beach Tennis'
       )
     : Object.keys(ModalityName).filter(
-        (mod) => mod !== 'Football' && mod !== 'Rugby'
+        (mod) => mod !== 'Football' && mod !== 'Rugby' && mod !== 'Beach Tennis'
       )
   const equipments = [
     'Bola de futsal',
@@ -395,7 +395,7 @@ export function Court({ isField }: CourtProps) {
   }
 
   return (
-    <div className="relative hidden w-full max-w-[100vw] flex-col md:flex">
+    <div className="relative w-full max-w-[100vw]">
       {getBookingsOfTheWeek?.isLoading && (
         <div className="absolute inset-0 z-[60] flex h-full w-full justify-center bg-white/20 pt-[30%] backdrop-blur-sm">
           <FiLoader className="animate-spin" color="black" size={64} />
@@ -429,7 +429,6 @@ export function Court({ isField }: CourtProps) {
           </div>
         </div>
       </div>
-
       <div className="sticky top-[70px] z-50 mb-12 flex max-w-[100vw] font-poppins text-base font-semibold text-gray-600 sm:top-[88px]">
         <div className="w-16 bg-blue-primary px-2 py-4 text-xl text-white">
           Hora
