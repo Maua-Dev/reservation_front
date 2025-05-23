@@ -1,21 +1,21 @@
 import { User } from '@/domain/entities/user'
-import { useUsers } from '../hooks/use-user'
+// import { useUser } from '../hooks/use-user'
 
 type UserCardProps = {
   user: User
 }
 
 export function UserCard({ user }: UserCardProps) {
-  const { deleteUser } = useUsers()
+  // const { deleteUser } = useUser()
 
-  const handleDelete = async () => {
-    if (confirm('Are you sure you want to delete this user?'))
-      await deleteUser(user.id)
-  }
+  // const handleDelete = async () => {
+  //   if (confirm('Are you sure you want to delete this user?'))
+  //     await deleteUser(user.id)
+  // }
 
   return (
     <div
-      onClick={handleDelete}
+      // onClick={handleDelete}
       className="flex cursor-pointer flex-col items-center justify-center rounded-md bg-white p-4 drop-shadow-md transition-all duration-200 hover:scale-105 hover:bg-red-100 md:p-6"
     >
       <h2 className="font-bold">{user.name}</h2>

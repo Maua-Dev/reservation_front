@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { Button } from './button'
 import fullLogo from '../assets/logo-completa.svg'
 import shortLogo from '../assets/logo-simplista.svg'

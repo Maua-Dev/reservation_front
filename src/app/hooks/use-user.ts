@@ -3,7 +3,6 @@ import { UserContext } from '../contexts/user-context'
 import { useIsAuthenticated } from '@azure/msal-react'
 import { UserService } from '@/services/user-service'
 import { useQuery } from '@tanstack/react-query'
-import { set } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 export interface User {
@@ -15,12 +14,6 @@ export interface User {
   confirmUser: boolean
 }
 
-interface getUserResponse {
-  user: User
-  created: boolean
-  message: string
-}
-
 export const useUser = () => {
   const context = useContext(UserContext)
 
@@ -28,7 +21,7 @@ export const useUser = () => {
     throw new Error('useUser must be used within a UserProvider')
   }
 
-  const { user, setUser } = context
+  const { user } = context
   const isAuth = useIsAuthenticated()
 
   return { user, useUserQuery, isAuth }

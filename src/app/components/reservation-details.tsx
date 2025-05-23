@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { IoClose } from 'react-icons/io5'
+import { useUser } from '../hooks/use-user'
 
 type ReservationDetailsProps = {
   location: string
@@ -9,8 +10,6 @@ type ReservationDetailsProps = {
   isChecked: boolean[]
   onClose: () => void
   bookingUserId?: string | number
-  currentUserId?: string | number
-  currentUserName?: string
 }
 
 export const ReservationDetails = ({
@@ -20,11 +19,10 @@ export const ReservationDetails = ({
   time,
   //isChecked,
   onClose,
-  bookingUserId,
-  currentUserId,
-  currentUserName
+  bookingUserId
 }: ReservationDetailsProps) => {
   const date = new Date(time)
+  const { user } = useUser()
   const formattedDate = date.toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: '2-digit'
@@ -60,9 +58,9 @@ export const ReservationDetails = ({
               className="absolute right-2 top-2 h-8 w-8 cursor-pointer md:h-10 md:w-16"
               onClick={onClose}
             ></IoClose>
-            {bookingUserId?.toString() === currentUserId?.toString() && (
+            {bookingUserId?.toString() === user.userId?.toString() && (
               <p className="mt-1 font-poppins text-2xl font-medium">
-                {currentUserName}
+                {user.name}
               </p>
             )}
             <p className="mt-1 font-poppins text-2xl font-medium">

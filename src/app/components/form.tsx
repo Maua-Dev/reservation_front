@@ -62,7 +62,7 @@ export const Form = ({
   const { user } = useUser()
   const isAuth = useIsAuthenticated()
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async () => {
     const bookingData = {
       start_date: timestamp,
       end_date: timestamp + 3600000,
@@ -118,10 +118,10 @@ export const Form = ({
       <div className="flex flex-col justify-between border-b-2 border-slate-700">
         <div className="flex justify-between">
           <p className="font-poppins text-2xl font-bold md:text-3xl">
-            {user?.name}
+            {user.name}
           </p>
           <p className="absolute left-[75%] mr-4 font-poppins text-2xl font-bold md:text-3xl">
-            {user?.ra}
+            {user.ra}
           </p>
           <IoClose
             className="absolute left-[94%] top-2 mr-1 h-8 w-8 cursor-pointer md:h-10 md:w-16"

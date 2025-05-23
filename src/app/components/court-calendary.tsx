@@ -42,8 +42,6 @@ export function Court({ isField }: CourtProps) {
   const isAuth = useIsAuthenticated()
 
   const { data } = useUserQuery()
-  const userId = data?.userId.toString()
-  const userName = data?.name
 
   useEffect(() => {
     if (data?.userId) {
@@ -54,7 +52,7 @@ export function Court({ isField }: CourtProps) {
   useEffect(() => {
     localStorage.setItem('end_date', endOfTheWeek().toString())
     localStorage.setItem('start_date', startOfTheWeek().toString())
-  }, []) // Apenas uma vez no mount
+  }, []) 
 
   const { getBookingsOfTheWeek } = useBookingsQuery()
 
@@ -590,8 +588,6 @@ export function Court({ isField }: CourtProps) {
             isChecked={[true, false]}
             onClose={() => handleDiselectingBooking()}
             bookingUserId={selectedBooking.userId}
-            currentUserId={userId}
-            currentUserName={userName}
           />
         </div>
       )}
