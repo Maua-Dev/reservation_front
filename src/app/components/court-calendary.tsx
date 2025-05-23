@@ -395,7 +395,7 @@ export function Court({ isField }: CourtProps) {
   }
 
   return (
-    <div className="relative w-full max-w-[100vw]">
+    <div className="relative w-full min-w-[100vw] sm:max-w-[100vw]">
       {getBookingsOfTheWeek?.isLoading && (
         <div className="absolute inset-0 z-[60] flex h-full w-full justify-center bg-white/20 pt-[30%] backdrop-blur-sm">
           <FiLoader className="animate-spin" color="black" size={64} />
@@ -429,179 +429,181 @@ export function Court({ isField }: CourtProps) {
           </div>
         </div>
       </div>
-      <div className="sticky top-[70px] z-50 mb-12 flex max-w-[100vw] font-poppins text-base font-semibold text-gray-600 sm:top-[88px]">
-        <div className="w-16 bg-blue-primary px-2 py-4 text-xl text-white">
-          Hora
-        </div>
-        <div className="flex flex-1 text-center text-lg text-white">
-          {thisWeek().map((date, index) => (
-            <div
-              key={index}
-              className="flex flex-1 flex-col items-center justify-center bg-blue-primary p-1 text-xl font-normal"
-            >
-              <div>{date}</div>
-              <div>
-                {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][index]}
-              </div>{' '}
-            </div>
-          ))}
-        </div>
-      </div>
-      {[...Array(isField ? 18 : 25)].map((_, index) => {
-        const hour = 8 + Math.floor((index + 1) / 2)
-        const minute = (index + 1) % 2
-        const isHourSeparator = minute === 0
-        return (
-          <div key={index} className="flex">
-            <div className="flex min-h-16 min-w-16 max-w-16 items-start border-r border-gray-400 px-4 font-poppins">{`${hour}:${minute === 0 ? '00' : '30'}`}</div>
-            <div className="flex flex-1">
-              {[...Array(6)].map((_, dayIndex) => (
-                <div
-                  key={dayIndex}
-                  title={
-                    isPassed(thisWeek()[dayIndex], dayIndex, hour, minute)
-                      ? 'Esse horário já passou'
-                      : cannotReserve(thisWeek()[dayIndex], hour, minute)
-                        ? 'Você não pode reservar dentro de uma hora de outra reserva sua'
-                        : ''
-                  }
-                  onClick={() =>
-                    isPassed(thisWeek()[dayIndex], dayIndex, hour, minute)
-                      ? toast.info('Esse horário já passou')
-                      : cannotReserve(thisWeek()[dayIndex], hour, minute)
-                        ? toast.info(
-                            'Você não pode reservar dentro de uma hora de outra reserva sua'
-                          )
-                        : isLastHalfHour(hour, minute)
-                          ? toast.info(
-                              'Esse horário não está disponível para reserva'
-                            )
-                          : handleClickedTime(
-                              hour,
-                              minute,
-                              thisWeek()[dayIndex],
-                              dayIndex
-                            )
-                  }
-                  className={`relative flex min-w-[90px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? 'bg-gray-300' : cannotReserve(thisWeek()[dayIndex], hour, minute) ? 'bg-gray-300' : isLastHalfHour(hour, minute) ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
-                  style={{
-                    borderBottomStyle: isHourSeparator ? 'dashed' : 'solid',
-                    borderRightStyle: 'solid'
-                  }}
-                >
-                  {reservasConvertidas.map((reserva) => {
-                    if (
-                      reserva.hour === hour &&
-                      reserva.minute === (minute == 1 ? 30 : 0) &&
-                      reserva.day === thisWeek()[dayIndex]
-                    ) {
-                      return (
-                        <div
-                          key={reserva.booking_id}
-                          onClick={(e) => e.stopPropagation()}
-                          className={cn(
-                            'absolute flex',
-                            specialWidth(
-                              Number(reserva.start_date),
-                              Number(reserva.end_date),
-                              thisWeek()[dayIndex]
-                            ),
-                            deslocation(
-                              reserva.court_number,
-                              Number(reserva.start_date),
-                              Number(reserva.end_date),
-                              thisWeek()[dayIndex]
-                            )
-                          )}
-                          style={{
-                            height: `${1 * 50 * 2}px`
-                          }}
-                        >
-                          <CalendaryCard
-                            court={reserva.court_number}
-                            location={`Quadra ${reserva.court_number}`}
-                            modality={
-                              ModalityName[
-                                reserva.sport as keyof typeof ModalityName
-                              ]
-                            }
-                            equipments={equipments}
-                            time={reserva.start_date}
-                            isChecked={[true, false]}
-                            openModal={() =>
-                              handleSelectingBooking({
-                                id: Number(reserva.booking_id) ?? 0,
-                                court: `Quadra ${reserva.court_number}`,
-                                courtNumber: reserva.court_number,
-                                modality: reserva.sport,
-                                time: reserva.start_date,
-                                duration:
-                                  (reserva.end_date - reserva.start_date) /
-                                  (1000 * 60 * 60),
-                                materials: reserva.materials,
-                                userId: reserva.user_id ?? ''
-                              })
-                            }
-                          />
-                        </div>
-                      )
-                    }
-                  })}
-                </div>
-              ))}
-            </div>
+      <div className="max-w-[100vw] overflow-x-scroll">
+        <div className="sticky top-[70px] z-50 mb-12 flex w-full bg-red-300 font-poppins text-base font-semibold text-gray-600 sm:top-[88px] sm:max-w-[100vw]">
+          <div className="sticky left-0 min-w-16 max-w-16 bg-blue-primary px-2 py-4 text-xl text-white">
+            Hora
           </div>
-        )
-      })}
-      {isReservationModalOpen && selectedTime && (
-        <div
-          className={`duration-250 fixed inset-0 z-[100] flex items-center justify-center bg-black/50 transition-all ${bookingModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
-          onClick={handleCloseModal}
-        >
-          <Form
-            isOpen={isReservationModalOpen}
-            onClose={handleCloseModal}
-            timestamp={selectedTime}
-            // se for field, soh vai ter football e rugby
-            modalities={modalities}
-            isField={isField}
-            equipments={
-              isField ? ['Bola de futebol', 'Bola de rugby'] : equipments
-            }
-            options={availableCourts.map((court) =>
-              isField ? (court === 6 ? `Beach` : `Campo`) : `Quadra ${court}`
-            )}
-          />
+          <div className="flex flex-1 text-center text-lg text-white">
+            {thisWeek().map((date, index) => (
+              <div
+                key={index}
+                className="flex min-w-[120px] flex-1 flex-col items-center justify-center bg-blue-primary p-1 text-xl font-normal sm:min-w-[90px]"
+              >
+                <div>{date}</div>
+                <div>
+                  {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][index]}
+                </div>{' '}
+              </div>
+            ))}
+          </div>
         </div>
-      )}
-      {isMyBookingsModalOpen && (
-        <div
-          className={`duration-250 fixed inset-0 z-[999] flex items-center justify-center bg-black/50 transition-all ${isMyBookingsModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
-          onClick={handleCloseMyBookings}
-        >
-          <View onClose={handleCloseMyBookings} />
-        </div>
-      )}
-      {selectedBooking && (
-        <div
-          className={`duration-250 fixed inset-0 z-[999] flex items-center justify-center bg-black/50 transition-all ${selectedBookingVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
-          onClick={() => handleDiselectingBooking()}
-        >
-          <ReservationDetails
-            location={selectedBooking.court}
-            modality={
-              ModalityName[
-                selectedBooking.modality as keyof typeof ModalityName
-              ]
-            }
-            equipments={selectedBooking.materials}
-            time={selectedBooking.time}
-            isChecked={[true, false]}
-            onClose={() => handleDiselectingBooking()}
-            bookingUserId={selectedBooking.userId}
-          />
-        </div>
-      )}
+        {[...Array(isField ? 18 : 25)].map((_, index) => {
+          const hour = 8 + Math.floor((index + 1) / 2)
+          const minute = (index + 1) % 2
+          const isHourSeparator = minute === 0
+          return (
+            <div key={index} className="flex min-w-[100vw] sm:min-w-0">
+              <div className="sticky left-0 z-20 flex min-h-16 min-w-16 max-w-16 items-start border-r border-gray-400 bg-white px-4 font-poppins">{`${hour}:${minute === 0 ? '00' : '30'}`}</div>
+              <div className="flex flex-1">
+                {[...Array(6)].map((_, dayIndex) => (
+                  <div
+                    key={dayIndex}
+                    title={
+                      isPassed(thisWeek()[dayIndex], dayIndex, hour, minute)
+                        ? 'Esse horário já passou'
+                        : cannotReserve(thisWeek()[dayIndex], hour, minute)
+                          ? 'Você não pode reservar dentro de uma hora de outra reserva sua'
+                          : ''
+                    }
+                    onClick={() =>
+                      isPassed(thisWeek()[dayIndex], dayIndex, hour, minute)
+                        ? toast.info('Esse horário já passou')
+                        : cannotReserve(thisWeek()[dayIndex], hour, minute)
+                          ? toast.info(
+                              'Você não pode reservar dentro de uma hora de outra reserva sua'
+                            )
+                          : isLastHalfHour(hour, minute)
+                            ? toast.info(
+                                'Esse horário não está disponível para reserva'
+                              )
+                            : handleClickedTime(
+                                hour,
+                                minute,
+                                thisWeek()[dayIndex],
+                                dayIndex
+                              )
+                    }
+                    className={`relative flex min-w-[120px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 sm:min-w-[90px] ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? 'bg-gray-300' : cannotReserve(thisWeek()[dayIndex], hour, minute) ? 'bg-gray-300' : isLastHalfHour(hour, minute) ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
+                    style={{
+                      borderBottomStyle: isHourSeparator ? 'dashed' : 'solid',
+                      borderRightStyle: 'solid'
+                    }}
+                  >
+                    {reservasConvertidas.map((reserva) => {
+                      if (
+                        reserva.hour === hour &&
+                        reserva.minute === (minute == 1 ? 30 : 0) &&
+                        reserva.day === thisWeek()[dayIndex]
+                      ) {
+                        return (
+                          <div
+                            key={reserva.booking_id}
+                            onClick={(e) => e.stopPropagation()}
+                            className={cn(
+                              'absolute flex',
+                              specialWidth(
+                                Number(reserva.start_date),
+                                Number(reserva.end_date),
+                                thisWeek()[dayIndex]
+                              ),
+                              deslocation(
+                                reserva.court_number,
+                                Number(reserva.start_date),
+                                Number(reserva.end_date),
+                                thisWeek()[dayIndex]
+                              )
+                            )}
+                            style={{
+                              height: `${1 * 50 * 2}px`
+                            }}
+                          >
+                            <CalendaryCard
+                              court={reserva.court_number}
+                              location={`Quadra ${reserva.court_number}`}
+                              modality={
+                                ModalityName[
+                                  reserva.sport as keyof typeof ModalityName
+                                ]
+                              }
+                              equipments={equipments}
+                              time={reserva.start_date}
+                              isChecked={[true, false]}
+                              openModal={() =>
+                                handleSelectingBooking({
+                                  id: Number(reserva.booking_id) ?? 0,
+                                  court: `Quadra ${reserva.court_number}`,
+                                  courtNumber: reserva.court_number,
+                                  modality: reserva.sport,
+                                  time: reserva.start_date,
+                                  duration:
+                                    (reserva.end_date - reserva.start_date) /
+                                    (1000 * 60 * 60),
+                                  materials: reserva.materials,
+                                  userId: reserva.user_id ?? ''
+                                })
+                              }
+                            />
+                          </div>
+                        )
+                      }
+                    })}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )
+        })}
+        {isReservationModalOpen && selectedTime && (
+          <div
+            className={`duration-250 fixed inset-0 z-[100] flex items-center justify-center bg-black/50 transition-all ${bookingModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
+            onClick={handleCloseModal}
+          >
+            <Form
+              isOpen={isReservationModalOpen}
+              onClose={handleCloseModal}
+              timestamp={selectedTime}
+              // se for field, soh vai ter football e rugby
+              modalities={modalities}
+              isField={isField}
+              equipments={
+                isField ? ['Bola de futebol', 'Bola de rugby'] : equipments
+              }
+              options={availableCourts.map((court) =>
+                isField ? (court === 6 ? `Beach` : `Campo`) : `Quadra ${court}`
+              )}
+            />
+          </div>
+        )}
+        {isMyBookingsModalOpen && (
+          <div
+            className={`duration-250 fixed inset-0 z-[999] flex items-center justify-center bg-black/50 transition-all ${isMyBookingsModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
+            onClick={handleCloseMyBookings}
+          >
+            <View onClose={handleCloseMyBookings} />
+          </div>
+        )}
+        {selectedBooking && (
+          <div
+            className={`duration-250 fixed inset-0 z-[999] flex items-center justify-center bg-black/50 transition-all ${selectedBookingVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
+            onClick={() => handleDiselectingBooking()}
+          >
+            <ReservationDetails
+              location={selectedBooking.court}
+              modality={
+                ModalityName[
+                  selectedBooking.modality as keyof typeof ModalityName
+                ]
+              }
+              equipments={selectedBooking.materials}
+              time={selectedBooking.time}
+              isChecked={[true, false]}
+              onClose={() => handleDiselectingBooking()}
+              bookingUserId={selectedBooking.userId}
+            />
+          </div>
+        )}
+      </div>
     </div>
   )
 }
