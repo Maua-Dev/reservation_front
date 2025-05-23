@@ -7,8 +7,8 @@ interface ReservationCardProps {
   startDate: number
   endDate: number
   court?: string
-  status?: string
   bookingId?: string
+  sport?: string
   reload: () => void
 }
 
@@ -16,8 +16,8 @@ export function ReservationCard({
   startDate,
   endDate,
   court,
-  status,
   bookingId,
+  sport,
   reload
 }: ReservationCardProps) {
   const { deleteBookingMutation } = useBookingsQuery()
@@ -53,6 +53,9 @@ export function ReservationCard({
         </p>
         <p className="text-xs font-normal text-white sm:text-base md:text-lg">
           Quadra: {court}
+        </p>
+        <p className="text-xs font-normal text-white sm:text-base md:text-lg">
+          Esporte: {sport}
         </p>
         {/* <p className="text-xs font-normal text-white sm:text-base md:text-lg">
           Status: {status}
