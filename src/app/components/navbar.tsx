@@ -126,12 +126,12 @@ export function Navbar() {
         </div>
         {auth ? (
           isLoading ? (
-            <Button className="flex h-16 w-40 items-center justify-center text-xl md:flex lg:text-2xl">
+            <Button className="hidden h-16 w-40 items-center justify-center text-xl md:flex lg:text-2xl">
               <BiLoaderAlt className="animate-spin text-2xl" />
             </Button>
           ) : (
             <Button
-              className="flex h-16 w-40 items-center justify-center text-xl md:flex lg:text-2xl"
+              className="hidden h-16 w-40 items-center justify-center text-xl md:flex lg:text-2xl"
               onClick={handleLogout}
             >
               <CiLogout className="mr-2" />
@@ -139,7 +139,7 @@ export function Navbar() {
           )
         ) : (
           <a href="/login">
-            <Button className="flex h-16 w-40 items-center justify-center text-xl md:flex lg:text-2xl">
+            <Button className="hidden h-16 w-40 items-center justify-center text-xl md:flex lg:text-2xl">
               Login
             </Button>
           </a>
@@ -180,12 +180,30 @@ export function Navbar() {
             >
               <BiWorld /> Sobre nós
             </a>
-            <Button
-              className={`flex items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
-            >
-              <FaUserCircle />
-              <p className="mt-[3px]">Perfil</p>
-            </Button>
+            {auth ? (
+              isLoading ? (
+                <Button
+                  className={`flex items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                >
+                  <BiLoaderAlt className="animate-spin text-2xl" />
+                </Button>
+              ) : (
+                <Button
+                  className={`flex items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  onClick={handleLogout}
+                >
+                  <CiLogout className="mr-2" /> Logout
+                </Button>
+              )
+            ) : (
+              <a href="/login">
+                <Button
+                  className={`flex w-full items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                >
+                  <FaUserCircle className="mr-2" /> Login
+                </Button>
+              </a>
+            )}
           </div>
           <p className="flex w-full justify-center text-xl text-white">
             Reservation Mauá - 2024

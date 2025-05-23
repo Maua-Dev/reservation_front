@@ -24,6 +24,7 @@ export function App() {
             pauseOnFocusLoss
             draggable
             pauseOnHover
+            limit={3}
             theme="colored"
           />
           <Navbar />
