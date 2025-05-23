@@ -395,7 +395,7 @@ export function Court({ isField }: CourtProps) {
   }
 
   return (
-    <div className="relative w-full max-w-[100vw]">
+    <div className="relative hidden w-full max-w-[100vw] flex-col md:flex">
       {getBookingsOfTheWeek?.isLoading && (
         <div className="absolute inset-0 z-[60] flex h-full w-full justify-center bg-white/20 pt-[30%] backdrop-blur-sm">
           <FiLoader className="animate-spin" color="black" size={64} />
@@ -430,7 +430,7 @@ export function Court({ isField }: CourtProps) {
         </div>
       </div>
 
-      <div className="sticky top-[88px] z-50 mb-12 flex max-w-[100vw] font-poppins text-base font-semibold text-gray-600">
+      <div className="sticky top-[70px] z-50 mb-12 flex max-w-[100vw] font-poppins text-base font-semibold text-gray-600 sm:top-[88px]">
         <div className="w-16 bg-blue-primary px-2 py-4 text-xl text-white">
           Hora
         </div>

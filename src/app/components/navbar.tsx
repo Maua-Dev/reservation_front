@@ -147,49 +147,90 @@ export function Navbar() {
 
         {isMenuOpen ? (
           <IoClose
-            className={`flex cursor-pointer text-5xl text-yellow transition-all duration-500 md:hidden ${fade ? 'opacity-100' : 'rotate-180 opacity-0'}`}
+            className={`flex cursor-pointer text-5xl text-yellow transition-all duration-200 md:hidden ${fade ? 'opacity-100' : 'rotate-180 opacity-0'}`}
             onClick={handleCloseMenu}
           />
         ) : (
           <IoMenu
-            className={`flex cursor-pointer text-5xl text-yellow transition-all duration-500 md:hidden ${fade ? 'opacity-0' : 'opacity-100'}`}
+            className={`flex cursor-pointer text-5xl text-yellow transition-all duration-200 md:hidden ${fade ? 'opacity-0' : 'opacity-100'}`}
             onClick={handleOpenMenu}
           />
         )}
       </nav>
       {isMenuOpen && (
         <div
-          className={`flex h-full w-full transform flex-col justify-between gap-16 bg-blue-primary pb-8 pt-16 duration-500 ${fade ? 'translate-x-0 opacity-100' : 'translate-x-[450px] opacity-0'}`}
+          className={`flex h-full w-full transform flex-col justify-between gap-16 bg-blue-primary pb-8 pt-16 duration-200 ${fade ? 'translate-x-0 opacity-100' : 'translate-x-[450px] opacity-0'}`}
         >
           <div className="flex flex-col justify-center gap-16 px-12">
             <a
               href="/"
-              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-75 duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-75 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+              onClick={(e) => {
+                if (window.location.pathname === '/') {
+                  e.preventDefault() // Evita o redirecionamento se já está na página inicial
+                  window.scrollTo({ top: 0, behavior: 'smooth' }) // Rola para o topo
+                }
+                handleCloseMenu()
+              }}
             >
               <FaHome /> Início
             </a>
             <a
               href="#reservation"
-              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-200 duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-200 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+              onClick={(e) => {
+                e.preventDefault()
+                const destinationUrl = '/#reservation'
+                if (window.location.pathname === '/') {
+                  const targetElement = document.querySelector(
+                    '#reservation'
+                  ) as HTMLElement | null
+                  if (targetElement) {
+                    targetElement.scrollIntoView({
+                      behavior: 'smooth'
+                    })
+                  }
+                } else {
+                  window.location.href = destinationUrl
+                }
+                handleCloseMenu()
+              }}
             >
               <FaCalendarAlt /> Menu de reservas
             </a>
             <a
               href="#dev"
-              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-300 duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-300 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+              onClick={(e) => {
+                e.preventDefault()
+                const destinationUrl = '/#dev'
+                if (window.location.pathname === '/') {
+                  const targetElement = document.querySelector(
+                    '#dev'
+                  ) as HTMLElement | null
+                  if (targetElement) {
+                    targetElement.scrollIntoView({
+                      behavior: 'smooth'
+                    })
+                  }
+                } else {
+                  window.location.href = destinationUrl
+                }
+                handleCloseMenu()
+              }}
             >
               <BiWorld /> Sobre nós
             </a>
             {auth ? (
               isLoading ? (
                 <Button
-                  className={`flex items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  className={`flex items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
                 >
                   <BiLoaderAlt className="animate-spin text-2xl" />
                 </Button>
               ) : (
                 <Button
-                  className={`flex items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  className={`flex items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
                   onClick={handleLogout}
                 >
                   <CiLogout className="mr-2" /> Logout
@@ -198,7 +239,7 @@ export function Navbar() {
             ) : (
               <a href="/login">
                 <Button
-                  className={`flex w-full items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  className={`flex w-full items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
                 >
                   <FaUserCircle className="mr-2" /> Login
                 </Button>
