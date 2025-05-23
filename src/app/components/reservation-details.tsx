@@ -70,7 +70,7 @@ export const ReservationDetails = ({
 
           <div className="flex w-full flex-col justify-start gap-10 font-poppins text-xl font-medium text-white lg:flex-row">
             <h1 className="inline-flex h-16 w-36 items-center justify-center text-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4">
-              {location}
+              {location.split(' ')[1] === '0' ? 'Campo' : location.split(' ')[1] === '6' ? 'Beach' : location} 
             </h1>
             <h1 className="inline-flex h-16 w-60 items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4">
               Horário: {formattedTime} -{' '}

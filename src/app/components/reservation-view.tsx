@@ -68,7 +68,11 @@ export function ReservationCard({
             if (isPassed) {
               toast.info('Não é possível cancelar uma reserva já passada')
             } else {
-              handleCancel()
+              if (deleteBookingMutation.isPending) {
+                return
+              } else {
+                handleCancel()
+              }
             }
           }}
           disabled={deleteBookingMutation.isPending}

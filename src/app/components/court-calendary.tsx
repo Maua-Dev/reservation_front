@@ -230,7 +230,7 @@ export function Court({ isField }: CourtProps) {
     .filter((reserva) =>
       isField
         ? reserva.court_number === 0 || reserva.court_number === 6
-        : reserva.court_number !== 0
+        : reserva.court_number !== 0 && reserva.court_number !== 6
     )
     .map((reserva) => {
       const date = new Date(Number(reserva.start_date))
