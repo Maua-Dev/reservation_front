@@ -76,7 +76,7 @@ export const Form = ({
   const handleClose = () => {
     onClose()
   }
-  const modality_equipament_map: Record<string, string[]> = {
+  const modalityToEquipament: Record<string, string[]> = {
     Football: ['Bola de futebol'],
     Rugby: ['Bola de rugby'],
     'Beach Tennis': ['Raquete de beach e Tamboréu'],
@@ -86,12 +86,12 @@ export const Form = ({
     Handball: ['Bola de handebol'],
     Futsal: ['Bola de futsal']
   }
+
   const handleModalitySelect = (modality: string) => {
     setSelectedModality(modality)
     setValue('modality', modality)
 
-    // Atualiza os equipamentos automaticamente
-    const defaultEquipment = modality_equipament_map[modality] || []
+    const defaultEquipment = modalityToEquipament[modality] || []
     setSelectedEquipments(defaultEquipment)
     setValue('equipment', defaultEquipment)
   }

@@ -84,11 +84,11 @@ export function Court({ isField }: CourtProps) {
         ModalityName.Futsal
       ]
   const equipments = [
-    'Bola de futsal',
-    'Bola de handebol',
     'Bola e Raquete de tênis',
+    'Bola de basquete',
+    'Bola de handebol',
     'Bola de vôlei',
-    'Bola de basquete'
+    'Bola de futsal'
   ]
 
   const startOfTheWeek = () => {
