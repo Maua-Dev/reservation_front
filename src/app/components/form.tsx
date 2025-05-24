@@ -76,13 +76,41 @@ export const Form = ({
   const handleClose = () => {
     onClose()
   }
+  const modality_equipament_map: Record<string, string[]> = {
+    Football: ['Bola de futebol'],
+    Rugby: ['Bola de rugby'],
+    'Beach Tennis': ['Raquete de beach e Tamboréu'],
+    Tennis: ['Bola e Raquete de tênis'],
+    Basketball: ['Bola de basquete'],
+    Volleyball: ['Bola de vôlei'],
+    Handball: ['Bola de handebol'],
+    Futsal: ['Bola de futsal']
+  }
+  const handleModalitySelect = (modality: string) => {
+    setSelectedModality(modality)
+    setValue('modality', modality)
 
+    // Atualiza os equipamentos automaticamente
+    const defaultEquipment = modality_equipament_map[modality] || []
+    setSelectedEquipments(defaultEquipment)
+    setValue('equipment', defaultEquipment)
+  }
+
+  // const sports = () => {
+  //   if (courtNumber == 0) {
+  //     return modalities.filter((mod) => mod == 'Rugby' || mod == 'Football')
+  //   } else {
+  //     return modalities.filter((mod) => mod == 'Beach Tennis')
+  //   }
+  // }
   const sports = () => {
-    if (courtNumber == 0) {
-      return modalities.filter((mod) => mod == 'Rugby' || mod == 'Football')
-    } else {
-      return modalities.filter((mod) => mod == 'Beach Tennis')
+    if (isField) {
+      if (courtNumber == 6) {
+        return ['Beach Tennis']
+      }
+      return ['Football', 'Rugby']
     }
+    return ['Tennis', 'Basketball', 'Volleyball', 'Handball', 'Futsal']
   }
 
   useEffect(() => {
@@ -199,11 +227,12 @@ export const Form = ({
             <button
               key={modality}
               type="button"
-              onClick={() => {
-                setSelectedModality(modality)
-                setValue('modality', modality)
-              }}
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-2 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 ${selectedModality === modality ? 'border-yellow bg-yellow/10 text-yellow-secondary hover:bg-yellow/10' : 'text-slate-700'}`}
+              onClick={() => handleModalitySelect(modality)}
+              className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-2 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 ${
+                selectedModality === modality
+                  ? 'border-yellow bg-yellow/10 text-yellow-secondary hover:bg-yellow/10'
+                  : 'text-slate-700'
+              }`}
             >
               {ModalityName[modality as keyof typeof ModalityName]}
             </button>
@@ -233,7 +262,7 @@ export const Form = ({
                 className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-2 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 ${
                   selectedEquipments.includes(equipment)
                     ? 'border-yellow bg-yellow/10 text-yellow-secondary hover:bg-yellow/10'
-                    : ''
+                    : 'text-slate-700'
                 }`}
               >
                 {equipment}

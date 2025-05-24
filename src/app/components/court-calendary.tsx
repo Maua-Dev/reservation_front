@@ -67,21 +67,28 @@ export function Court({ isField }: CourtProps) {
   }
 
   const today = new Date()
+  // const modalities = isField
+  //   ? Object.keys(ModalityName).filter(
+  //       (mod) => mod === 'Football' || mod === 'Rugby' || mod === 'Beach Tennis'
+  //     )
+  //   : Object.keys(ModalityName).filter(
+  //       (mod) => mod !== 'Football' && mod !== 'Rugby' && mod !== 'Beach Tennis'
+  //     )
   const modalities = isField
-    ? Object.keys(ModalityName).filter(
-        (mod) => mod === 'Football' || mod === 'Rugby' || mod === 'Beach Tennis'
-      )
-    : Object.keys(ModalityName).filter(
-        (mod) => mod !== 'Football' && mod !== 'Rugby' && mod !== 'Beach Tennis'
-      )
+    ? [ModalityName.Football, ModalityName.Rugby, ModalityName['Beach Tennis']]
+    : [
+        ModalityName.Tennis,
+        ModalityName.Basketball,
+        ModalityName.Volleyball,
+        ModalityName.Handball,
+        ModalityName.Futsal
+      ]
   const equipments = [
     'Bola de futsal',
     'Bola de handebol',
     'Bola e Raquete de tênis',
     'Bola de vôlei',
-    'Bola de basquete',
-    'Raquete de beach',
-    'Tamboréu'
+    'Bola de basquete'
   ]
 
   const startOfTheWeek = () => {
@@ -567,7 +574,13 @@ export function Court({ isField }: CourtProps) {
               modalities={modalities}
               isField={isField}
               equipments={
-                isField ? ['Bola de futebol', 'Bola de rugby'] : equipments
+                isField
+                  ? [
+                      'Bola de futebol',
+                      'Bola de rugby',
+                      'Raquete de beach ou Tamboréu'
+                    ]
+                  : equipments
               }
               options={availableCourts.map((court) =>
                 isField ? (court === 6 ? `Beach` : `Campo`) : `Quadra ${court}`
