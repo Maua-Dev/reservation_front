@@ -176,14 +176,16 @@ export const Form = ({
     >
       <div className="flex flex-col justify-between border-b-2 border-slate-700">
         <div className="flex justify-between">
-          <p className="font-poppins text-2xl font-bold md:text-3xl">
-            {user.name}
-          </p>
-          <p className="absolute left-[75%] mr-4 font-poppins text-2xl font-bold md:text-3xl">
-            {user.ra}
-          </p>
+          <div className="flex flex-col justify-between md:flex-row md:gap-72">
+            <p className="font-poppins text-2xl font-bold md:text-3xl">
+              {user.name}
+            </p>
+            <p className="left-[75%] mr-4 font-poppins text-2xl font-bold md:text-3xl">
+              {user.ra}
+            </p>
+          </div>
           <IoClose
-            className="absolute left-[94%] top-2 mr-1 h-8 w-8 cursor-pointer md:h-10 md:w-16"
+            className="absolute left-[85%] top-2 mr-1 h-8 w-8 cursor-pointer md:left-[94%] md:h-10 md:w-16"
             onClick={handleClose}
           ></IoClose>
         </div>
@@ -193,8 +195,8 @@ export const Form = ({
         </p>
       </div>
 
-      <div className="flex w-full flex-col justify-start font-medium md:flex-row">
-        <div className="flex w-40 items-center justify-between rounded md:w-32">
+      <div className="flex w-full flex-col justify-start gap-2 font-medium md:flex-row">
+        <div className="flex w-32 items-center justify-between rounded">
           <label className="flex-grow text-center font-poppins text-lg text-white">
             <select
               defaultValue={courtNumber}
@@ -220,7 +222,7 @@ export const Form = ({
             </select>
           </label>
         </div>
-        <div className="flex items-start justify-start gap-1">
+        <div className="flex flex-col items-start justify-start gap-1 md:flex-row">
           <label className="flex items-center justify-center gap-1 font-poppins text-xl">
             <span></span>
             <p>Horário</p>

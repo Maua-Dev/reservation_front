@@ -125,7 +125,9 @@ export function View({ onClose }: ViewProps) {
                     court={booking.court_number.toString()}
                     bookingId={booking.booking_id}
                     reload={reloadBooking}
-                    sport={ModalityName[booking.sport as keyof typeof ModalityName]}
+                    sport={
+                      ModalityName[booking.sport as keyof typeof ModalityName]
+                    }
                   />
                 ))
               ))}
