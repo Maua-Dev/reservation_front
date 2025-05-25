@@ -24,7 +24,6 @@ type FormProps = {
 const formSchema = z.object({
   modality: z.string().min(1, 'Selecione uma modalidade'),
   equipment: z.array(z.string()).min(1, 'Selecione pelo menos um equipamento'),
-  needsVest: z.boolean(),
   shareCourt: z.boolean()
 })
 
@@ -47,7 +46,6 @@ export const Form = ({
     defaultValues: {
       modality: '',
       equipment: [],
-      needsVest: false,
       shareCourt: false
     }
   })
@@ -86,6 +84,16 @@ export const Form = ({
     Handball: ['Bola de handebol'],
     Futsal: ['Bola de futsal']
   }
+  const equipmentToModality: Record<string, string> = {
+    'Bola de futebol': 'Football',
+    'Bola de rugby': 'Rugby',
+    'Raquete de beach e Tamboréu': 'Beach Tennis',
+    'Bola e Raquete de tênis': 'Tennis',
+    'Bola de basquete': 'Basketball',
+    'Bola de vôlei': 'Volleyball',
+    'Bola de handebol': 'Handball',
+    'Bola de futsal': 'Futsal'
+  }
 
   const handleModalitySelect = (modality: string) => {
     setSelectedModality(modality)
@@ -111,6 +119,21 @@ export const Form = ({
       return ['Football', 'Rugby']
     }
     return ['Tennis', 'Basketball', 'Volleyball', 'Handball', 'Futsal']
+  }
+  const equipamento = () => {
+    if (isField) {
+      if (courtNumber == 6) {
+        return ['Raquete de beach e Tamboréu']
+      }
+      return ['Bola de futebol', 'Bola de rugby']
+    }
+    return [
+      'Bola e Raquete de tênis',
+      'Bola de basquete',
+      'Bola de vôlei',
+      'Bola de handebol',
+      'Bola de futsal'
+    ]
   }
 
   useEffect(() => {
@@ -222,42 +245,58 @@ export const Form = ({
             Modalidade:
           </p>
         </div>
-        <div className="flex flex-wrap gap-2 py-1">
-          {sports().map((modality) => (
-            <button
-              key={modality}
-              type="button"
-              onClick={() => handleModalitySelect(modality)}
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-2 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 ${
-                selectedModality === modality
-                  ? 'border-yellow bg-yellow/10 text-yellow-secondary hover:bg-yellow/10'
-                  : 'text-slate-700'
-              }`}
-            >
-              {ModalityName[modality as keyof typeof ModalityName]}
-            </button>
-          ))}
-          {errors.modality && (
-            <p className="text-red-500">{errors.modality.message}</p>
+        <div className="flex items-center justify-between">
+          <div className="flex flex-wrap gap-2 py-1">
+            {sports().map((modality) => (
+              <button
+                key={modality}
+                type="button"
+                onClick={() => handleModalitySelect(modality)}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-2 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 ${
+                  selectedModality === modality
+                    ? 'border-yellow bg-yellow/10 text-yellow-secondary hover:bg-yellow/10'
+                    : 'text-slate-700'
+                }`}
+              >
+                {ModalityName[modality as keyof typeof ModalityName]}
+              </button>
+            ))}
+            {errors.modality && (
+              <p className="text-red-500">{errors.modality.message}</p>
+            )}
+          </div>
+          {selectedModality == 'Volleyball' && (
+            <div className="flex w-[45%] items-start justify-start">
+              {/* <input type="checkbox" className="h-10 w-10" /> */}
+              <p className="text-md w-full text-center font-poppins font-medium text-red-600 md:text-sm">
+                <span className="font-extrabold">Aviso:</span> a rede de vôlei
+                para ser montada precisa de no mínimo 6 pessoas para ser montada
+              </p>
+            </div>
           )}
         </div>
       </div>
 
       <div className="flex flex-col">
         <div className="flex justify-start">
-          <p className="py-2 text-left font-poppins text-2xl font-bold">
+          <p className="py-1 text-left font-poppins text-2xl font-bold">
             Equipamentos:
           </p>
         </div>
         <div className="flex items-center">
           <div className="flex flex-wrap gap-2 py-1">
-            {equipments.map((equipment) => (
+            {equipamento().map((equipment) => (
               <button
                 key={equipment}
                 type="button"
                 onClick={() => {
                   setSelectedEquipments([equipment])
                   setValue('equipment', [equipment])
+                  const modality = equipmentToModality[equipment]
+                  if (modality) {
+                    setSelectedModality(modality)
+                    setValue('modality', modality)
+                  }
                 }}
                 className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-2 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 ${
                   selectedEquipments.includes(equipment)
@@ -271,6 +310,42 @@ export const Form = ({
             {errors.equipment && (
               <p className="text-red-500">{errors.equipment.message}</p>
             )}
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2">
+        <div className="flex justify-start">
+          <p className="text-left font-poppins text-2xl font-bold">
+            Colete de identificação:
+          </p>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => {
+              const needsVest = !selectedEquipments.includes('Colete')
+              const updatedEquipments = needsVest
+                ? [...selectedEquipments, 'Colete']
+                : selectedEquipments.filter((item) => item !== 'Colete')
+
+              setSelectedEquipments(updatedEquipments)
+              setValue('equipment', updatedEquipments)
+            }}
+            className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-2 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 ${
+              selectedEquipments.includes('Colete')
+                ? 'border-yellow bg-yellow/10 text-yellow-secondary hover:bg-yellow/10'
+                : 'text-slate-700'
+            }`}
+          >
+            <div className="flex items-center">
+              {selectedEquipments.includes('Colete')}Colete
+            </div>
+          </button>
+          <div className="flex justify-end">
+            <Button className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary px-5 py-2 font-poppins text-lg text-white active:border-b-2">
+              Salvar
+            </Button>
           </div>
         </div>
       </div>
@@ -297,19 +372,7 @@ export const Form = ({
             Aceito compartilhar quadra
           </p>
         </div> */}
-        <div className="flex w-full items-center justify-between rounded p-1">
-          <Button className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary px-5 py-2 font-poppins text-lg text-white active:border-b-2">
-            Salvar
-          </Button>
-          {selectedModality == 'Volleyball' && (
-            <div className="flex w-1/2 items-center gap-2">
-              {/* <input type="checkbox" className="h-10 w-10" /> */}
-              <p className="text-md w-full text-center font-poppins font-medium text-red-600 md:text-xl">
-                <span className="font-extrabold">Aviso:</span> a rede de vôlei
-                para ser montada precisa de no mínimo 6 pessoas para ser montada
-              </p>
-            </div>
-          )}
+        <div className="flex w-full items-center justify-between rounded">
           <Modal open={open} onClose={() => setOpen(false)}>
             <Confirm
               onClose={() => setOpen(false)}

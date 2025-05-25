@@ -86,8 +86,8 @@ export function Court({ isField }: CourtProps) {
   const equipments = [
     'Bola e Raquete de tênis',
     'Bola de basquete',
-    'Bola de handebol',
     'Bola de vôlei',
+    'Bola de handebol',
     'Bola de futsal'
   ]
 
