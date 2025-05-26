@@ -29,12 +29,7 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>
 
-export const Form = ({
-  timestamp,
-  options,
-  isField,
-  onClose
-}: FormProps) => {
+export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   const {
     handleSubmit,
     formState: { errors },
@@ -75,7 +70,7 @@ export const Form = ({
   const modalityToEquipament: Record<string, string[]> = {
     Football: ['Bola de futebol'],
     Rugby: ['Bola de rugby'],
-    'Beach Tennis': ['Raquete de beach e Tamboréu'],
+    'Beach Tennis': ['Raquete e Bola', 'Tamboréu e Bola'],
     Tennis: ['Bola e Raquete de tênis'],
     Basketball: ['Bola de basquete'],
     Volleyball: ['Bola de vôlei'],
@@ -85,7 +80,8 @@ export const Form = ({
   const equipmentToModality: Record<string, string> = {
     'Bola de futebol': 'Football',
     'Bola de rugby': 'Rugby',
-    'Raquete de beach e Tamboréu': 'Beach Tennis',
+    'Raquete e Bola': 'Beach Tennis',
+    'Tamboréu e Bola': 'Beach Tennis',
     'Bola e Raquete de tênis': 'Tennis',
     'Bola de basquete': 'Basketball',
     'Bola de vôlei': 'Volleyball',
@@ -97,7 +93,9 @@ export const Form = ({
     setSelectedModality(modality)
     setValue('modality', modality)
 
-    const defaultEquipment = modalityToEquipament[modality] || []
+    const defaultEquipment = modalityToEquipament[modality]?.[0]
+      ? [modalityToEquipament[modality][0]]
+      : []
     setSelectedEquipments(defaultEquipment)
     setValue('equipment', defaultEquipment)
   }
@@ -121,7 +119,7 @@ export const Form = ({
   const equipamento = () => {
     if (isField) {
       if (courtNumber == 6) {
-        return ['Raquete de beach e Tamboréu']
+        return ['Raquete e Bola', 'Tamboréu e Bola']
       }
       return ['Bola de futebol', 'Bola de rugby']
     }
@@ -170,15 +168,15 @@ export const Form = ({
         e.preventDefault()
       }}
       onClick={(e) => e.stopPropagation()}
-      className="relative flex max-h-[90vh] w-[90%] max-w-[70vw] cursor-default flex-col gap-3 overflow-x-hidden overflow-y-visible rounded-xl bg-white px-4 py-6 tracking-wide text-slate-700 shadow-lg sm:w-[70%]"
+      className="am:overflow-y-hidden relative flex max-h-[90vh] w-[90%] max-w-[70vw] cursor-default flex-col gap-3 overflow-x-hidden overflow-y-visible rounded-xl bg-white px-4 py-6 tracking-wide text-slate-700 shadow-lg sm:w-[70%] md:overflow-y-hidden"
     >
       <div className="flex w-full flex-col justify-between border-b-2 border-slate-700">
         <div className="flex w-full justify-between">
           <div className="flex w-full flex-col justify-between md:flex-row">
-            <p className="font-poppins text-2xl w-1/2 font-bold md:text-3xl">
+            <p className="w-1/2 font-poppins text-xl font-bold md:text-3xl">
               {user.name}
             </p>
-            <p className="mr-4 flex justify-end font-poppins text-2xl font-bold md:text-3xl w-1/2">
+            <p className="mr-4 flex w-1/2 justify-end font-poppins text-2xl font-bold sm:justify-end md:text-3xl">
               {user.ra}
             </p>
           </div>

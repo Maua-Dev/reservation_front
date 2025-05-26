@@ -578,7 +578,8 @@ export function Court({ isField }: CourtProps) {
                   ? [
                       'Bola de futebol',
                       'Bola de rugby',
-                      'Raquete de beach ou Tamboréu'
+                      'Raquete de beach e Bola',
+                      'Tamboréu e Bola'
                     ]
                   : equipments
               }
