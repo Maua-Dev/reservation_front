@@ -174,13 +174,13 @@ export const Form = ({
       onClick={(e) => e.stopPropagation()}
       className="relative flex max-h-[90vh] w-[90%] max-w-[70vw] cursor-default flex-col gap-3 overflow-x-hidden overflow-y-visible rounded-xl bg-white px-4 py-6 tracking-wide text-slate-700 shadow-lg sm:w-[70%]"
     >
-      <div className="flex flex-col justify-between border-b-2 border-slate-700">
-        <div className="flex justify-between">
-          <div className="flex flex-col justify-between md:flex-row md:gap-72">
-            <p className="font-poppins text-2xl font-bold md:text-3xl">
+      <div className="flex w-full flex-col justify-between border-b-2 border-slate-700">
+        <div className="flex w-full justify-between">
+          <div className="flex w-full flex-col justify-between md:flex-row">
+            <p className="font-poppins text-2xl w-1/2 font-bold md:text-3xl">
               {user.name}
             </p>
-            <p className="left-[75%] mr-4 font-poppins text-2xl font-bold md:text-3xl">
+            <p className="mr-4 flex justify-end font-poppins text-2xl font-bold md:text-3xl w-1/2">
               {user.ra}
             </p>
           </div>
