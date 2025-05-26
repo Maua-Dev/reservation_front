@@ -100,7 +100,7 @@ export function View({ onClose }: ViewProps) {
               <p className="text-sm font-bold text-black sm:text-base md:text-xl">
                 {user?.name}
               </p>
-              <p className="text-sm font-bold text-black sm:text-base md:text-xl">
+              <p className="left-[90%] text-sm font-bold text-black sm:text-base md:text-xl">
                 {user?.ra}
               </p>
               <IoClose

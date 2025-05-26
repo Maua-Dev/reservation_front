@@ -322,7 +322,7 @@ export const Form = ({
           </p>
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col items-start justify-between gap-4 md:flex-row">
           <button
             type="button"
             onClick={() => {
@@ -344,7 +344,7 @@ export const Form = ({
               {selectedEquipments.includes('Colete')}Colete
             </div>
           </button>
-          <div className="flex justify-end">
+          <div className="flex w-full justify-end">
             <Button className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary px-5 py-2 font-poppins text-lg text-white active:border-b-2">
               Salvar
             </Button>

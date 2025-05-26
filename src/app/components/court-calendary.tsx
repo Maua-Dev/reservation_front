@@ -411,8 +411,8 @@ export function Court({ isField }: CourtProps) {
       <div
         className={`relative h-44 w-full ${isField ? 'bg-campo' : 'bg-quadra'} bg-cover bg-center`}
       >
-        <div className="h-full w-full bg-black/50">
-          <div className="absolute bottom-0 left-0 p-5 font-poppins text-white">
+        <div className="flex h-full w-full flex-col bg-black/50 md:flex-row">
+          <div className="bottom-0 left-0 p-5 font-poppins text-white md:absolute">
             <p className="text-3xl font-semibold">
               {isField ? 'Campo' : 'Quadras'}
             </p>
@@ -427,7 +427,7 @@ export function Court({ isField }: CourtProps) {
               {thisWeek()[0]}-{thisWeek()[5]}
             </p>
           </div>
-          <div className="absolute bottom-0 right-0 p-8">
+          <div className="bottom-0 right-0 p-2 md:absolute md:p-8">
             {isAuth && (
               <Button onClick={handleOpeMyBookings} className="h-12 w-52 p-1">
                 Minhas Reservas

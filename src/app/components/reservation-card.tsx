@@ -22,7 +22,7 @@ export function ReservationCard({
         alt="Imagem do campo"
         className="h-44 w-full rounded-t-xl object-cover sm:h-60"
       />
-      <div className="flex flex-col items-center justify-center rounded-b-xl bg-blue-primary py-2 pb-4 text-center text-white lg:h-[40vh] lg:px-4 lg:py-4">
+      <div className="flex flex-col items-center justify-center rounded-b-xl bg-blue-primary py-2 pb-4 text-center text-white lg:h-[40vh] lg:p-4">
         <h1 className="mt-2 font-league text-sm font-semibold lg:text-4xl">
           {title}
         </h1>

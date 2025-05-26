@@ -32,7 +32,7 @@ export function CalendaryCard({
           openModal()
         }}
         className={cn(
-          'z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 shadow-md duration-300 hover:z-10 hover:-translate-y-1 hover:cursor-pointer',
+          'z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 text-center shadow-md duration-300 hover:z-10 hover:-translate-y-1 hover:cursor-pointer',
           courtColors[court]
         )}
       >
