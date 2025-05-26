@@ -7,7 +7,7 @@ import { ReservationDetails } from './reservation-details'
 import { cn } from '../utils/cn'
 import { useUserQuery } from '../hooks/use-user'
 import { useBookingsQuery } from '../hooks/use-booking'
-import { useIsAuthenticated } from '@azure/msal-react'
+import { useIsAuthenticated, useMsal } from '@azure/msal-react'
 import { ModalityName } from '@/utils/enums/modality'
 import { FiLoader } from 'react-icons/fi'
 import { toast } from 'react-toastify'
@@ -50,6 +50,7 @@ export function Court({ isField }: CourtProps) {
   }, [data?.userId])
 
   useEffect(() => {
+    fetchAccessToken()
     localStorage.setItem('end_date', endOfTheWeek().toString())
     localStorage.setItem('start_date', startOfTheWeek().toString())
   }, [])
@@ -90,6 +91,21 @@ export function Court({ isField }: CourtProps) {
     'Bola de handebol',
     'Bola de futsal'
   ]
+
+  const { instance } = useMsal()
+
+  const fetchAccessToken = async () => {
+    const accounts = instance.getAllAccounts()
+    if (accounts.length === 0) return
+    const accessToken = (
+      await instance.acquireTokenSilent({
+        scopes: ['User.Read'],
+        account: accounts[0]
+      })
+    ).accessToken
+    localStorage.setItem('accessToken', accessToken)
+    return accessToken
+  }
 
   const startOfTheWeek = () => {
     const now = new Date()
