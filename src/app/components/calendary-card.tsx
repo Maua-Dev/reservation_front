@@ -18,9 +18,12 @@ export function CalendaryCard({
   const courtColors: {
     [key: number]: string
   } = {
-    1: 'border-blue-primary text-blue-primary z-[2]',
-    2: 'border-blue-secondary text-blue-secondary z-[3]',
-    3: 'border-blue-tertiary text-blue-tertiary z-[4]'
+    // BEACH AS COURT 6 MUST BE A TEMPORARY FIX
+    6: 'border-[#E5CBA8] text-black z-[1]',
+    0: 'border-yellow text-black z-[2]',
+    1: 'border-blue-primary text-blue-primary z-[1]',
+    2: 'border-blue-secondary text-blue-secondary z-[2]',
+    3: 'border-blue-tertiary text-blue-tertiary z-[3]'
   }
   return (
     <>
@@ -29,11 +32,11 @@ export function CalendaryCard({
           openModal()
         }}
         className={cn(
-          'z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 shadow-md duration-300 hover:z-50 hover:-translate-y-1 hover:cursor-pointer',
+          'z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 text-center shadow-md duration-300 hover:z-10 hover:-translate-y-1 hover:cursor-pointer',
           courtColors[court]
         )}
       >
-        <p>Quadra {court}</p>
+        <p>{court == 0 ? 'Campo' : court == 6 ? `Beach` : `Quadra ${court}`}</p>
         <p>{modality}</p>
       </div>
     </>

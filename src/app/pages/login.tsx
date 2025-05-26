@@ -1,8 +1,45 @@
 import logobranca from '../assets/logobranca.png'
 import baixados from '../assets/baixados.jpg'
 import { Button } from '../components/button'
+import { useIsAuthenticated, useMsal } from '@azure/msal-react'
+import { useNavigate } from 'react-router-dom'
+import { loginRequest } from '../auth/auth-config'
 
 export function Login() {
+  const auth = useIsAuthenticated()
+  const { instance } = useMsal()
+  const navigate = useNavigate()
+
+  // SOLUÇÃO TEMPORÁRIA
+  // Por algum motivo, o redirect te leva de volta para a pagina de login
+  // e não para a página inicial. Então, se o usuário já estiver logado,
+  // redirecionamos ele para a página inicial.
+  // Isso deve ser corrigido no futuro.
+
+  const fetchAccessToken = async () => {
+    const accounts = instance.getAllAccounts()
+    const accessToken = (
+      await instance.acquireTokenSilent({
+        ...loginRequest,
+        account: accounts[0]
+      })
+    ).accessToken
+    localStorage.setItem('accessToken', accessToken)
+    return accessToken
+  }
+
+  if (auth) {
+    fetchAccessToken()
+    navigate('/')
+    return
+  }
+
+  const handleLogin = () => {
+    instance.loginPopup({ scopes: ['User.Read'] }).catch((error) => {
+      console.error('Login error:', error)
+    })
+  }
+
   return (
     <>
       <div className="absolute left-0 top-0 z-0 flex h-screen w-full bg-quadra bg-cover bg-center brightness-50" />
@@ -21,7 +58,10 @@ export function Login() {
               Microsoft
             </p>
             <div className="flex justify-center">
-              <Button className="flex items-center gap-2 rounded-lg border bg-white p-4 text-center font-poppins text-base font-normal text-black md:text-xl">
+              <Button
+                className="flex items-center gap-2 rounded-lg border bg-white p-4 text-center font-poppins text-base font-normal text-black md:text-xl"
+                onClick={handleLogin}
+              >
                 <img
                   src={baixados}
                   alt="Logo da Microsoft"
