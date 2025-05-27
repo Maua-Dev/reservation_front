@@ -97,6 +97,13 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
       ? [modalityToEquipament[modality][0]]
       : []
     setSelectedEquipments(defaultEquipment)
+    if (isField) {
+      if (modality === 'Beach Tennis') {
+        setCourtNumber(6)
+      } else {
+        setCourtNumber(0)
+      }
+    }
     setValue('equipment', defaultEquipment)
   }
 
@@ -109,19 +116,30 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   // }
   const sports = () => {
     if (isField) {
-      if (courtNumber == 6) {
+      if (options.length === 1 && options[0] === 'Beach') {
         return ['Beach Tennis']
       }
-      return ['Football', 'Rugby']
+      if (options.length === 1 && options[0] === 'Campo') {
+        return ['Football', 'Rugby']
+      }
+      return ['Football', 'Rugby', 'Beach Tennis']
     }
     return ['Tennis', 'Basketball', 'Volleyball', 'Handball', 'Futsal']
   }
   const equipamento = () => {
     if (isField) {
-      if (courtNumber == 6) {
+      if (options.length === 1 && options[0] === 'Beach') {
         return ['Raquete e Bola', 'Tamboréu e Bola']
       }
-      return ['Bola de futebol', 'Bola de rugby']
+      if (options.length === 1 && options[0] === 'Campo') {
+        return ['Bola de futebol', 'Bola de rugby']
+      }
+      return [
+        'Bola de futebol',
+        'Bola de rugby',
+        'Raquete e Bola',
+        'Tamboréu e Bola'
+      ]
     }
     return [
       'Bola e Raquete de tênis',
@@ -199,7 +217,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
               onChange={(e) => {
                 setCourtNumber(e.target.value)
               }}
-              className="inline-flex items-start justify-start rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2"
+              className={`${isField ? 'hidden' : ''} inline-flex items-start justify-start rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2`}
             >
               {options.map((option) => (
                 <option
@@ -216,6 +234,11 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
                 </option>
               ))}
             </select>
+            <div
+              className={`${isField ? '' : 'hidden'} inline-flex items-start justify-start rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2`}
+            >
+              {courtNumber == 0 ? 'Campo' : `Beach`}
+            </div>
           </label>
         </div>
         <div className="flex flex-col items-start justify-start gap-1 md:flex-row">
@@ -295,6 +318,9 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
                     setSelectedModality(modality)
                     setValue('modality', modality)
                   }
+                  if (isField) {
+                    setCourtNumber(modality === 'Beach Tennis' ? 6 : 0)
+                  }
                 }}
                 className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-2 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 ${
                   selectedEquipments.includes(equipment)
@@ -347,17 +373,6 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
           </div>
         </div>
       </div>
-
-      {/* <div className="flex flex-row items-center gap-2">
-        <input
-          type="checkbox"
-          {...register('needsVest')}
-          className="h-6 w-7 border border-slate-500 p-1 md:w-6"
-        />
-        <p className="text-md font-poppins font-medium md:text-xl">
-          Preciso de colete
-        </p>
-      </div> */}
 
       <div className="flex flex-row items-center justify-between">
         {/* <div className="flex items-center gap-2">
