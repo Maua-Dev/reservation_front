@@ -5,13 +5,27 @@ import shortLogo from '../assets/logo-simplista.svg'
 import { IoMenu } from 'react-icons/io5'
 import { FaHome } from 'react-icons/fa'
 import { FaCalendarAlt } from 'react-icons/fa'
-import { BiWorld } from 'react-icons/bi'
+import { BiLoaderAlt, BiWorld } from 'react-icons/bi'
 import { FaUserCircle } from 'react-icons/fa'
 import { IoClose } from 'react-icons/io5'
+import { useIsAuthenticated, useMsal } from '@azure/msal-react'
+import { CiLogout } from 'react-icons/ci'
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [fade, setFade] = useState(false)
+
+  const { instance } = useMsal()
+  const auth = useIsAuthenticated()
+  const isLoading = false
+
+  const handleLogout = () => {
+    localStorage.removeItem('user_id')
+    localStorage.removeItem('accessToken')
+    instance.logoutRedirect({ postLogoutRedirectUri: '/' }).catch((error) => {
+      console.error('Logout error:', error)
+    })
+  }
 
   const handleOpenMenu = () => {
     setIsMenuOpen(true)
@@ -32,67 +46,205 @@ export function Navbar() {
       style={{
         height: isMenuOpen ? '100vh' : 'auto'
       }}
-      className="fixed z-10 flex w-full flex-col font-league"
+      className="fixed z-[90] flex w-full flex-col font-league"
     >
       <nav className="flex w-full select-none items-center justify-between bg-white px-6 py-2 md:px-8 md:py-3 lg:px-10">
-        <img
-          src={window.innerWidth < 768 ? shortLogo : fullLogo}
-          alt="Logo do Mauá Reservation"
-          className="w-14 sm:w-20 md:w-24"
-        />
+        <a
+          href="/"
+          className="cursor-pointer"
+          onClick={(e) => {
+            if (window.location.pathname === '/') {
+              e.preventDefault() // Evita o redirecionamento se já está na página inicial
+              window.scrollTo({ top: 0, behavior: 'smooth' }) // Rola para o topo
+            }
+          }}
+        >
+          <img
+            src={window.innerWidth < 768 ? shortLogo : fullLogo}
+            alt="Logo do Mauá Reservation"
+            className="w-14 sm:w-20 md:w-24"
+          />
+        </a>
+
         <div className="hidden gap-24 text-xl font-medium text-blue-primary md:flex lg:text-2xl">
-          <a href="#" className="cursor-pointer">
+          <a
+            href="/"
+            className="cursor-pointer scroll-smooth"
+            onClick={(e) => {
+              if (window.location.pathname === '/') {
+                e.preventDefault() // Evita o redirecionamento se já está na página inicial
+                window.scrollTo({ top: 0, behavior: 'smooth' }) // Rola para o topo
+              }
+            }}
+          >
             INÍCIO
           </a>
-          <a href="#" className="cursor-pointer">
+          <a
+            href="/#reservation"
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault()
+              const destinationUrl = '/#reservation'
+              if (window.location.pathname === '/') {
+                const targetElement = document.querySelector(
+                  '#reservation'
+                ) as HTMLElement | null
+                if (targetElement) {
+                  targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                  })
+                }
+              } else {
+                window.location.href = destinationUrl
+              }
+            }}
+          >
             MENU DE RESERVAS
           </a>
-          <a href="#" className="cursor-pointer">
+          <a
+            href="/#dev"
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault()
+              const destinationUrl = '/#dev'
+              if (window.location.pathname === '/') {
+                const targetElement = document.querySelector(
+                  '#dev'
+                ) as HTMLElement | null
+                if (targetElement) {
+                  targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                  })
+                }
+              } else {
+                window.location.href = destinationUrl
+              }
+            }}
+          >
             SOBRE NÓS
           </a>
         </div>
-        <Button className="hidden text-xl md:flex lg:text-2xl">Login</Button>
+        {auth ? (
+          isLoading ? (
+            <Button className="hidden h-16 w-40 items-center justify-center text-xl md:flex lg:text-2xl">
+              <BiLoaderAlt className="animate-spin text-2xl" />
+            </Button>
+          ) : (
+            <Button
+              className="hidden h-16 w-40 items-center justify-center text-xl md:flex lg:text-2xl"
+              onClick={handleLogout}
+            >
+              <CiLogout className="mr-2" />
+            </Button>
+          )
+        ) : (
+          <a href="/login">
+            <Button className="hidden h-16 w-40 items-center justify-center text-xl md:flex lg:text-2xl">
+              Login
+            </Button>
+          </a>
+        )}
+
         {isMenuOpen ? (
           <IoClose
-            className={`flex cursor-pointer text-5xl text-yellow transition-all duration-500 md:hidden ${fade ? 'opacity-100' : 'rotate-180 opacity-0'}`}
+            className={`flex cursor-pointer text-5xl text-yellow transition-all duration-200 md:hidden ${fade ? 'opacity-100' : 'rotate-180 opacity-0'}`}
             onClick={handleCloseMenu}
           />
         ) : (
           <IoMenu
-            className={`flex cursor-pointer text-5xl text-yellow transition-all duration-500 md:hidden ${fade ? 'opacity-0' : 'opacity-100'}`}
+            className={`flex cursor-pointer text-5xl text-yellow transition-all duration-200 md:hidden ${fade ? 'opacity-0' : 'opacity-100'}`}
             onClick={handleOpenMenu}
           />
         )}
       </nav>
       {isMenuOpen && (
         <div
-          className={`flex h-full w-full transform flex-col justify-between gap-16 bg-blue-primary pb-8 pt-16 duration-500 ${fade ? 'translate-x-0 opacity-100' : 'translate-x-[450px] opacity-0'}`}
+          className={`flex h-full w-full transform flex-col justify-between gap-16 bg-blue-primary pb-8 pt-16 duration-200 ${fade ? 'translate-x-0 opacity-100' : 'translate-x-[450px] opacity-0'}`}
         >
           <div className="flex flex-col justify-center gap-16 px-12">
             <a
-              href="#"
-              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-75 duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+              href="/"
+              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-75 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+              onClick={(e) => {
+                if (window.location.pathname === '/') {
+                  e.preventDefault() // Evita o redirecionamento se já está na página inicial
+                  window.scrollTo({ top: 0, behavior: 'smooth' }) // Rola para o topo
+                }
+                handleCloseMenu()
+              }}
             >
               <FaHome /> Início
             </a>
             <a
-              href="#"
-              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-200 duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+              href="#reservation"
+              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-200 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+              onClick={(e) => {
+                e.preventDefault()
+                const destinationUrl = '/#reservation'
+                if (window.location.pathname === '/') {
+                  const targetElement = document.querySelector(
+                    '#reservation'
+                  ) as HTMLElement | null
+                  if (targetElement) {
+                    targetElement.scrollIntoView({
+                      behavior: 'smooth'
+                    })
+                  }
+                } else {
+                  window.location.href = destinationUrl
+                }
+                handleCloseMenu()
+              }}
             >
               <FaCalendarAlt /> Menu de reservas
             </a>
             <a
-              href="#"
-              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-300 duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+              href="#dev"
+              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-300 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+              onClick={(e) => {
+                e.preventDefault()
+                const destinationUrl = '/#dev'
+                if (window.location.pathname === '/') {
+                  const targetElement = document.querySelector(
+                    '#dev'
+                  ) as HTMLElement | null
+                  if (targetElement) {
+                    targetElement.scrollIntoView({
+                      behavior: 'smooth'
+                    })
+                  }
+                } else {
+                  window.location.href = destinationUrl
+                }
+                handleCloseMenu()
+              }}
             >
               <BiWorld /> Sobre nós
             </a>
-            <Button
-              className={`flex items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-1000 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
-            >
-              <FaUserCircle />
-              <p className="mt-[3px]">Perfil</p>
-            </Button>
+            {auth ? (
+              isLoading ? (
+                <Button
+                  className={`flex items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                >
+                  <BiLoaderAlt className="animate-spin text-2xl" />
+                </Button>
+              ) : (
+                <Button
+                  className={`flex items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  onClick={handleLogout}
+                >
+                  <CiLogout className="mr-2" /> Logout
+                </Button>
+              )
+            ) : (
+              <a href="/login">
+                <Button
+                  className={`flex w-full items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                >
+                  <FaUserCircle className="mr-2" /> Login
+                </Button>
+              </a>
+            )}
           </div>
           <p className="flex w-full justify-center text-xl text-white">
             Reservation Mauá - 2024
