@@ -8,12 +8,15 @@ export function Dev() {
   const slides = [imageDev1, imageDev2, imageDev3]
 
   return (
-    <section className="flex min-h-screen flex-col items-center justify-center gap-4 bg-blue-primary px-4 py-12 md:gap-16 md:py-0 lg:px-14">
+    <section
+      id="dev"
+      className="flex min-h-screen w-full flex-col items-center justify-center gap-4 scroll-smooth bg-blue-primary px-4 py-12 md:gap-16 md:py-0 lg:px-14"
+    >
       <h1 className="font-league text-3xl font-semibold text-white md:text-5xl">
         Dev Community Mauá
       </h1>
 
-      <div className="flex w-full flex-col items-center justify-center gap-8 px-8 md:flex-row md:items-start">
+      <div className="flex w-full max-w-7xl flex-col items-center justify-center gap-8 px-8 md:flex-row md:items-start">
         <div className="text-md order-2 flex w-full flex-col items-center text-justify font-poppins text-white md:order-1 md:w-1/2 md:items-start md:text-xl">
           <p className="">
             O Dev. Community Mauá, fundado em 2021, é uma extracurricular do
