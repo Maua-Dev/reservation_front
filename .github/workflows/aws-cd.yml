@@ -6,7 +6,7 @@ on:
       - homolog
       - prod
   workflow_dispatch:
-  
+
 jobs:
   DeployToAWS:
     environment:
@@ -44,6 +44,8 @@ jobs:
         run: |
           echo AWS_REGION=${{ vars.AWS_REGION }} >> $GITHUB_ENV
           echo AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }} >> $GITHUB_ENV
+          echo VITE_AUTH_CLIENT_ID=${{ secrets.VITE_AUTH_CLIENT_ID }} >> $GITHUB_ENV
+          echo VITE_AUTH_TENANT_ID=${{ secrets.VITE_AUTH_TENANT_ID }} >> $GITHUB_ENV
           echo STACK_NAME=${{ env.STACK_NAME }} >> $GITHUB_ENV
           echo GITHUB_REF_NAME=${{ github.ref_name }} >> $GITHUB_ENV
           echo ACM_CERTIFICATE_ARN=${{ secrets.DEVMAUA_ACM_CERTIFICATE_ARN }} >> $GITHUB_ENV
