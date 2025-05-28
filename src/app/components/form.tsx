@@ -8,7 +8,6 @@ import { z } from 'zod'
 import { IoClose } from 'react-icons/io5'
 import { useBookingsQuery } from '../hooks/use-booking'
 import { useUser } from '../hooks/use-user'
-import { useIsAuthenticated } from '@azure/msal-react'
 import { ModalityName } from '@/utils/enums/modality'
 
 type FormProps = {
@@ -51,7 +50,6 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   const selectedDate = new Date(timestamp)
   const { createBookingMutation } = useBookingsQuery()
   const { user } = useUser()
-  const isAuth = useIsAuthenticated()
 
   const onSubmit = async () => {
     const bookingData = {
@@ -165,19 +163,6 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   }, [onClose])
 
   const formatDate = (date: number) => date.toString().padStart(2, '0')
-
-  if (!isAuth) {
-    return (
-      <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="relative flex max-h-[90vh] min-h-[30vh] w-[50vw] max-w-[70vw] items-center justify-center rounded-lg bg-white p-4 font-poppins"
-        >
-          <p className="text-3xl">Você não está logado</p>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <form
