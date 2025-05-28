@@ -13,7 +13,7 @@ import futsal from '../assets/futsal.jpg'
 import rugby from '../assets/rugby.jpg'
 import tenis from '../assets/tenisbola1.jpg'
 import basquete from '../assets/basquete.jpg'
-import handebol from '../assets/handebol.jpg'
+import handebol from '../assets/handball1.jpg'
 import beachTenis from '../assets/beach.jpg'
 
 interface ReservationCardProps {
