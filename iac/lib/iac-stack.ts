@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
-import { Certificate } from 'aws-cdk-lib/aws-certificatemanager'
+import { Certificate, ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as route53Targets from 'aws-cdk-lib/aws-route53-targets'
 import * as iam from 'aws-cdk-lib/aws-iam'
@@ -41,73 +41,53 @@ export class IacStack extends cdk.Stack {
       }
     })
 
-    let viewerCertificate =
-      cloudfront.ViewerCertificate.fromCloudFrontDefaultCertificate()
+    const s3Origin = origins.S3BucketOrigin.withOriginAccessControl(s3Bucket, {
+      originAccessControlId: oac.attrId
+    })
+
+    let certificate: ICertificate | undefined = undefined
     if (stage === 'dev' || stage === 'homolog') {
-      viewerCertificate = cloudfront.ViewerCertificate.fromAcmCertificate(
-        Certificate.fromCertificateArn(
-          this,
-          'ReservationFrontCertificate-' + stage,
-          acmCertificateArn
-        ),
-        {
-          aliases: [alternativeDomain],
-          securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021
-        }
+      certificate = Certificate.fromCertificateArn(
+        this,
+        'ReservationFrontCertificate-' + stage,
+        acmCertificateArn
       )
     }
 
     if (stage === 'prod') {
-      viewerCertificate = cloudfront.ViewerCertificate.fromAcmCertificate(
-        Certificate.fromCertificateArn(
-          this,
-          'ReservationFrontCertificate-' + stage,
-          acmCertificateArn
-        ),
-        {
-          aliases: [alternativeDomain],
-          securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021
-        }
+      certificate = Certificate.fromCertificateArn(
+        this,
+        'ReservationFrontCertificate-' + stage,
+        acmCertificateArn
       )
     }
 
-    const cloudFrontWebDistribution = new cloudfront.CloudFrontWebDistribution(
-      this,
-      'CDN',
-      {
-        comment: 'Reservation Front Distribution ' + stage,
-        originConfigs: [
-          {
-            s3OriginSource: {
-              s3BucketSource: s3Bucket
-            },
-            behaviors: [
-              {
-                isDefaultBehavior: true,
-                allowedMethods: cloudfront.CloudFrontAllowedMethods.GET_HEAD,
-                compress: true,
-                cachedMethods:
-                  cloudfront.CloudFrontAllowedCachedMethods.GET_HEAD,
-                viewerProtocolPolicy:
-                  cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-                minTtl: cdk.Duration.seconds(0),
-                maxTtl: cdk.Duration.seconds(86400),
-                defaultTtl: cdk.Duration.seconds(3600)
-              }
-            ]
-          }
-        ],
-        viewerCertificate: viewerCertificate,
-        errorConfigurations: [
-          {
-            errorCode: 403,
-            responseCode: 200,
-            responsePagePath: '/index.html',
-            errorCachingMinTtl: 0
-          }
-        ]
-      }
-    )
+    const cloudFrontWebDistribution = new cloudfront.Distribution(this, 'CDN', {
+      comment: 'Reservation Front Distribution ' + stage,
+      defaultBehavior: {
+        origin: s3Origin,
+        allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
+        compress: true,
+        cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        cachePolicy: new cloudfront.CachePolicy(this, 'CachePolicy', {
+          minTtl: cdk.Duration.seconds(0),
+          maxTtl: cdk.Duration.seconds(86400),
+          defaultTtl: cdk.Duration.seconds(3600)
+        })
+      },
+      certificate,
+      domainNames: [alternativeDomain],
+      errorResponses: [
+        {
+          httpStatus: 403,
+          responseHttpStatus: 200,
+          responsePagePath: '/index.html',
+          ttl: cdk.Duration.seconds(0)
+        }
+      ],
+      minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021
+    })
 
     const cfnDistribution = cloudFrontWebDistribution.node
       .defaultChild as cloudfront.CfnDistribution
