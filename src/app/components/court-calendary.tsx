@@ -418,7 +418,7 @@ export function Court({ isField }: CourtProps) {
   }
 
   return (
-    <div className="relative w-full min-w-[100vw] sm:max-w-[100vw]">
+    <div className="relative w-full">
       {getBookingsOfTheWeek?.isLoading && (
         <div className="absolute inset-0 z-[60] flex h-full w-full justify-center bg-white/20 pt-[30%] backdrop-blur-sm">
           <FiLoader className="animate-spin" color="black" size={64} />
@@ -490,22 +490,24 @@ export function Court({ isField }: CourtProps) {
                           : ''
                     }
                     onClick={() =>
-                      isPassed(thisWeek()[dayIndex], dayIndex, hour, minute)
-                        ? toast.info('Esse horário já passou')
-                        : cannotReserve(thisWeek()[dayIndex], hour, minute)
-                          ? toast.info(
-                              'Você não pode reservar dentro de uma hora de outra reserva sua'
-                            )
-                          : isLastHalfHour(hour, minute)
+                      !isAuth
+                        ? toast.error('Você precisa estar logado para reservar')
+                        : isPassed(thisWeek()[dayIndex], dayIndex, hour, minute)
+                          ? toast.info('Esse horário já passou')
+                          : cannotReserve(thisWeek()[dayIndex], hour, minute)
                             ? toast.info(
-                                'Esse horário não está disponível para reserva'
+                                'Você não pode reservar dentro de uma hora de outra reserva sua'
                               )
-                            : handleClickedTime(
-                                hour,
-                                minute,
-                                thisWeek()[dayIndex],
-                                dayIndex
-                              )
+                            : isLastHalfHour(hour, minute)
+                              ? toast.info(
+                                  'Esse horário não está disponível para reserva'
+                                )
+                              : handleClickedTime(
+                                  hour,
+                                  minute,
+                                  thisWeek()[dayIndex],
+                                  dayIndex
+                                )
                     }
                     className={`relative flex min-w-[120px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 sm:min-w-[90px] ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? 'bg-gray-300' : cannotReserve(thisWeek()[dayIndex], hour, minute) ? 'bg-gray-300' : isLastHalfHour(hour, minute) ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
                     style={{
