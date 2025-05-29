@@ -40,8 +40,10 @@ jobs:
           npm run build
         env:
           VITE_STAGE: ${{ github.ref_name }}
-          VITE_AUTH_CLIENT_ID: ${{ vars.VITE_AUTH_CLIENT_ID }} 
+          VITE_AUTH_CLIENT_ID: ${{ vars.VITE_AUTH_CLIENT_ID }}
           VITE_AUTH_TENANT_ID: ${{ vars.VITE_AUTH_TENANT_ID }}
+          VITE_USER_URL: ${{ vars.VITE_USER_URL }}
+          VITE_RESERVATION_URL: ${{ vars.VITE_RESERVATION_URL }}
       - name: Setup envs
         run: |
           echo AWS_REGION=${{ vars.AWS_REGION }} >> $GITHUB_ENV
