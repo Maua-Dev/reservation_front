@@ -13,11 +13,11 @@ export function Modal({ open, children, onClose }: ModalProps) {
 
   return (
     <div
-      className={`fixed inset-0 flex items-center justify-center transition-colors ${open ? 'visible z-20 bg-black/20' : 'invisible'}`}
+      className={`fixed inset-0 z-[1000] flex items-center justify-center transition-colors ${open ? 'visible z-20 bg-black/20' : 'invisible'}`}
       onClick={handleClick}
     >
       <div
-        className={`max-h-[90vh] w-[90%] overflow-y-auto overflow-x-hidden rounded-xl bg-white shadow transition-all sm:w-[70%] ${open ? 'scale-100 opacity-100' : 'scale-125 opacity-0'} `}
+        className={`max-h-[90vh] w-[70%] rounded-xl bg-white shadow transition-all sm:w-[25%] ${open ? 'scale-100 opacity-100' : 'scale-125 opacity-0'} `}
         onClick={(e) => e.stopPropagation()}
       >
         {children}

@@ -70,6 +70,10 @@ jobs:
           npm run build
         env:
           VITE_STAGE: ${{ env.VITE_STAGE}}
+          VITE_AUTH_CLIENT_ID: ${{ vars.VITE_AUTH_CLIENT_ID }}
+          VITE_AUTH_TENANT_ID: ${{ vars.VITE_AUTH_TENANT_ID }}
+          VITE_USER_URL: ${{ vars.VITE_USER_URL }}
+          VITE_RESERVATION_URL: ${{ vars.VITE_RESERVATION_URL }}
       - name: Setup envs
         run: |
           echo "Stage: ${{ env.STAGE }}"
