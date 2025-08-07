@@ -10,10 +10,13 @@ import { FaUserCircle } from 'react-icons/fa'
 import { IoClose } from 'react-icons/io5'
 import { useIsAuthenticated, useMsal } from '@azure/msal-react'
 import { CiLogout } from 'react-icons/ci'
+import { useNavigate } from 'react-router-dom'
+import { TbAlertSquareFilled } from 'react-icons/tb'
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [fade, setFade] = useState(false)
+  const navigate = useNavigate()
 
   const { instance } = useMsal()
   const auth = useIsAuthenticated()
@@ -100,6 +103,16 @@ export function Navbar() {
             }}
           >
             MENU DE RESERVAS
+          </a>
+          <a
+            href="/#reservation"
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault()
+              navigate('/rules-warnings')
+            }}
+          >
+            AVISOS
           </a>
           <a
             href="/#dev"
@@ -197,6 +210,16 @@ export function Navbar() {
               }}
             >
               <FaCalendarAlt /> Menu de reservas
+            </a>
+            <a
+              href="/#reservation"
+              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-200 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+              onClick={(e) => {
+                e.preventDefault()
+                navigate('/rules-warnings')
+              }}
+            >
+              <TbAlertSquareFilled /> AVISOS
             </a>
             <a
               href="#dev"

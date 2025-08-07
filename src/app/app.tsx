@@ -8,6 +8,7 @@ import { MsalProvider } from '@azure/msal-react'
 import { msalInstance } from './auth/auth-config'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import RulesWarnings from './pages/rules-warnings'
 
 export function App() {
   return (
@@ -32,6 +33,7 @@ export function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/court-reserve" element={<CourtReserve />} />
+            <Route path="/rules-warnings" element={<RulesWarnings />} />
             <Route path="/fieldbeach-reserve" element={<FieldBeachReserve />} />
             <Route path="*" element={<h1>Not Found</h1>} />
           </Routes>
