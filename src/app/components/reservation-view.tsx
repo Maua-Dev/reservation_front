@@ -123,15 +123,22 @@ export function ReservationCard({
       </div>
       <div className="relative z-10 ml-auto flex h-full justify-end gap-4">
         <Button
-          className={`flex h-8 w-20 items-center justify-center bg-white p-2 text-sm font-bold text-black transition-colors ${isPassed ? 'bg-gray-300' : 'hover:bg-red-400'} md:w-36 lg:h-10 lg:text-lg`}
+          className={`flex h-8 w-20 items-center justify-center bg-white p-2 text-sm font-bold text-black transition-colors ${startDate < today + 15 * 60 * 1000 ? 'bg-gray-300' : isPassed ? 'bg-gray-300' : 'hover:bg-red-400'} md:w-36 lg:h-10 lg:text-lg`}
           onClick={() => {
-            if (isPassed) {
-              toast.info('Não é possível cancelar uma reserva já passada')
+            // confere se pelo menos 15 min de antecedencia
+            if (startDate < today + 15 * 60 * 1000) {
+              toast.info(
+                'Não é possível cancelar uma reserva com menos de 15 minutos de antecedência'
+              )
             } else {
-              if (deleteBookingMutation.isPending) {
-                return
+              if (isPassed) {
+                toast.info('Não é possível cancelar uma reserva já passada')
               } else {
-                handleCancel()
+                if (deleteBookingMutation.isPending) {
+                  return
+                } else {
+                  handleCancel()
+                }
               }
             }
           }}
