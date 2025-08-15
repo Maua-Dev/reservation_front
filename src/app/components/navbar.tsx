@@ -12,6 +12,7 @@ import { useIsAuthenticated, useMsal } from '@azure/msal-react'
 import { CiLogout } from 'react-icons/ci'
 import { useNavigate } from 'react-router-dom'
 import { TbAlertSquareFilled } from 'react-icons/tb'
+import { IoIosPaper } from 'react-icons/io'
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -51,7 +52,7 @@ export function Navbar() {
       }}
       className="fixed z-[90] flex w-full flex-col font-league"
     >
-      <nav className="flex w-full select-none items-center justify-between bg-white px-6 py-2 md:px-8 md:py-3 lg:px-10">
+      <nav className="flex w-full select-none items-center justify-between bg-white px-6 py-2 md:px-8 md:py-3 lg:px-8">
         <a
           href="/"
           className="cursor-pointer"
@@ -69,7 +70,7 @@ export function Navbar() {
           />
         </a>
 
-        <div className="hidden gap-24 text-xl font-medium text-blue-primary md:flex lg:text-2xl">
+        <div className="hidden gap-16 text-xl font-medium text-blue-primary md:flex lg:text-2xl">
           <a
             href="/"
             className="cursor-pointer scroll-smooth"
@@ -102,7 +103,7 @@ export function Navbar() {
               }
             }}
           >
-            MENU DE RESERVAS
+            CEAF - ESPORTES
           </a>
           <a
             href="/#reservation"
@@ -113,6 +114,16 @@ export function Navbar() {
             }}
           >
             AVISOS
+          </a>
+          <a
+            href="/#reservation"
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault()
+              navigate('/terms-of-use')
+            }}
+          >
+            TERMO DE USO
           </a>
           <a
             href="/#dev"
@@ -172,9 +183,9 @@ export function Navbar() {
       </nav>
       {isMenuOpen && (
         <div
-          className={`flex h-full w-full transform flex-col justify-between gap-16 bg-blue-primary pb-8 pt-16 duration-200 ${fade ? 'translate-x-0 opacity-100' : 'translate-x-[450px] opacity-0'}`}
+          className={`flex h-full w-full transform flex-col justify-between gap-16 bg-blue-primary pb-8 pt-10 duration-200 ${fade ? 'translate-x-0 opacity-100' : 'translate-x-[450px] opacity-0'}`}
         >
-          <div className="flex flex-col justify-center gap-16 px-12">
+          <div className="flex flex-col justify-center gap-8 px-10">
             <a
               href="/"
               className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-75 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
@@ -209,7 +220,7 @@ export function Navbar() {
                 handleCloseMenu()
               }}
             >
-              <FaCalendarAlt /> Menu de reservas
+              <FaCalendarAlt /> CEAF - Esportes
             </a>
             <a
               href="/#reservation"
@@ -219,7 +230,17 @@ export function Navbar() {
                 navigate('/rules-warnings')
               }}
             >
-              <TbAlertSquareFilled /> AVISOS
+              <TbAlertSquareFilled /> Avisos
+            </a>
+            <a
+              href="/#reservation"
+              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-200 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+              onClick={(e) => {
+                e.preventDefault()
+                navigate('/terms-of-use')
+              }}
+            >
+              <IoIosPaper /> Termos de Uso
             </a>
             <a
               href="#dev"
@@ -270,7 +291,7 @@ export function Navbar() {
             )}
           </div>
           <p className="flex w-full justify-center text-xl text-white">
-            Reservation Mauá - 2024
+            Reservation Mauá - 2025
           </p>
         </div>
       )}
