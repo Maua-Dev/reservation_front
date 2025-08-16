@@ -105,26 +105,7 @@ export function Navbar() {
           >
             CEAF - ESPORTES
           </a>
-          <a
-            href="/#reservation"
-            className="cursor-pointer"
-            onClick={(e) => {
-              e.preventDefault()
-              navigate('/rules-warnings')
-            }}
-          >
-            AVISOS
-          </a>
-          <a
-            href="/#reservation"
-            className="cursor-pointer"
-            onClick={(e) => {
-              e.preventDefault()
-              navigate('/terms-of-use')
-            }}
-          >
-            TERMO DE USO
-          </a>
+
           <a
             href="/#dev"
             className="cursor-pointer"
@@ -146,6 +127,26 @@ export function Navbar() {
             }}
           >
             SOBRE NÓS
+          </a>
+          <a
+            href="/#reservation"
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault()
+              navigate('/rules-warnings')
+            }}
+          >
+            AVISOS
+          </a>
+          <a
+            href="/#reservation"
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault()
+              navigate('/terms-of-use')
+            }}
+          >
+            TERMO DE USO
           </a>
         </div>
         {auth ? (
@@ -223,26 +224,6 @@ export function Navbar() {
               <FaCalendarAlt /> CEAF - Esportes
             </a>
             <a
-              href="/#reservation"
-              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-200 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
-              onClick={(e) => {
-                e.preventDefault()
-                navigate('/rules-warnings')
-              }}
-            >
-              <TbAlertSquareFilled /> Avisos
-            </a>
-            <a
-              href="/#reservation"
-              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-200 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
-              onClick={(e) => {
-                e.preventDefault()
-                navigate('/terms-of-use')
-              }}
-            >
-              <IoIosPaper /> Termos de Uso
-            </a>
-            <a
               href="#dev"
               className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-300 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
               onClick={(e) => {
@@ -265,16 +246,62 @@ export function Navbar() {
             >
               <BiWorld /> Sobre nós
             </a>
+            <a
+              href="/#reservation"
+              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-[400ms] duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+              onClick={(e) => {
+                e.preventDefault()
+                const destinationUrl = '/rules-warnings'
+                if (window.location.pathname === '/') {
+                  const targetElement = document.querySelector(
+                    'rules-warnings'
+                  ) as HTMLElement | null
+                  if (targetElement) {
+                    targetElement.scrollIntoView({
+                      behavior: 'smooth'
+                    })
+                  }
+                } else {
+                  window.location.href = destinationUrl
+                }
+                handleCloseMenu()
+              }}
+            >
+              <TbAlertSquareFilled /> Avisos
+            </a>
+            <a
+              href="/#reservation"
+              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-500 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+              onClick={(e) => {
+                e.preventDefault()
+                const destinationUrl = '/terms-of-use'
+                if (window.location.pathname === '/') {
+                  const targetElement = document.querySelector(
+                    'terms-of-use'
+                  ) as HTMLElement | null
+                  if (targetElement) {
+                    targetElement.scrollIntoView({
+                      behavior: 'smooth'
+                    })
+                  }
+                } else {
+                  window.location.href = destinationUrl
+                }
+                handleCloseMenu()
+              }}
+            >
+              <IoIosPaper /> Termos de Uso
+            </a>
             {auth ? (
               isLoading ? (
                 <Button
-                  className={`flex items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  className={`flex items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[600ms] duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
                 >
                   <BiLoaderAlt className="animate-spin text-2xl" />
                 </Button>
               ) : (
                 <Button
-                  className={`flex items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  className={`flex items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[600ms] duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
                   onClick={handleLogout}
                 >
                   <CiLogout className="mr-2" /> Logout
@@ -283,7 +310,7 @@ export function Navbar() {
             ) : (
               <a href="/login">
                 <Button
-                  className={`flex w-full items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[400ms] duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  className={`flex w-full items-center gap-4 px-3 py-4 text-2xl font-semibold delay-[600ms] duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
                 >
                   <FaUserCircle className="mr-2" /> Login
                 </Button>
