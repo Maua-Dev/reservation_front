@@ -68,8 +68,8 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   const modalityToEquipament: Record<string, string[]> = {
     Football: ['Bola de futebol'],
     Rugby: ['Bola de rugby'],
-    'Beach Tennis': ['Raquete e Bola', 'Tamboréu e Bola'],
-    Tennis: ['Bola e Raquete de tênis'],
+    'Beach Tennis': ['Raquete e Bola'],
+    Tennis: ['Bola e Raquete de tênis', 'Tamboréu e Bola'],
     Basketball: ['Bola de basquete'],
     Volleyball: ['Bola de vôlei'],
     Handball: ['Bola de handebol'],
@@ -79,7 +79,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     'Bola de futebol': 'Football',
     'Bola de rugby': 'Rugby',
     'Raquete e Bola': 'Beach Tennis',
-    'Tamboréu e Bola': 'Beach Tennis',
+    'Tamboréu e Bola': 'Tennis',
     'Bola e Raquete de tênis': 'Tennis',
     'Bola de basquete': 'Basketball',
     'Bola de vôlei': 'Volleyball',
@@ -127,20 +127,16 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   const equipamento = () => {
     if (isField) {
       if (options.length === 1 && options[0] === 'Beach') {
-        return ['Raquete e Bola', 'Tamboréu e Bola']
+        return ['Raquete e Bola']
       }
       if (options.length === 1 && options[0] === 'Campo') {
         return ['Bola de futebol', 'Bola de rugby']
       }
-      return [
-        'Bola de futebol',
-        'Bola de rugby',
-        'Raquete e Bola',
-        'Tamboréu e Bola'
-      ]
+      return ['Bola de futebol', 'Bola de rugby', 'Raquete e Bola']
     }
     return [
       'Bola e Raquete de tênis',
+      'Tamboréu e Bola',
       'Bola de basquete',
       'Bola de vôlei',
       'Bola de handebol',
