@@ -19,7 +19,7 @@ export class IacStack extends cdk.Stack {
     // const acmCertificateArn =
     //   process.env.ACM_CERTIFICATE_ARN ||
     //   'arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012'
-  
+
     const s3Bucket = new s3.Bucket(this, 'ReservationFrontBucket' + stage, {
       versioned: true,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
@@ -64,6 +64,8 @@ export class IacStack extends cdk.Stack {
     //     }
     //   )
     // }
+
+    const domainName = process.env.DOMAIN_NAME
 
     const cloudFrontWebDistribution = new cloudfront.CloudFrontWebDistribution(
       this,

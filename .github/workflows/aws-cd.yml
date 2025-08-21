@@ -61,6 +61,18 @@ jobs:
             echo "Invalid branch name!" && exit 1
           fi
           echo "STACK_NAME=ReservationStackFront${{env.STAGE}}" >> $GITHUB_ENV
+      - name: Set DOMAIN_NAME
+        run: |
+          if [[ "${{ github.ref_name }}" == "dev" ]]; then
+            echo "DOMAIN_NAME=reservation.dev.devmaua.com" >> $GITHUB_ENV
+          elif [[ "${{ github.ref_name }}" == "homolog" ]]; then
+            echo "DOMAIN_NAME=reservation.hml.devmaua.com" >> $GITHUB_ENV
+          elif [[ "${{ github.ref_name }}" == "prod" ]]; then
+            echo "DOMAIN_NAME=reservation.devmaua.com" >> $GITHUB_ENV
+          else
+            echo "Invalid branch name!" && exit 1
+          fi
+
       - name: Installing Dependencies
         run: |
           npm install
