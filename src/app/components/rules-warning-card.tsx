@@ -1,11 +1,9 @@
-import { useNavigate } from 'react-router-dom'
 type RulesWarningCardProps = {
   content: string
 }
 export function RulesWarningCard({ content }: RulesWarningCardProps) {
-  const navigate = useNavigate()
   return (
-    <div className="p-60px flex h-[300px] w-[500px] flex-col items-start justify-start overflow-auto bg-gray-200 rounded-md p-3">
+    <div className="flex h-full w-full flex-col items-start justify-start overflow-auto rounded-md bg-grey-tertiary/20 p-6 text-justify font-poppins text-lg font-bold text-grey-primary">
       <p>{content}</p>
     </div>
   )

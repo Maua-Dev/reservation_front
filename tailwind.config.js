@@ -16,6 +16,7 @@ export default {
         'yellow-secondary': '#a0a823',
         'grey-primary': '#999999',
         'grey-secondary': '#656565',
+        'grey-tertiary': '#c4c4c4',
         'white-primary': '#cccccc'
       },
       backgroundImage: {
