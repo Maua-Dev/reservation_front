@@ -15,7 +15,7 @@ export default function RulesWarnings() {
       {/* <div className="flex h-[80px] w-[900px] items-center justify-center rounded-b-lg bg-blue-primary text-center text-4xl text-white">
         <p>Avisos e Regras</p>
       </div> */}
-      <div className="flex h-[80px] w-[900px] items-center justify-center rounded-md bg-blue-400 pt-[0px] text-center text-4xl text-white">
+      <div className="flex h-[66px] w-[900px] items-center justify-center rounded-md bg-blue-400 pt-[0px] text-center text-3xl text-white">
         <p className="font-bold">AVISOS E REGRAS</p>
       </div>
       <div className="flex h-[10px] w-full items-start justify-between px-[20rem] pl-20 pt-12 text-2xl text-blue-700">
