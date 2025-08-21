@@ -56,7 +56,6 @@ export default function RulesWarnings() {
             ></CardWarnings>
           </div>
         </div>
-
         <div>
           <p className="font-poppins font-bold text-blue-500">Regras</p>
         </div>
