@@ -11,7 +11,7 @@ import { CardWarnings } from '../components/warnings-card'
 export default function RulesWarnings() {
   return (
     <div className="bg-red-30 flex h-[100vh] w-full flex-col items-center justify-start overflow-y-hidden pt-20">
-      <div className="flex h-[66px] w-1/2 items-center justify-center rounded-md bg-blue-primary/80 text-center text-3xl text-white">
+      <div className="flex h-[66px] w-1/2 items-center justify-center rounded-b-xl bg-blue-primary pt-2 text-center font-poppins text-2xl font-bold text-white">
         <p className="font-bold">AVISOS E REGRAS</p>
       </div>
       <div className="flex w-full items-center justify-evenly gap-10 overflow-scroll px-14 pt-12 text-2xl text-blue-700">
