@@ -68,13 +68,7 @@ export function Court({ isField }: CourtProps) {
   }
 
   const today = new Date()
-  // const modalities = isField
-  //   ? Object.keys(ModalityName).filter(
-  //       (mod) => mod === 'Football' || mod === 'Rugby' || mod === 'Beach Tennis'
-  //     )
-  //   : Object.keys(ModalityName).filter(
-  //       (mod) => mod !== 'Football' && mod !== 'Rugby' && mod !== 'Beach Tennis'
-  //     )
+
   const modalities = isField
     ? [ModalityName.Football, ModalityName.Rugby, ModalityName['Beach Tennis']]
     : [
@@ -279,6 +273,12 @@ export function Court({ isField }: CourtProps) {
         date.setFullYear(today.getFullYear() + 1)
         date.setMonth(0)
       }
+    } else if (day > today.getDate() && weekday < today.getDay() - 1) {
+      date.setMonth(today.getMonth() - 1)
+      if (today.getMonth() === 0) {
+        date.setFullYear(today.getFullYear() - 1)
+        date.setMonth(11) // Dezembro
+      }
     } else {
       date.setMonth(today.getMonth())
       date.setFullYear(today.getFullYear())
@@ -355,6 +355,7 @@ export function Court({ isField }: CourtProps) {
     const timestamp = clickedTime.getTime()
     const oneHourLater = timestamp + 60 * 60 * 1000
 
+    console.log(`Clicked time: ${clickedTime.toLocaleString()}`)
     if (timestamp < today.getTime()) {
       return
     }
