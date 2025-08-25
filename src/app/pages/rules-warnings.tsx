@@ -105,7 +105,7 @@ export default function RulesWarnings() {
             />
             {showEdit && (
               <Button
-                className="flex h-5 p-3 w-1/12 items-center justify-center bg-blue-primary font-poppins text-base text-white"
+                className="flex h-5 w-1/12 items-center justify-center bg-blue-primary p-3 font-poppins text-base text-white"
                 onClick={() => {
                   setShowEdit(false)
                   setShowModal(true)
