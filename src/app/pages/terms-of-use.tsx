@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { BsThreeDots } from 'react-icons/bs'
 import { Button } from '../components/button'
 import EditModal from '../components/edit-modal'
-import NoticeModal from '../components/edit-notice-modal'
+//import NoticeModal from '../components/edit-notice-modal'
 
 export default function Terms() {
   const [showEdit, setShowEdit] = useState(false)

@@ -160,6 +160,16 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
 
   const formatDate = (date: number) => date.toString().padStart(2, '0')
 
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center rounded-xl bg-white p-8">
+        <p className="font-poppins text-xl text-red-500">
+          Usuário não encontrado. Por favor, faça login novamente.
+        </p>
+      </div>
+    )
+  }
+
   return (
     <form
       onSubmit={(e) => {
