@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { BsThreeDots } from 'react-icons/bs'
 import { Button } from '../components/button'
 import EditModal from '../components/edit-modal'
-import NoticeModal from '../components/edit-notice-modal'
+//import NoticeModal from '../components/edit-notice-modal'
 
 export default function Terms() {
   const [showEdit, setShowEdit] = useState(false)
@@ -46,8 +46,8 @@ export default function Terms() {
             Editar
           </Button>
         )}
-        <div className="flex w-[720px] flex-col justify-between bg-gray-200">
-          <div className="flex flex-col gap-2 p-8">
+        <div className="flex w-[720px] flex-col justify-between bg-grey-tertiary/20">
+          <div className="flex flex-col gap-2 p-8 font-semibold text-grey-secondary">
             What is Lorem Ipsum? <p></p> Lorem Ipsum is simply dummy text of the
             printing and typesetting industry. Lorem Ipsum has been the
             industrys standard dummy text ever since the 1500s, when an
@@ -74,7 +74,7 @@ export default function Terms() {
           </div>
         </div>
       </div>
-      {showModal && <NoticeModal onClose={() => setShowModal(false)} />}
+      {showModal && <EditModal onClose={() => setShowModal(false)} />}
     </div>
   )
 }

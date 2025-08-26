@@ -46,6 +46,16 @@ export const ReservationDetails = ({
     }
   }, [onClose])
 
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center rounded-xl bg-white p-8">
+        <p className="font-poppins text-xl text-red-500">
+          Usuário não encontrado. Por favor, faça login novamente.
+        </p>
+      </div>
+    )
+  }
+
   return (
     <>
       <div
