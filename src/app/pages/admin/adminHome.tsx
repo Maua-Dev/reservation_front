@@ -3,7 +3,7 @@ import { AdminOption } from '@/app/components/adminOption'
 import Footer from '@/app/components/footer'
 import imgBeachTenis from '../../assets/imagem-beachtenis.png'
 import imgCampo from '../../assets/imagem-campo.png'
-import imgQuadra from '../../assets/imagem-quadra.png'
+// import imgQuadra from '../../assets/imagem-quadra.png'
 
 const options = [
   {
@@ -12,12 +12,12 @@ const options = [
     action: 'Eventos',
     dir: '/admin-reserve'
   },
-  {
-    image: imgQuadra,
-    title: 'Visualizar Reservas de Usuários',
-    action: 'Visualizar',
-    dir: '/admin-report'
-  },
+  // {
+  //   image: imgQuadra,
+  //   title: 'Visualizar Reservas de Usuários',
+  //   action: 'Visualizar',
+  //   dir: '/admin-report'
+  // },
   {
     image: imgBeachTenis,
     title: 'Professores Autorizados',

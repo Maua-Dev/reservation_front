@@ -4,6 +4,7 @@ import { Button } from '../components/button'
 import { useState, useRef, useEffect } from 'react'
 import EditModal from '../components/edit-modal'
 import NoticeModal from '../components/edit-notice-modal'
+import { useUser } from '../hooks/use-user'
 // import { RulesWarningCard } from
 
 export default function RulesWarnings() {
@@ -12,6 +13,7 @@ export default function RulesWarnings() {
   const editRef = useRef<HTMLDivElement>(null)
   const [showNoticeModal, setShowNoticeModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
+  const { user } = useUser()
 
   useEffect(() => {
     if (!showEdit && !showNoticeModal && !showEditModal) return
@@ -35,21 +37,25 @@ export default function RulesWarnings() {
           <div className="w-[100px] pb-0 text-center font-poppins font-bold text-blue-500">
             Avisos
           </div>
-          <div
-            ref={editRef}
-            className="flex w-full flex-row justify-end pb-4 pr-8"
-          >
-            <Button
-              className="flex h-5 w-1/12 items-center justify-center bg-blue-primary font-poppins text-base text-white"
-              onClick={() => {
-                setShowEdit(false)
-                setShowNoticeModal(true)
-              }}
+          {user?.role === 'ADMIN' && (
+            <div
+              ref={editRef}
+              className="flex w-full flex-row justify-end pb-4 pr-8"
             >
-              +
-            </Button>
-            {showNoticeModal && <NoticeModal onClose={() => setShowNoticeModal(false)} />}
-          </div>
+              <Button
+                className="flex h-5 w-1/12 items-center justify-center bg-blue-primary font-poppins text-base text-white"
+                onClick={() => {
+                  setShowEdit(false)
+                  setShowNoticeModal(true)
+                }}
+              >
+                +
+              </Button>
+              {showNoticeModal && (
+                <NoticeModal onClose={() => setShowNoticeModal(false)} />
+              )}
+            </div>
+          )}
           <div className="h-[60vh] w-full overflow-scroll px-4">
             <CardWarnings
               titulo="Quadra 1"
@@ -88,22 +94,28 @@ export default function RulesWarnings() {
           <div>
             <p className="font-poppins font-bold text-blue-500">Regras</p>
           </div>
-          <div className="flex w-full flex-col items-end pb-3 pr-8">
-            <Button
-              className="flex h-5 w-1/12 items-center justify-center bg-blue-primary p-3 font-poppins text-base text-white"
-              onClick={() => {
-                setShowEdit(false)
-                setShowEditModal(true)
-              }}
-            >
-              Editar
-            </Button>
-            {showEditModal && <EditModal onClose={() => setShowEditModal(false)} />}
-          </div>
+          {user?.role === 'ADMIN' && (
+            <div className="flex w-full flex-col items-end pb-3 pr-8">
+              <Button
+                className="flex h-5 w-1/12 items-center justify-center bg-blue-primary p-3 font-poppins text-base text-white"
+                onClick={() => {
+                  setShowEdit(false)
+                  setShowEditModal(true)
+                }}
+              >
+                Editar
+              </Button>
+              {showEditModal && (
+                <EditModal onClose={() => setShowEditModal(false)} />
+              )}
+            </div>
+          )}
           <div className="flex h-[60vh] w-full flex-col justify-between">
             <RulesWarningCard content=" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. " />
           </div>
-          {showEditModal && <EditModal onClose={() => setShowEditModal(false)} />}
+          {showEditModal && (
+            <EditModal onClose={() => setShowEditModal(false)} />
+          )}
         </div>
       </div>
     </div>

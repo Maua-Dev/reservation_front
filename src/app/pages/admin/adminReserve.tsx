@@ -4,6 +4,7 @@ import { CiFilter } from 'react-icons/ci'
 import { useState } from 'react'
 import ReserveOptionsModal from '@/app/components/admin/reserveOptionsModal'
 import MonthCalendarAdmin from '@/app/components/month-calendar-admin'
+import { IoMdDownload } from 'react-icons/io'
 //import { set } from 'react-hook-form'
 
 const reservas = [
@@ -12,7 +13,7 @@ const reservas = [
     court: 'Quadra 1',
     courtNumber: 1,
     modality: 'Basquete',
-    time: new Date(2025, 4, 1, 17, 30).getTime(), //year, month, day, hour, minute
+    time: new Date(2025, 8, 28, 18, 30).getTime(), //year, month, day, hour, minute
     duration: 1
   }
 ]
@@ -280,6 +281,10 @@ export default function AdminReserve() {
               currentYear={currentYear}
               onMonthChange={handleMonthChange}
             />
+            <div className="-mt-2 flex cursor-pointer flex-row items-center justify-center gap-2 text-start font-poppins">
+              <IoMdDownload />
+              <span>RELATÓRIO</span>
+            </div>
           </div>
 
           {/* Coluna da semana - 75% em telas grandes, 100% em telas pequenas */}

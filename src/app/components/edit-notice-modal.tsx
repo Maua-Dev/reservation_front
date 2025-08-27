@@ -2,7 +2,7 @@ import { IoClose } from 'react-icons/io5'
 import { Button } from './button'
 import { useRef, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import MonthCalendarAdmin from './month-calendary'
+import MonthCalendarAdmin from './month-calendar-admin'
 
 export default function NoticeModal({ onClose }: { onClose: () => void }) {
   const modalRef = useRef<HTMLDivElement>(null)
@@ -53,22 +53,25 @@ export default function NoticeModal({ onClose }: { onClose: () => void }) {
           <div className="flex w-[180px] flex-col gap-2">
             <label className="pt-6 font-bold text-black">Tempo</label>
             <select
-              className="rounded-lg bg-yellow px-4 py-2 text-sm text-black"
+              className="rounded-lg bg-yellow px-4 py-2 text-base text-black"
               defaultValue="24 horas"
             >
               <option value="24 horas">24 horas</option>
               <option value="48 horas">48 horas</option>
             </select>
-            <label className="mt-36 font-bold text-black" htmlFor="titulo">
-              TÍTULO:
+            <label
+              className="mt-36 font-poppins font-bold text-black"
+              htmlFor="titulo"
+            >
+              Título:
             </label>
             <input
               id="titulo"
               type="text"
-              className="w-full rounded border border-gray-400 px-2 py-1"
+              className="w-full rounded border border-gray-400 px-2 py-1 text-black"
             />
           </div>
-          <div className="ml-4 w-[160px] flex-1">
+          <div className="ml-4 w-[180px] flex-1">
             <MonthCalendarAdmin
               selectedDate={selectedDate}
               onDateSelect={handleDateSelect}
@@ -78,10 +81,10 @@ export default function NoticeModal({ onClose }: { onClose: () => void }) {
             />
           </div>
         </div>
-        <div className="flex w-full flex-col gap-2">
+        <div className="flex w-full flex-col">
           <textarea
             id="descricao"
-            className="w-full rounded border border-gray-400 px-2 py-1"
+            className="w-full rounded border border-gray-400 px-2 py-1 text-lg text-black"
             rows={3}
             placeholder="Descrição"
           />

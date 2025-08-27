@@ -27,7 +27,7 @@ export default function EditModal({ onClose }: { onClose: () => void }) {
         <button onClick={onClose} className="absolute right-4 top-4 text-black">
           <IoClose className="text-2xl" />
         </button>
-        <div className="flex h-[320px] w-full flex-col gap-2 overflow-auto rounded-lg border border-gray-300 bg-gray-50 p-4">
+        <div className="flex h-[320px] w-full flex-col gap-2 overflow-auto rounded-lg border border-gray-300 bg-gray-50 p-4 text-black">
           What is Lorem Ipsum? <p></p> Lorem Ipsum is simply dummy text of the
           printing and typesetting industry. Lorem Ipsum has been the industrys
           standard dummy text ever since the 1500s, when an

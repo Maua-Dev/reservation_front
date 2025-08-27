@@ -13,6 +13,7 @@ import { CiLogout } from 'react-icons/ci'
 import { useNavigate } from 'react-router-dom'
 import { TbAlertSquareFilled } from 'react-icons/tb'
 import { IoIosPaper } from 'react-icons/io'
+import { useUser } from '../hooks/use-user'
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -21,6 +22,7 @@ export function Navbar() {
 
   const { instance } = useMsal()
   const auth = useIsAuthenticated()
+  const { user } = useUser()
   const isLoading = false
 
   const handleLogout = () => {
@@ -53,102 +55,215 @@ export function Navbar() {
       className="fixed z-[90] flex w-full flex-col font-league"
     >
       <nav className="flex w-full select-none items-center justify-between bg-white px-6 py-2 md:px-8 md:py-3 lg:px-8">
-        <a
-          href="/"
-          className="cursor-pointer"
-          onClick={(e) => {
-            if (window.location.pathname === '/') {
-              e.preventDefault() // Evita o redirecionamento se já está na página inicial
-              window.scrollTo({ top: 0, behavior: 'smooth' }) // Rola para o topo
-            }
-          }}
-        >
-          <img
-            src={window.innerWidth < 768 ? shortLogo : fullLogo}
-            alt="Logo do Mauá Reservation"
-            className="w-14 sm:w-20 md:w-24"
-          />
-        </a>
-
-        <div className="hidden gap-16 text-xl font-medium text-blue-primary md:flex lg:text-2xl">
-          <a
-            href="/"
-            className="cursor-pointer scroll-smooth"
-            onClick={(e) => {
-              if (window.location.pathname === '/') {
-                e.preventDefault() // Evita o redirecionamento se já está na página inicial
-                window.scrollTo({ top: 0, behavior: 'smooth' }) // Rola para o topo
-              }
-            }}
-          >
-            INÍCIO
-          </a>
-          <a
-            href="/#reservation"
-            className="cursor-pointer"
-            onClick={(e) => {
-              e.preventDefault()
-              const destinationUrl = '/#reservation'
-              if (window.location.pathname === '/') {
-                const targetElement = document.querySelector(
-                  '#reservation'
-                ) as HTMLElement | null
-                if (targetElement) {
-                  targetElement.scrollIntoView({
-                    behavior: 'smooth'
-                  })
+        {user?.role === 'ADMIN' ? (
+          <>
+            <a
+              href="/admin-home"
+              className="cursor-pointer"
+              onClick={(e) => {
+                if (window.location.pathname === '/admin-home') {
+                  e.preventDefault() // Evita o redirecionamento se já está na página inicial
+                  window.scrollTo({ top: 0, behavior: 'smooth' }) // Rola para o topo
                 }
-              } else {
-                window.location.href = destinationUrl
-              }
-            }}
-          >
-            CEAF - ESPORTES
-          </a>
+              }}
+            >
+              <img
+                src={window.innerWidth < 768 ? shortLogo : fullLogo}
+                alt="Logo do Mauá Reservation"
+                className="w-14 sm:w-20 md:w-24"
+              />
+            </a>
 
-          <a
-            href="/#dev"
-            className="cursor-pointer"
-            onClick={(e) => {
-              e.preventDefault()
-              const destinationUrl = '/#dev'
-              if (window.location.pathname === '/') {
-                const targetElement = document.querySelector(
-                  '#dev'
-                ) as HTMLElement | null
-                if (targetElement) {
-                  targetElement.scrollIntoView({
-                    behavior: 'smooth'
-                  })
+            <div className="hidden gap-16 text-xl font-medium text-blue-primary md:flex lg:text-2xl">
+              <a
+                href="/admin-home"
+                className="cursor-pointer scroll-smooth"
+                onClick={(e) => {
+                  if (window.location.pathname === '/admin-home') {
+                    e.preventDefault() // Evita o redirecionamento se já está na página inicial
+                    window.scrollTo({ top: 0, behavior: 'smooth' }) // Rola para o topo
+                  }
+                }}
+              >
+                HOME
+              </a>
+              {/* <a
+                href="/#reservation"
+                className="cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault()
+                  const destinationUrl = '/#reservation'
+                  if (window.location.pathname === '/') {
+                    const targetElement = document.querySelector(
+                      '#reservation'
+                    ) as HTMLElement | null
+                    if (targetElement) {
+                      targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                      })
+                    }
+                  } else {s
+                    window.location.href = destinationUrl
+                  }
+                }}
+              >
+                CEAF - ESPORTES
+              </a> */}
+
+              {/* <a
+                href="/#dev"
+                className="cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault()
+                  const destinationUrl = '/#dev'
+                  if (window.location.pathname === '/') {
+                    const targetElement = document.querySelector(
+                      '#dev'
+                    ) as HTMLElement | null
+                    if (targetElement) {
+                      targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                      })
+                    }
+                  } else {
+                    window.location.href = destinationUrl
+                  }
+                }}
+              >
+                SOBRE NÓS
+              </a> */}
+              <a
+                href="/#reservation"
+                className="cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigate('/admin-reserve')
+                }}
+              >
+                RELATÓRIO/RESERVAS
+              </a>
+              <a
+                href="/#reservation"
+                className="cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigate('/rules-warnings')
+                }}
+              >
+                AVISOS
+              </a>
+              <a
+                href="/#reservation"
+                className="cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigate('/terms-of-use')
+                }}
+              >
+                TERMO DE USO
+              </a>
+            </div>
+          </>
+        ) : (
+          <>
+            <a
+              href="/"
+              className="cursor-pointer"
+              onClick={(e) => {
+                if (window.location.pathname === '/') {
+                  e.preventDefault() // Evita o redirecionamento se já está na página inicial
+                  window.scrollTo({ top: 0, behavior: 'smooth' }) // Rola para o topo
                 }
-              } else {
-                window.location.href = destinationUrl
-              }
-            }}
-          >
-            SOBRE NÓS
-          </a>
-          <a
-            href="/#reservation"
-            className="cursor-pointer"
-            onClick={(e) => {
-              e.preventDefault()
-              navigate('/rules-warnings')
-            }}
-          >
-            AVISOS
-          </a>
-          <a
-            href="/#reservation"
-            className="cursor-pointer"
-            onClick={(e) => {
-              e.preventDefault()
-              navigate('/terms-of-use')
-            }}
-          >
-            TERMO DE USO
-          </a>
-        </div>
+              }}
+            >
+              <img
+                src={window.innerWidth < 768 ? shortLogo : fullLogo}
+                alt="Logo do Mauá Reservation"
+                className="w-14 sm:w-20 md:w-24"
+              />
+            </a>
+
+            <div className="hidden gap-16 text-xl font-medium text-blue-primary md:flex lg:text-2xl">
+              <a
+                href="/"
+                className="cursor-pointer scroll-smooth"
+                onClick={(e) => {
+                  if (window.location.pathname === '/') {
+                    e.preventDefault() // Evita o redirecionamento se já está na página inicial
+                    window.scrollTo({ top: 0, behavior: 'smooth' }) // Rola para o topo
+                  }
+                }}
+              >
+                INÍCIO
+              </a>
+              <a
+                href="/#reservation"
+                className="cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault()
+                  const destinationUrl = '/#reservation'
+                  if (window.location.pathname === '/') {
+                    const targetElement = document.querySelector(
+                      '#reservation'
+                    ) as HTMLElement | null
+                    if (targetElement) {
+                      targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                      })
+                    }
+                  } else {
+                    window.location.href = destinationUrl
+                  }
+                }}
+              >
+                CEAF - ESPORTES
+              </a>
+
+              <a
+                href="/#dev"
+                className="cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault()
+                  const destinationUrl = '/#dev'
+                  if (window.location.pathname === '/') {
+                    const targetElement = document.querySelector(
+                      '#dev'
+                    ) as HTMLElement | null
+                    if (targetElement) {
+                      targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                      })
+                    }
+                  } else {
+                    window.location.href = destinationUrl
+                  }
+                }}
+              >
+                SOBRE NÓS
+              </a>
+              <a
+                href="/#reservation"
+                className="cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigate('/rules-warnings')
+                }}
+              >
+                AVISOS
+              </a>
+              <a
+                href="/#reservation"
+                className="cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigate('/terms-of-use')
+                }}
+              >
+                TERMO DE USO
+              </a>
+            </div>
+          </>
+        )}
         {auth ? (
           isLoading ? (
             <Button className="hidden h-16 w-40 items-center justify-center text-xl md:flex lg:text-2xl">
@@ -187,111 +302,223 @@ export function Navbar() {
           className={`flex h-full w-full transform flex-col justify-between gap-16 bg-blue-primary pb-8 pt-10 duration-200 ${fade ? 'translate-x-0 opacity-100' : 'translate-x-[450px] opacity-0'}`}
         >
           <div className="flex flex-col justify-center gap-8 px-10">
-            <a
-              href="/"
-              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-75 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
-              onClick={(e) => {
-                if (window.location.pathname === '/') {
-                  e.preventDefault() // Evita o redirecionamento se já está na página inicial
-                  window.scrollTo({ top: 0, behavior: 'smooth' }) // Rola para o topo
-                }
-                handleCloseMenu()
-              }}
-            >
-              <FaHome /> Início
-            </a>
-            <a
-              href="#reservation"
-              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-200 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
-              onClick={(e) => {
-                e.preventDefault()
-                const destinationUrl = '/#reservation'
-                if (window.location.pathname === '/') {
-                  const targetElement = document.querySelector(
-                    '#reservation'
-                  ) as HTMLElement | null
-                  if (targetElement) {
-                    targetElement.scrollIntoView({
-                      behavior: 'smooth'
-                    })
-                  }
-                } else {
-                  window.location.href = destinationUrl
-                }
-                handleCloseMenu()
-              }}
-            >
-              <FaCalendarAlt /> CEAF - Esportes
-            </a>
-            <a
-              href="#dev"
-              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-300 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
-              onClick={(e) => {
-                e.preventDefault()
-                const destinationUrl = '/#dev'
-                if (window.location.pathname === '/') {
-                  const targetElement = document.querySelector(
-                    '#dev'
-                  ) as HTMLElement | null
-                  if (targetElement) {
-                    targetElement.scrollIntoView({
-                      behavior: 'smooth'
-                    })
-                  }
-                } else {
-                  window.location.href = destinationUrl
-                }
-                handleCloseMenu()
-              }}
-            >
-              <BiWorld /> Sobre nós
-            </a>
-            <a
-              href="/#reservation"
-              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-[400ms] duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
-              onClick={(e) => {
-                e.preventDefault()
-                const destinationUrl = '/rules-warnings'
-                if (window.location.pathname === '/') {
-                  const targetElement = document.querySelector(
-                    'rules-warnings'
-                  ) as HTMLElement | null
-                  if (targetElement) {
-                    targetElement.scrollIntoView({
-                      behavior: 'smooth'
-                    })
-                  }
-                } else {
-                  window.location.href = destinationUrl
-                }
-                handleCloseMenu()
-              }}
-            >
-              <TbAlertSquareFilled /> Avisos
-            </a>
-            <a
-              href="/#reservation"
-              className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-500 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
-              onClick={(e) => {
-                e.preventDefault()
-                const destinationUrl = '/terms-of-use'
-                if (window.location.pathname === '/') {
-                  const targetElement = document.querySelector(
-                    'terms-of-use'
-                  ) as HTMLElement | null
-                  if (targetElement) {
-                    targetElement.scrollIntoView({
-                      behavior: 'smooth'
-                    })
-                  }
-                } else {
-                  window.location.href = destinationUrl
-                }
-                handleCloseMenu()
-              }}
-            >
-              <IoIosPaper /> Termos de Uso
-            </a>
+            {user?.role === 'ADMIN' ? (
+              <>
+                <a
+                  href="/admin-home"
+                  className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-75 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  onClick={(e) => {
+                    if (window.location.pathname === '/admin-home') {
+                      e.preventDefault() // Evita o redirecionamento se já está na página inicial
+                      window.scrollTo({ top: 0, behavior: 'smooth' }) // Rola para o topo
+                    }
+                    handleCloseMenu()
+                  }}
+                >
+                  <FaHome /> Home
+                </a>
+                <a
+                  href="#reservation"
+                  className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-200 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    const destinationUrl = '/#reservation'
+                    if (window.location.pathname === '/') {
+                      const targetElement = document.querySelector(
+                        '#reservation'
+                      ) as HTMLElement | null
+                      if (targetElement) {
+                        targetElement.scrollIntoView({
+                          behavior: 'smooth'
+                        })
+                      }
+                    } else {
+                      window.location.href = destinationUrl
+                    }
+                    handleCloseMenu()
+                  }}
+                >
+                  <FaCalendarAlt /> CEAF - Esportes
+                </a>
+                <a
+                  href="#dev"
+                  className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-300 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    const destinationUrl = '/#dev'
+                    if (window.location.pathname === '/') {
+                      const targetElement = document.querySelector(
+                        '#dev'
+                      ) as HTMLElement | null
+                      if (targetElement) {
+                        targetElement.scrollIntoView({
+                          behavior: 'smooth'
+                        })
+                      }
+                    } else {
+                      window.location.href = destinationUrl
+                    }
+                    handleCloseMenu()
+                  }}
+                >
+                  <BiWorld /> Sobre nós
+                </a>
+                <a
+                  href="/#reservation"
+                  className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-[400ms] duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    const destinationUrl = '/rules-warnings'
+                    if (window.location.pathname === '/') {
+                      const targetElement = document.querySelector(
+                        'rules-warnings'
+                      ) as HTMLElement | null
+                      if (targetElement) {
+                        targetElement.scrollIntoView({
+                          behavior: 'smooth'
+                        })
+                      }
+                    } else {
+                      window.location.href = destinationUrl
+                    }
+                    handleCloseMenu()
+                  }}
+                >
+                  <TbAlertSquareFilled /> Avisos
+                </a>
+                <a
+                  href="/#reservation"
+                  className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-500 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    const destinationUrl = '/terms-of-use'
+                    if (window.location.pathname === '/') {
+                      const targetElement = document.querySelector(
+                        'terms-of-use'
+                      ) as HTMLElement | null
+                      if (targetElement) {
+                        targetElement.scrollIntoView({
+                          behavior: 'smooth'
+                        })
+                      }
+                    } else {
+                      window.location.href = destinationUrl
+                    }
+                    handleCloseMenu()
+                  }}
+                >
+                  <IoIosPaper /> Termos de Uso
+                </a>
+              </>
+            ) : (
+              <>
+                <a
+                  href="/"
+                  className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-75 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  onClick={(e) => {
+                    if (window.location.pathname === '/') {
+                      e.preventDefault() // Evita o redirecionamento se já está na página inicial
+                      window.scrollTo({ top: 0, behavior: 'smooth' }) // Rola para o topo
+                    }
+                    handleCloseMenu()
+                  }}
+                >
+                  <FaHome /> Início
+                </a>
+                <a
+                  href="#reservation"
+                  className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-200 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    const destinationUrl = '/#reservation'
+                    if (window.location.pathname === '/') {
+                      const targetElement = document.querySelector(
+                        '#reservation'
+                      ) as HTMLElement | null
+                      if (targetElement) {
+                        targetElement.scrollIntoView({
+                          behavior: 'smooth'
+                        })
+                      }
+                    } else {
+                      window.location.href = destinationUrl
+                    }
+                    handleCloseMenu()
+                  }}
+                >
+                  <FaCalendarAlt /> CEAF - Esportes
+                </a>
+                <a
+                  href="#dev"
+                  className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-300 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    const destinationUrl = '/#dev'
+                    if (window.location.pathname === '/') {
+                      const targetElement = document.querySelector(
+                        '#dev'
+                      ) as HTMLElement | null
+                      if (targetElement) {
+                        targetElement.scrollIntoView({
+                          behavior: 'smooth'
+                        })
+                      }
+                    } else {
+                      window.location.href = destinationUrl
+                    }
+                    handleCloseMenu()
+                  }}
+                >
+                  <BiWorld /> Sobre nós
+                </a>
+                <a
+                  href="/#reservation"
+                  className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-[400ms] duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    const destinationUrl = '/rules-warnings'
+                    if (window.location.pathname === '/') {
+                      const targetElement = document.querySelector(
+                        'rules-warnings'
+                      ) as HTMLElement | null
+                      if (targetElement) {
+                        targetElement.scrollIntoView({
+                          behavior: 'smooth'
+                        })
+                      }
+                    } else {
+                      window.location.href = destinationUrl
+                    }
+                    handleCloseMenu()
+                  }}
+                >
+                  <TbAlertSquareFilled /> Avisos
+                </a>
+                <a
+                  href="/#reservation"
+                  className={`ml-[12px] flex w-4/5 items-center gap-4 text-2xl font-semibold text-white delay-500 duration-500 sm:text-4xl ${fade ? 'translate-x-0 opacity-100' : 'translate-x-24 opacity-0'}`}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    const destinationUrl = '/terms-of-use'
+                    if (window.location.pathname === '/') {
+                      const targetElement = document.querySelector(
+                        'terms-of-use'
+                      ) as HTMLElement | null
+                      if (targetElement) {
+                        targetElement.scrollIntoView({
+                          behavior: 'smooth'
+                        })
+                      }
+                    } else {
+                      window.location.href = destinationUrl
+                    }
+                    handleCloseMenu()
+                  }}
+                >
+                  <IoIosPaper /> Termos de Uso
+                </a>
+              </>
+            )}
             {auth ? (
               isLoading ? (
                 <Button

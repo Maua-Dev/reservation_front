@@ -12,7 +12,7 @@ export function Home() {
   const navigate = useNavigate()
   if (user && user.role === 'ADMIN') {
     toast.success('Welcome back, Admin!')
-    navigate('/admin-portal')
+    navigate('/admin-home')
   }
   return (
     <main className="flex h-auto flex-col items-center justify-center">

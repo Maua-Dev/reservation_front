@@ -1,26 +1,26 @@
-import { useState, useRef, useEffect } from 'react'
-import { BsThreeDots } from 'react-icons/bs'
-import { Button } from '../components/button'
-import EditModal from '../components/edit-modal'
+// import { useState, useRef, useEffect } from 'react'
+// import { BsThreeDots } from 'react-icons/bs'
+// import { Button } from '../components/button'
+// import EditModal from '../components/edit-modal'
 //import NoticeModal from '../components/edit-notice-modal'
 
 export default function Terms() {
-  const [showEdit, setShowEdit] = useState(false)
-  const [showModal, setShowModal] = useState(false)
-  const editRef = useRef<HTMLDivElement>(null)
+  // const [showEdit, setShowEdit] = useState(false)
+  // const [showModal, setShowModal] = useState(false)
+  // const editRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (!showEdit) return
-    const handleClickOutside = (e: MouseEvent) => {
-      if (editRef.current && !editRef.current.contains(e.target as Node)) {
-        setShowEdit(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [showEdit])
+  // useEffect(() => {
+  //   if (!showEdit) return
+  //   const handleClickOutside = (e: MouseEvent) => {
+  //     if (editRef.current && !editRef.current.contains(e.target as Node)) {
+  //       setShowEdit(false)
+  //     }
+  //   }
+  //   document.addEventListener('mousedown', handleClickOutside)
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside)
+  //   }
+  // }, [showEdit])
 
   return (
     <div className="flex w-full flex-col items-center justify-start gap-10 p-4 pt-24 font-poppins">
@@ -28,10 +28,10 @@ export default function Terms() {
         <p>Termos de Uso</p>
       </div>
       <div
-        ref={editRef}
+        // ref={editRef}
         className="relative flex w-[720px] flex-col items-end justify-end"
       >
-        <BsThreeDots
+        {/* <BsThreeDots
           className="z-20 cursor-pointer"
           onClick={() => setShowEdit((prev) => !prev)}
         />
@@ -45,7 +45,7 @@ export default function Terms() {
           >
             Editar
           </Button>
-        )}
+        )} */}
         <div className="flex w-[720px] flex-col justify-between bg-grey-tertiary/20">
           <div className="flex flex-col gap-2 p-8 font-semibold text-grey-secondary">
             What is Lorem Ipsum? <p></p> Lorem Ipsum is simply dummy text of the
@@ -74,7 +74,7 @@ export default function Terms() {
           </div>
         </div>
       </div>
-      {showModal && <EditModal onClose={() => setShowModal(false)} />}
+      {/* {showModal && <EditModal onClose={() => setShowModal(false)} />} */}
     </div>
   )
 }
