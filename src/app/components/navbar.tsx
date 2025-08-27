@@ -32,7 +32,6 @@ export function Navbar() {
       console.error('Logout error:', error)
     })
   }
-
   const handleOpenMenu = () => {
     setIsMenuOpen(true)
     setTimeout(() => {
@@ -79,59 +78,12 @@ export function Navbar() {
                 href="/admin-home"
                 className="cursor-pointer scroll-smooth"
                 onClick={(e) => {
-                  if (window.location.pathname === '/admin-home') {
-                    e.preventDefault() // Evita o redirecionamento se já está na página inicial
-                    window.scrollTo({ top: 0, behavior: 'smooth' }) // Rola para o topo
-                  }
+                  e.preventDefault()
+                  navigate('/admin-home')
                 }}
               >
                 HOME
               </a>
-              {/* <a
-                href="/#reservation"
-                className="cursor-pointer"
-                onClick={(e) => {
-                  e.preventDefault()
-                  const destinationUrl = '/#reservation'
-                  if (window.location.pathname === '/') {
-                    const targetElement = document.querySelector(
-                      '#reservation'
-                    ) as HTMLElement | null
-                    if (targetElement) {
-                      targetElement.scrollIntoView({
-                        behavior: 'smooth'
-                      })
-                    }
-                  } else {s
-                    window.location.href = destinationUrl
-                  }
-                }}
-              >
-                CEAF - ESPORTES
-              </a> */}
-
-              {/* <a
-                href="/#dev"
-                className="cursor-pointer"
-                onClick={(e) => {
-                  e.preventDefault()
-                  const destinationUrl = '/#dev'
-                  if (window.location.pathname === '/') {
-                    const targetElement = document.querySelector(
-                      '#dev'
-                    ) as HTMLElement | null
-                    if (targetElement) {
-                      targetElement.scrollIntoView({
-                        behavior: 'smooth'
-                      })
-                    }
-                  } else {
-                    window.location.href = destinationUrl
-                  }
-                }}
-              >
-                SOBRE NÓS
-              </a> */}
               <a
                 href="/#reservation"
                 className="cursor-pointer"
