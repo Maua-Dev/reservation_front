@@ -75,7 +75,8 @@ export const useBookingsQuery = () => {
     queryKey: ['bookingsOfTheWeek'],
     queryFn: async () => {
       try {
-        return await BookingsService.getBookingsOfTheWeek() //Criar uma função para o meu try
+        const data = await BookingsService.getBookingsOfTheWeek()
+        return data
       } catch (error) {
         toast.error('Erro ao buscar reservas!: ' + error)
         throw new Error('Failed to fetch bookings')

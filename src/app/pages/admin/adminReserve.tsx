@@ -1,44 +1,126 @@
 /* eslint-disable prettier/prettier */
 import { cn } from '../../utils/cn'
 import { CiFilter } from 'react-icons/ci'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ReserveOptionsModal from '@/app/components/admin/reserveOptionsModal'
 import MonthCalendarAdmin from '@/app/components/month-calendar-admin'
 import { IoMdDownload } from 'react-icons/io'
-//import { set } from 'react-hook-form'
-
-const reservas = [
-  {
-    id: 1,
-    court: 'Quadra 1',
-    courtNumber: 1,
-    modality: 'Basquete',
-    time: new Date(2025, 8, 28, 18, 30).getTime(), //year, month, day, hour, minute
-    duration: 1
-  }
-]
+import { Booking, useBookings, useBookingsQuery } from '@/app/hooks/use-booking'
+import { CalendaryCard } from '@/app/components/calendary-card'
+import { ModalityName } from '@/utils/enums/modality'
+import { useMsal } from '@azure/msal-react'
+import { FiLoader } from 'react-icons/fi'
 
 export default function AdminReserve() {
   const today = new Date()
   const [isOptionsOpen, setIsOptionsOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+  const [loading, setLoading] = useState(false)
   const [currentMonth, setCurrentMonth] = useState<number>(
     new Date().getMonth()
   )
+  const { allBookings, setAllBookings } = useBookings()
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
   )
   const [clickedTime, setClickedTime] = useState<number>(0)
 
-  const handleDateSelect = (date: Date) => {
+  const handleDateSelect = async (date: Date) => {
+    setLoading(true)
     setSelectedDate(date)
+    const selected = new Date(date)
+    const dayOfWeek = selected.getDay()
+    const sunday = selected.getDate() - dayOfWeek
+    const startOfWeek = new Date(selected)
+    if (sunday < 1) {
+      startOfWeek.setMonth(selected.getMonth() - 1)
+      startOfWeek.setDate(sunday + 31)
+      startOfWeek.setHours(0, 0, 0, 0)
+    } else {
+      startOfWeek.setDate(sunday)
+      startOfWeek.setHours(0, 0, 0, 0)
+    }
+    const nextSunday = selected.getDate() + (7 - dayOfWeek)
+    const endOfTheWeek = new Date(selected)
+    if (nextSunday > 31) {
+      endOfTheWeek.setMonth(selected.getMonth() + 1)
+      endOfTheWeek.setDate(nextSunday - 31)
+      endOfTheWeek.setHours(0, 0, 0, 0)
+    } else {
+      endOfTheWeek.setDate(nextSunday)
+      endOfTheWeek.setHours(0, 0, 0, 0)
+    }
+    localStorage.setItem('start_date', startOfWeek.getTime().toString())
+    localStorage.setItem('end_date', endOfTheWeek.getTime().toString())
+    await getBookingsOfTheWeek.refetch()
+    setLoading(false)
   }
+
+  const { getBookingsOfTheWeek } = useBookingsQuery()
 
   // Função chamada quando o mês é alterado no calendário
   const handleMonthChange = (month: number, year: number) => {
     setCurrentMonth(month)
     setCurrentYear(year)
   }
+
+  const endOfTheWeek = () => {
+    const now = new Date()
+    const dayOfWeek = now.getDay()
+    const nextSunday = now.getDate() + (7 - dayOfWeek)
+    const endOfTheWeek = new Date(now)
+    if (nextSunday > 31) {
+      endOfTheWeek.setMonth(now.getMonth() + 1)
+      endOfTheWeek.setDate(nextSunday - 31)
+      endOfTheWeek.setHours(0, 0, 0, 0)
+    } else {
+      endOfTheWeek.setDate(nextSunday)
+      endOfTheWeek.setHours(0, 0, 0, 0)
+    }
+    return endOfTheWeek.getTime()
+  }
+  const startOfTheWeek = () => {
+    const now = new Date()
+    const dayOfWeek = now.getDay()
+    const sunday = now.getDate() - dayOfWeek
+    const startOfWeek = new Date(now)
+    if (sunday < 1) {
+      startOfWeek.setMonth(now.getMonth() - 1)
+      startOfWeek.setDate(sunday + 31)
+      startOfWeek.setHours(0, 0, 0, 0)
+    } else {
+      startOfWeek.setDate(sunday)
+      startOfWeek.setHours(0, 0, 0, 0)
+    }
+    return startOfWeek.getTime()
+  }
+
+  const { instance } = useMsal()
+
+  const fetchAccessToken = async () => {
+    const accounts = instance.getAllAccounts()
+    if (accounts.length === 0) return
+    const accessToken = (
+      await instance.acquireTokenSilent({
+        scopes: ['User.Read'],
+        account: accounts[0]
+      })
+    ).accessToken
+    localStorage.setItem('accessToken', accessToken)
+    return accessToken
+  }
+
+  useEffect(() => {
+    if (getBookingsOfTheWeek.data) {
+      setAllBookings(getBookingsOfTheWeek.data.bookings)
+    }
+  }, [getBookingsOfTheWeek.data, setAllBookings])
+
+  useEffect(() => {
+    fetchAccessToken()
+    localStorage.setItem('end_date', endOfTheWeek().toString())
+    localStorage.setItem('start_date', startOfTheWeek().toString())
+  }, [])
 
   // A FUNÇÃO TA ERRADA EU ACHO CORRIGIR DPS
   function handleClickedTime(hour: number, minute: number, day: number) {
@@ -74,15 +156,23 @@ export default function AdminReserve() {
       return
     }
 
-    // Verifica se a quadra está ocupada
-    const occupiedCourts = new Set() // Como se fosse um array para armazenar as quadras ocupadas
-    reservasConvertidas
-      .filter((reserva) => reserva.day === day)
-      .forEach((reserva) => {
-        if (timestamp < reserva.endTime && timestamp >= reserva.time) {
-          occupiedCourts.add(reserva.courtNumber) // Adiciona a quadra ao Set de quadras ocupadas
+    const occupiedCourts = new Set<number>()
+    reservasConvertidas.forEach(
+      (reserva: {
+        day: number
+        end_date: number
+        start_date: number
+        court_number: number
+      }) => {
+        if (
+          reserva.day === day &&
+          timestamp < reserva.end_date &&
+          timestamp >= reserva.start_date
+        ) {
+          occupiedCourts.add(reserva.court_number)
         }
-      })
+      }
+    )
 
     // Se todas as 3 quadras estiverem ocupadas, bloqueia o modal
     if (occupiedCourts.size >= 3) {
@@ -141,30 +231,35 @@ export default function AdminReserve() {
     return week
   }
 
-  const reservasConvertidas = reservas.map((reserva) => {
-    const date = new Date(Number(reserva.time))
+  const reservasConvertidas = allBookings.map((reserva: Booking) => {
+    const date = new Date(Number(reserva.start_date))
     return {
       ...reserva,
       day: date.getDate(),
       hour: date.getHours(),
-      minute: date.getMinutes() == 30 ? 1 : 0,
-      endTime: reserva.time + reserva.duration * 60 * 60 * 1000
+      minute: date.getMinutes()
     }
   })
 
-  const specialWidth = (timestamp: number, endTime: number, day: number) => {
+  const specialWidth = (timestamp: number, end_date: number, day: number) => {
     const sameTimeReservations = new Set()
 
     reservasConvertidas
-      .filter((reserva) => Number(reserva.day) === day)
-      .forEach((reserva) => {
-        if (
-          (timestamp < reserva.endTime && timestamp >= reserva.time) ||
-          (endTime <= reserva.endTime && endTime > reserva.time)
-        ) {
-          sameTimeReservations.add(reserva.courtNumber)
+      .filter((reserva: { day: any }) => Number(reserva.day) === day)
+      .forEach(
+        (reserva: {
+          end_date: number
+          start_date: number
+          court_number: unknown
+        }) => {
+          if (
+            (timestamp < reserva.end_date && timestamp >= reserva.start_date) ||
+            (end_date <= reserva.end_date && end_date > reserva.start_date)
+          ) {
+            sameTimeReservations.add(reserva.court_number)
+          }
         }
-      })
+      )
 
     return sameTimeReservations.size > 1
       ? sameTimeReservations.size > 2
@@ -176,21 +271,27 @@ export default function AdminReserve() {
   const deslocation = (
     courtNumber: number,
     timestamp: number,
-    endTime: number,
+    end_date: number,
     day: number
   ) => {
     const sameTimeReservations = new Set()
 
     reservasConvertidas
-      .filter((reserva) => Number(reserva.day) === day)
-      .forEach((reserva) => {
-        if (
-          (timestamp < reserva.endTime && timestamp >= reserva.time) ||
-          (endTime <= reserva.endTime && endTime > reserva.time)
-        ) {
-          sameTimeReservations.add(reserva.courtNumber)
+      .filter((reserva: { day: any }) => Number(reserva.day) === day)
+      .forEach(
+        (reserva: {
+          end_date: number
+          start_date: number
+          court_number: unknown
+        }) => {
+          if (
+            (timestamp < reserva.end_date && timestamp >= reserva.start_date) ||
+            (end_date <= reserva.end_date && end_date > reserva.start_date)
+          ) {
+            sameTimeReservations.add(reserva.court_number)
+          }
         }
-      })
+      )
 
     const isItOne = sameTimeReservations.has(1)
 
@@ -229,7 +330,12 @@ export default function AdminReserve() {
         timestamp={clickedTime}
       />
       <div className="flex h-full w-full flex-col items-center justify-center">
-        <div className="top-[5.4rem] z-[90] flex w-full flex-col font-poppins text-base font-semibold text-gray-600 md:flex-row">
+        <div className="relative z-[90] flex w-full flex-col font-poppins text-base font-semibold text-gray-600 md:flex-row">
+          {loading && (
+            <div className="fixed inset-0 z-[999] flex h-full w-full items-center justify-center bg-black/20 backdrop-blur-sm">
+              <FiLoader className="animate-spin" color="black" size={64} />
+            </div>
+          )}
           {/* Floating menu in the bottom-left corner */}
           <div className="fixed bottom-4 left-4 z-50 flex flex-col gap-2">
             <div className="flex flex-col gap-2 text-black">
@@ -345,38 +451,51 @@ export default function AdminReserve() {
                           {reservasConvertidas.map((reserva) => {
                             if (
                               reserva.hour === hour &&
-                              reserva.minute === minute &&
-                              reserva.day === selectedWeek()[dayIndex]
+                              reserva.minute === (minute == 1 ? 30 : 0) &&
+                              reserva.day === thisWeek()[dayIndex]
                             ) {
                               return (
                                 <div
-                                  key={reserva.id}
+                                  key={reserva.booking_id}
                                   onClick={(e) => e.stopPropagation()}
                                   className={cn(
-                                    'absolute flex items-center justify-center rounded-md bg-blue-200 p-1 text-xs text-blue-800 md:p-2 md:text-sm',
+                                    'absolute flex',
                                     specialWidth(
-                                      Number(reserva.time),
-                                      Number(reserva.endTime),
+                                      Number(reserva.start_date),
+                                      Number(reserva.end_date),
                                       thisWeek()[dayIndex]
                                     ),
                                     deslocation(
-                                      reserva.courtNumber,
-                                      Number(reserva.time),
-                                      Number(reserva.endTime),
+                                      reserva.court_number,
+                                      Number(reserva.start_date),
+                                      Number(reserva.end_date),
                                       thisWeek()[dayIndex]
                                     )
                                   )}
                                   style={{
-                                    height: `${reserva.duration * 64}px`
+                                    height: `${1 * 50 * 2}px`
                                   }}
                                 >
-                                  <div className="truncate text-xs font-medium md:text-sm">
-                                    {reserva.court} - {reserva.modality}
-                                  </div>
+                                  <CalendaryCard
+                                    court={reserva.court_number}
+                                    location={`Quadra ${reserva.court_number}`}
+                                    modality={
+                                      ModalityName[
+                                        reserva.sport as keyof typeof ModalityName
+                                      ]
+                                    }
+                                    time={reserva.start_date}
+                                    isChecked={[true, false]}
+                                    equipments={[]}
+                                    openModal={function (): void {
+                                      throw new Error(
+                                        'Function not implemented.'
+                                      )
+                                    }}
+                                  />
                                 </div>
                               )
                             }
-                            return null
                           })}
                         </div>
                       ))}

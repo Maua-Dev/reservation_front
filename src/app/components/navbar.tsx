@@ -13,13 +13,14 @@ import { CiLogout } from 'react-icons/ci'
 import { useNavigate } from 'react-router-dom'
 import { TbAlertSquareFilled } from 'react-icons/tb'
 import { IoIosPaper } from 'react-icons/io'
-import { useUser } from '../hooks/use-user'
+import { useUser, useUserQuery } from '../hooks/use-user'
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [fade, setFade] = useState(false)
   const navigate = useNavigate()
 
+  useUserQuery()
   const { instance } = useMsal()
   const auth = useIsAuthenticated()
   const { user } = useUser()
