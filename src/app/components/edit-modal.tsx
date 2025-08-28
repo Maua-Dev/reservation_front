@@ -1,28 +1,16 @@
 import { IoClose } from 'react-icons/io5'
 import { Button } from './button'
-import { useRef, useEffect } from 'react'
 import { toast } from 'react-toastify'
 
 export default function EditModal({ onClose }: { onClose: () => void }) {
-  const modalRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        onClose()
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [onClose])
-
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20">
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20"
+      onClick={onClose}
+    >
       <div
-        ref={modalRef}
         className="relative flex w-[640px] flex-col items-end bg-white p-10 shadow-lg"
+        onClick={(e) => e.stopPropagation()}
       >
         <button onClick={onClose} className="absolute right-4 top-4 text-black">
           <IoClose className="text-2xl" />
