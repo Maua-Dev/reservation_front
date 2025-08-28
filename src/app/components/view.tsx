@@ -28,7 +28,9 @@ export function View({ onClose }: ViewProps) {
     setMyBookings(bookings.data?.bookings || [])
   }
 
-  setMyBookings(getMyBookingsQuery.data?.bookings || [])
+  useEffect(() => {
+    setMyBookings(getMyBookingsQuery.data?.bookings || [])
+  }, [getMyBookingsQuery.data, setMyBookings])
 
   const handleClose = () => {
     onClose()

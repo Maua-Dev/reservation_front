@@ -79,10 +79,10 @@ export interface UserResponse {
 // }
 
 export const UserService = {
-  getUser: async (): Promise<User> => {
+  getUser: async (accessTokenParam?: string): Promise<User> => {
     const accessToken = localStorage.getItem('accessToken')
     const response = await api.get<UserResponse>('/auth-user', {
-      headers: { Authorization: `Bearer ${accessToken}` }
+      headers: { Authorization: `Bearer ${accessTokenParam ?? accessToken}` }
     })
     const data = response.data
 

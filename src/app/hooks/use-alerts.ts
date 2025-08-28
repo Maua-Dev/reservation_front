@@ -40,9 +40,25 @@ export const useAlertsQuery = () => {
     retry: 2
   })
 
+  const deleteAlert = useMutation({
+    mutationFn: async (alert_id: string): Promise<void> => {
+      await AlertsService.deleteAlert(alert_id)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['alerts'] })
+      toast.success('Alerta deletado com sucesso!')
+    },
+    onError: (error) => {
+      toast.error('Erro ao deletar alerta!')
+      console.log(error)
+    },
+    retry: 2
+  })
+
   return {
     createAlert,
-    getAlerts
+    getAlerts,
+    deleteAlert
   }
 }
 

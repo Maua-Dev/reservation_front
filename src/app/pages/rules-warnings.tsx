@@ -6,13 +6,15 @@ import EditModal from '../components/edit-modal'
 import NoticeModal from '../components/edit-notice-modal'
 import { alertContext } from '../contexts/alerts-context'
 import { useUser } from '../hooks/use-user'
+import DeleteAlertModal from '../components/admin/delteAlertModal'
 // import { RulesWarningCard } from
 
 export default function RulesWarnings() {
   const [showEdit, setShowEdit] = useState(false)
-  // const [showModal, setShowModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const editRef = useRef<HTMLDivElement>(null)
   const [showNoticeModal, setShowNoticeModal] = useState(false)
+  const [selectedAlert, setSelectedAlert] = useState<string | null>(null)
   const [showEditModal, setShowEditModal] = useState(false)
   const { user } = useUser()
   const { alerts } = useContext(alertContext)
@@ -33,11 +35,17 @@ export default function RulesWarnings() {
   }, [showEdit, showEditModal, showNoticeModal])
 
   return (
-    <div className="bg-red-30 flex h-[100vh] w-full flex-col items-center justify-start overflow-y-hidden pt-20">
+    <div className="bg-red-30 flex h-[100vh] w-full flex-col items-center justify-start overflow-hidden bg-white px-14 pt-20">
+      {showDeleteModal && selectedAlert && (
+        <DeleteAlertModal
+          onClose={() => setShowDeleteModal(false)}
+          alertId={selectedAlert}
+        />
+      )}
       <div className="flex h-[66px] w-1/2 items-center justify-center rounded-b-xl bg-blue-primary pt-2 text-center font-poppins text-2xl font-bold text-white">
         <p className="font-bold">AVISOS E REGRAS</p>
       </div>
-      <div className="flex w-full items-center justify-evenly gap-10 overflow-scroll px-14 pt-12 text-2xl text-blue-700">
+      <div className="flex w-full items-center justify-evenly gap-10 overflow-hidden pt-12 text-2xl text-blue-700">
         <div className="flex h-[72vh] w-1/3 flex-col items-center justify-center">
           <div className="flex w-[100px] flex-row gap-16 pb-5 text-center font-poppins font-bold text-blue-500">
             Avisos
@@ -62,11 +70,18 @@ export default function RulesWarnings() {
             )}
           </div>
 
-          <div className="h-[60vh] w-full overflow-scroll px-4">
+          <div className="h-[60vh] w-full overflow-x-hidden overflow-y-scroll px-4">
             <div>
               {alerts &&
                 alerts.map((alert) => (
-                  <CardWarnings alert={alert} key={alert.alert.alert_id} />
+                  <CardWarnings
+                    alert={alert}
+                    key={alert.alert.alert_id}
+                    confirmDelete={() => {
+                      setShowDeleteModal(true)
+                      setSelectedAlert(alert.alert.alert_id)
+                    }}
+                  />
                 ))}
             </div>
           </div>

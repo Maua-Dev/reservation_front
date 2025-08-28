@@ -28,7 +28,7 @@ export const alertContext = createContext<AlertsContextType>({
 export const AlertsProvider = ({ children }: { children: ReactNode }) => {
   const [alerts, setAlerts] = useState<{ alert: Alert }[]>([])
 
-  const { getAlerts, createAlert } = useAlertsQuery()
+  const { getAlerts, createAlert, deleteAlert } = useAlertsQuery()
 
   const addAlert = (alert: CreateAlert) => {
     createAlert.mutate(alert, {
@@ -39,9 +39,11 @@ export const AlertsProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const removeAlert = (alert_id: string) => {
-    setAlerts((prevAlerts) =>
-      prevAlerts.filter((alert) => alert.alert.alert_id !== alert_id)
-    )
+    deleteAlert.mutate(alert_id, {
+      onSuccess: () => {
+        getAlerts.refetch()
+      }
+    })
   }
 
   useEffect(() => {
