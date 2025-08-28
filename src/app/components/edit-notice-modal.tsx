@@ -1,8 +1,8 @@
 import { IoClose } from 'react-icons/io5'
 import { Button } from './button'
-import { useRef, useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
+import { useRef, useEffect, useState, useContext } from 'react'
 import MonthCalendarAdmin from './month-calendar-admin'
+import { alertContext } from '../contexts/alerts-context'
 
 export default function NoticeModal({ onClose }: { onClose: () => void }) {
   const modalRef = useRef<HTMLDivElement>(null)
@@ -13,6 +13,9 @@ export default function NoticeModal({ onClose }: { onClose: () => void }) {
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
   )
+  const [title, setTitle] = useState<string>('')
+
+  const { addAlert } = useContext(alertContext)
 
   // Função chamada quando um dia é selecionado no calendário
   const handleDateSelect = (date: Date) => {
@@ -23,6 +26,17 @@ export default function NoticeModal({ onClose }: { onClose: () => void }) {
   const handleMonthChange = (month: number, year: number) => {
     setCurrentMonth(month)
     setCurrentYear(year)
+  }
+
+  const createAlert = async () => {
+    const data = {
+      title: title,
+      description: 'teste',
+      start_date: Date.now(),
+      end_date: Date.now() + 86400000,
+      is_rule: false
+    }
+    addAlert(data)
   }
 
   useEffect(() => {
@@ -68,6 +82,8 @@ export default function NoticeModal({ onClose }: { onClose: () => void }) {
             <input
               id="titulo"
               type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               className="w-full rounded border border-gray-400 px-2 py-1 text-black"
             />
           </div>
@@ -92,7 +108,7 @@ export default function NoticeModal({ onClose }: { onClose: () => void }) {
         <Button
           className="mt-4 bg-blue-primary px-16 py-2 text-base text-white"
           onClick={() => {
-            toast.success('Novo aviso criado!')
+            createAlert()
             onClose()
           }}
         >

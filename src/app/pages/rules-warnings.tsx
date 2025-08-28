@@ -1,73 +1,11 @@
 import { RulesWarningCard } from '../components/rules-warning-card'
 import { CardWarnings } from '../components/warnings-card'
 import { Button } from '../components/button'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useContext } from 'react'
 import EditModal from '../components/edit-modal'
 import NoticeModal from '../components/edit-notice-modal'
+import { alertContext } from '../contexts/alerts-context'
 // import { RulesWarningCard } from
-
-const warnings = [
-  {
-    titulo: 'Quadra 1',
-    data: '24/10 à 26/10',
-    conteudo:
-      'A quadra estará fechada por causa do evento Eureka. Durante este período, não será possível agendar horários para atividades esportivas.'
-  },
-  {
-    titulo: 'Quadra 2',
-    data: '25/10 à 27/10',
-    conteudo:
-      'Manutenção programada da quadra para troca do piso e revisão das redes. Previsão de retorno para segunda-feira.'
-  },
-  {
-    titulo: 'Quadra 3',
-    data: '28/10',
-    conteudo:
-      'Evento especial de fim de semana com torneio de vôlei. Inscrições abertas até sexta-feira.'
-  },
-  {
-    titulo: 'Quadra 4',
-    data: '29/10 à 30/10',
-    conteudo:
-      'Reforma das arquibancadas e pintura das linhas do campo. A quadra ficará interditada para melhorias.'
-  },
-  {
-    titulo: 'Quadra Poliesportiva',
-    data: '31/10',
-    conteudo:
-      'Evento de Halloween com atividades especiais para crianças e adolescentes. Programação especial das 14h às 18h.'
-  },
-  {
-    titulo: 'Campo Society',
-    data: '01/11 à 03/11',
-    conteudo:
-      'Feriado prolongado - o campo estará disponível para aluguel mediante agendamento prévio com 48h de antecedência.'
-  },
-  {
-    titulo: 'Quadra Coberta',
-    data: '04/11 à 05/11',
-    conteudo:
-      'Manutenção do sistema de iluminação. Horário de funcionamento reduzido das 8h às 17h.'
-  },
-  {
-    titulo: 'Todas as Quadras',
-    data: '06/11',
-    conteudo:
-      'Treinamento de funcionários. Todas as quadras ficarão fechadas das 8h às 12h para capacitação da equipe.'
-  },
-  {
-    titulo: 'Quadra de Areia',
-    data: '07/11 à 10/11',
-    conteudo:
-      'Troca da areia e nivelamento do campo. A quadra de vôlei de praia estará indisponível durante este período.'
-  },
-  {
-    titulo: 'Quadra Principal',
-    data: '11/11',
-    conteudo:
-      'Campeonato municipal de basquete. A quadra estará reservada para os jogos do torneio durante todo o dia.'
-  }
-]
 
 export default function RulesWarnings() {
   const [showEdit, setShowEdit] = useState(false)
@@ -75,9 +13,12 @@ export default function RulesWarnings() {
   const editRef = useRef<HTMLDivElement>(null)
   const [showNoticeModal, setShowNoticeModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
+  const { alerts } = useContext(alertContext)
+  console.log('alerts: ', alerts)
 
   useEffect(() => {
     if (!showEdit && !showNoticeModal && !showEditModal) return
+
     const handleClickOutside = (e: MouseEvent) => {
       if (editRef.current && !editRef.current.contains(e.target as Node)) {
         setShowEdit(false)
@@ -88,6 +29,7 @@ export default function RulesWarnings() {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [showEdit, showEditModal, showNoticeModal])
+
   return (
     <div className="bg-red-30 flex h-[100vh] w-full flex-col items-center justify-start overflow-y-hidden pt-20">
       <div className="flex h-[66px] w-1/2 items-center justify-center rounded-b-xl bg-blue-primary pt-2 text-center font-poppins text-2xl font-bold text-white">
@@ -117,15 +59,10 @@ export default function RulesWarnings() {
           </div>
           <div className="h-[60vh] w-full overflow-scroll px-4">
             <div>
-              {warnings.map((warning, index) => (
-                <CardWarnings
-                  key={index}
-                  titulo={warning.titulo}
-                  data={warning.data}
-                  conteudo={warning.conteudo}
-                />
-              ))}
-              ;
+              {alerts &&
+                alerts.map((alert) => (
+                  <CardWarnings alert={alert} key={alert.alert.alert_id} />
+                ))}
             </div>
           </div>
         </div>
