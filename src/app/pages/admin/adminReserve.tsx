@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable prettier/prettier */
 import { cn } from '../../utils/cn'
 import { CiFilter } from 'react-icons/ci'
@@ -10,6 +11,19 @@ import { CalendaryCard } from '@/app/components/calendary-card'
 import { ModalityName } from '@/utils/enums/modality'
 import { useMsal } from '@azure/msal-react'
 import { FiLoader } from 'react-icons/fi'
+import { ReservationDetails } from '@/app/components/reservation-details'
+
+export interface Reservation {
+  id: string
+  court: string
+  courtNumber: number
+  modality: string
+  time: number
+  duration: number
+  materials: string[]
+  userId: string
+  bookingId?: string
+}
 
 export default function AdminReserve() {
   const today = new Date()
@@ -20,6 +34,10 @@ export default function AdminReserve() {
     new Date().getMonth()
   )
   const { allBookings, setAllBookings } = useBookings()
+  const [selectedBooking, setSelectedBooking] = useState<
+    Reservation | undefined
+  >(undefined)
+  const [selectedBookingVisible, setSelectedBookingVisible] = useState(false)
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
   )
@@ -319,6 +337,13 @@ export default function AdminReserve() {
 
   const weekDays = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 
+  function handleDiselectingBooking() {
+    setSelectedBookingVisible(false)
+    setTimeout(() => {
+      setSelectedBooking(undefined)
+    }, 200)
+  }
+
   return (
     <main className="z-50 flex h-auto w-full flex-col items-center justify-center bg-white pt-24">
       <ReserveOptionsModal
@@ -374,10 +399,11 @@ export default function AdminReserve() {
           {/* Coluna do mês - 25% em telas grandes, 100% em telas pequenas */}
           <div className="sticky top-0 flex h-full min-h-screen w-full flex-grow flex-col bg-white md:w-1/4">
             <h1 className="sticky top-0 flex h-20 w-full items-center justify-center bg-blue-primary p-4 text-xl text-white">
-              {selectedDate.toLocaleDateString('pt-Br', {
+              {/* {selectedDate.toLocaleDateString('pt-Br', {
                 month: 'long',
                 year: 'numeric'
-              })}
+              })} */}
+              Mês
             </h1>
             {/* Month calendar */}
             <MonthCalendarAdmin
@@ -457,7 +483,23 @@ export default function AdminReserve() {
                               return (
                                 <div
                                   key={reserva.booking_id}
-                                  onClick={(e) => e.stopPropagation()}
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    setSelectedBooking({
+                                      id: reserva.booking_id || '',
+                                      court: `Quadra ${reserva.court_number}`,
+                                      courtNumber: reserva.court_number,
+                                      modality: reserva.sport,
+                                      time: reserva.start_date,
+                                      duration:
+                                        (reserva.end_date -
+                                          reserva.start_date) /
+                                        (1000 * 60), // duração em minutos
+                                      materials: reserva.materials || [],
+                                      userId: reserva.user_id || ''
+                                    })
+                                    setSelectedBookingVisible(true)
+                                  }}
                                   className={cn(
                                     'absolute flex',
                                     specialWidth(
@@ -505,6 +547,27 @@ export default function AdminReserve() {
               })}
             </div>
           </div>
+          {selectedBooking && (
+            <div
+              className={`duration-250 fixed inset-0 z-[999] flex items-center justify-center bg-black/50 transition-all ${selectedBookingVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
+              onClick={() => handleDiselectingBooking()}
+            >
+              <ReservationDetails
+                location={selectedBooking.court}
+                modality={
+                  ModalityName[
+                    selectedBooking.modality as keyof typeof ModalityName
+                  ]
+                }
+                equipments={selectedBooking.materials}
+                time={selectedBooking.time}
+                isChecked={[true, false]}
+                onClose={() => handleDiselectingBooking()}
+                bookingUserId={selectedBooking.userId}
+                bookingId={selectedBooking.id}
+              />
+            </div>
+          )}
         </div>
       </div>
     </main>

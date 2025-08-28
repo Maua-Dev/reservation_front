@@ -1,5 +1,8 @@
 import { PiPencilSimpleLine } from 'react-icons/pi'
 import { Alert } from '../contexts/alerts-context'
+import { useEffect, useRef, useState } from 'react'
+import { useUser } from '../hooks/use-user'
+import EditModal from './edit-modal'
 
 interface CardWarningsProps {
   alert: { alert: Alert }
@@ -13,6 +16,23 @@ export function CardWarnings({ alert }: CardWarningsProps) {
     return texto
   }
   console.log('alert: ', alert)
+  const [showEdit, setShowEdit] = useState(false)
+  const editRef = useRef<HTMLDivElement>(null)
+  const [showModal, setShowModal] = useState(false)
+  const { user } = useUser()
+
+  useEffect(() => {
+    if (!showEdit) return
+    const handleClickOutside = (e: MouseEvent) => {
+      if (editRef.current && !editRef.current.contains(e.target as Node)) {
+        setShowEdit(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showEdit])
 
   return (
     <div className="mb-5 h-[150px] w-full rounded-md bg-grey-tertiary/20 p-2 font-poppins font-bold text-black">
@@ -25,7 +45,21 @@ export function CardWarnings({ alert }: CardWarningsProps) {
             {new Date(alert.alert.start_date).toLocaleDateString('pt-BR')}
           </h4>
           <button className="flex h-[20px] w-[20px] items-center justify-end rounded-[5px]">
-            <PiPencilSimpleLine></PiPencilSimpleLine>
+            {user?.role === 'ADMIN' && (
+              <div>
+                <PiPencilSimpleLine
+                  onClick={() => {
+                    setShowEdit(false)
+                    setShowModal(true)
+                  }}
+                ></PiPencilSimpleLine>
+                <div className="text-start text-2xl font-normal">
+                  {showModal && (
+                    <EditModal onClose={() => setShowModal(false)} />
+                  )}
+                </div>
+              </div>
+            )}
           </button>
         </div>
       </div>

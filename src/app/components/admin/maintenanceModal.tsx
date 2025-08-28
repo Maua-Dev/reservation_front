@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+import { useBookingsQuery } from '@/app/hooks/use-booking'
 import { useEffect, useState } from 'react'
 
 /* eslint-disable prettier/prettier */
@@ -18,6 +20,9 @@ const modalidade = [
   'Tênis'
 ]
 
+// const [selectedModality, setSelectedModality] = useState('')
+// const [selectedEquipments, setSelectedEquipments] = useState<string[]>([])
+
 export default function MaintenanceModal({
   isVisible,
   onClose,
@@ -32,6 +37,7 @@ export default function MaintenanceModal({
     month: '2-digit',
     day: '2-digit'
   })
+  const { createBookingMutation } = useBookingsQuery()
 
   useEffect(() => {
     if (isVisible) {
@@ -46,6 +52,17 @@ export default function MaintenanceModal({
     setTimeout(() => {
       onClose()
     }, 100)
+  }
+
+  const handleBook = async () => {
+    const bookingdata = {
+      start_date: Number(timestamp),
+      end_date: Number(timestamp) + 3600000,
+      court_number: 2,
+      sport: 'Handball',
+      materials: ['Bola de vôlei']
+    }
+    await createBookingMutation.mutateAsync(bookingdata)
   }
 
   if (!isVisible) return null
@@ -69,7 +86,7 @@ export default function MaintenanceModal({
         >
           &times;
         </button>
-        <button>
+        <button onClick={handleBook}>
           <div className="absolute bottom-4 right-4 w-40 rounded-md bg-blue-primary p-2 text-xl text-white hover:cursor-pointer hover:text-gray-200">
             Salvar
           </div>
