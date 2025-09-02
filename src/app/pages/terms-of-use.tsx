@@ -48,29 +48,35 @@ export default function Terms() {
         )} */}
         <div className="flex w-[720px] flex-col justify-between bg-grey-tertiary/20">
           <div className="flex flex-col gap-2 p-8 font-semibold text-grey-secondary">
-            What is Lorem Ipsum? <p></p> Lorem Ipsum is simply dummy text of the
-            printing and typesetting industry. Lorem Ipsum has been the
-            industrys standard dummy text ever since the 1500s, when an
-            <p></p>
-            unknown printer took a galley of type and scrambled it to make a
-            type specimen book. It has survived not only five centuries, but
-            also the leap into electronic typesetting,
-            <p></p>
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing
-            <p></p>
-            Lorem Ipsum passages, and more recently with desktop publishing
-            software like Aldus PageMaker including
-            <p></p>
-            versions of Lorem Ipsum.
-            <p></p>
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing
-            <p></p>
-            Lorem Ipsum passages, and more recently with desktop publishing
-            software like Aldus PageMaker including
-            <p></p>
-            versions of Lorem Ipsum.
+            <p>
+              Bem-vindo ao nosso serviço! Ao utilizar esta aplicação, você
+              concorda com os seguintes termos de uso:
+            </p>
+            <p>
+              1. O uso deste serviço é destinado apenas para fins legais e
+              autorizados. Você concorda em não utilizar o serviço para
+              atividades ilícitas.
+            </p>
+            <p>
+              2. Reservamo-nos o direito de modificar ou encerrar o serviço a
+              qualquer momento, sem aviso prévio.
+            </p>
+            <p>
+              3. Suas informações pessoais serão tratadas conforme nossa
+              política de privacidade.
+            </p>
+            <p>
+              4. Não nos responsabilizamos por danos diretos ou indiretos
+              decorrentes do uso deste serviço.
+            </p>
+            <p>
+              5. O conteúdo disponibilizado é protegido por direitos autorais e
+              não pode ser reproduzido sem autorização.
+            </p>
+            <p>
+              Ao continuar utilizando o serviço, você declara que leu e concorda
+              com estes termos.
+            </p>
           </div>
         </div>
       </div>

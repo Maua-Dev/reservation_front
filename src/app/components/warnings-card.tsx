@@ -18,9 +18,9 @@ export function CardWarnings({ alert, confirmDelete }: CardWarningsProps) {
   const { user } = useUser()
 
   return (
-    <div className="mb-5 h-[150px] w-full rounded-md bg-grey-tertiary/20 p-2 font-poppins font-bold text-black">
-      <div className="flex h-[40px] items-center gap-5 pt-2">
-        <h4 className="rounded- h-[30px] w-[100px] rounded-md bg-blue-400 text-center text-lg text-white">
+    <div className="mb-5 h-[150px] w-full rounded-md bg-grey-tertiary/20 p-3 font-poppins font-bold text-black">
+      <div className="flex h-[40px] items-center gap-5">
+        <h4 className="h-[30px] min-w-[100px] rounded-md bg-blue-400 text-center text-lg text-white">
           {alert.alert.title}
         </h4>
         <div className="flex w-full justify-between">
@@ -41,7 +41,7 @@ export function CardWarnings({ alert, confirmDelete }: CardWarningsProps) {
           )}
         </div>
       </div>
-      <div className="flex h-[160px] w-full pl-3 pt-3 text-base text-grey-primary">
+      <div className="flex h-[160px] w-full text-lg text-grey-primary">
         <p>{limitarCaracteres(alert.alert.description)}</p>
       </div>
     </div>

@@ -88,22 +88,38 @@ export default function RulesWarnings() {
           <div>
             <p className="font-poppins font-bold text-blue-500">Regras</p>
           </div>
-          <div className="flex w-full flex-col items-end pb-3 pr-8">
-            <Button
-              className="flex h-5 w-1/12 items-center justify-center bg-blue-primary p-3 font-poppins text-base text-white"
-              onClick={() => {
-                setShowEdit(false)
-                setShowEditModal(true)
-              }}
-            >
-              Editar
-            </Button>
-            {showEditModal && <EditModal onClose={() => setShowEditModal(false)} />}
-          </div>
-          <div className="flex h-[60vh] w-full flex-col justify-between">
-            <RulesWarningCard content=" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. " />
-          </div>
-          {showEditModal && <EditModal onClose={() => setShowEditModal(false)} />}
+          {user?.role === 'ADMIN' && (
+            <div className="flex w-full flex-col items-end pb-3 pr-8">
+              <Button
+                className="flex h-5 w-1/12 items-center justify-center bg-blue-primary p-3 font-poppins text-base text-white"
+                onClick={() => {
+                  setShowEdit(false)
+                  setShowEditModal(true)
+                }}
+              >
+                Editar
+              </Button>
+              {showEditModal && (
+                <EditModal onClose={() => setShowEditModal(false)} />
+              )}
+            </div>
+          )}
+
+          <RulesWarningCard
+            content={`Não é permitido fumar nas dependências do condomínio, incluindo áreas comuns e privativas, conforme legislação vigente.\n
+      O uso das áreas comuns deve ser feito com respeito aos horários estabelecidos pelo regulamento interno evitando barulhos excessivos após as 22h.\n
+      É proibido realizar festas ou eventos sem a devida autorização da administração do condomínio.
+      Animais de estimação são permitidos, desde que não causem incômodo aos demais moradores e estejam sempre acompanhados em áreas comuns.\n
+      O descarte de lixo deve ser feito de forma seletiva, utilizando os recipientes apropriados localizados nas áreas designadas.\n
+      Não é permitido modificar a fachada do prédio ou instalar objetos nas janelas e sacadas sem aprovação prévia.\n
+      Visitantes devem ser identificados na portaria e acompanhados pelo morador responsável durante toda a permanência.\n
+      O uso das vagas de garagem é exclusivo para veículos cadastrados e não deve ser cedido a terceiros sem autorização.\n
+      Qualquer dano causado ao patrimônio comum deverá ser comunicado imediatamente à administração e ressarcido pelo responsável.\n
+      O descumprimento das regras poderá resultar em advertências, multas ou outras sanções previstas no regimento interno.`}
+          />
+          {showEditModal && (
+            <EditModal onClose={() => setShowEditModal(false)} />
+          )}
         </div>
       </div>
     </div>
