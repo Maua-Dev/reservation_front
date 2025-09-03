@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import { useBookingsQuery } from '@/app/hooks/use-booking'
 import { useEffect, useState } from 'react'
+import { FiLoader } from 'react-icons/fi'
 
 /* eslint-disable prettier/prettier */
 interface MaintenanceModalProps {
@@ -63,8 +64,15 @@ export default function MaintenanceModal({
       materials: ['Bola de vôlei']
     }
     await createBookingMutation.mutateAsync(bookingdata)
+
+    handleClose();
+    
+    // Adiciona o recarregamento automático da página após a conclusão da reserva
+    window.location.reload();
   }
 
+  
+  
   if (!isVisible) return null
   return (
     <div className={`fixed inset-0 z-20 flex items-center justify-center`}>
@@ -86,10 +94,20 @@ export default function MaintenanceModal({
         >
           &times;
         </button>
-        <button onClick={handleBook}>
+        <button onClick={handleBook}
+        disabled={createBookingMutation.isPending}
+        > 
           <div className="absolute bottom-4 right-4 w-40 rounded-md bg-blue-primary p-2 text-xl text-white hover:cursor-pointer hover:text-gray-200">
-            Salvar
+          {createBookingMutation.isPending ? (
+            <>
+            Salvando...
+            <FiLoader className="animate-spin" />
+            </>
+          ) : (
+            'Salvar'
+          )}
           </div>
+
         </button>
         <header className="flex h-12 w-full items-center justify-start gap-6 border-b-2 border-black px-4 pb-6">
           <h2 className="text-3xl font-semibold">CEAF</h2>

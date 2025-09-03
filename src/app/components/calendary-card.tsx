@@ -3,17 +3,17 @@ import { cn } from '../utils/cn'
 interface CalendaryCardProps {
   court: number
   location: string
-  modality: string
+  ity: string
   equipments: string[]
   time: number
   isChecked: boolean[]
-  openModal: () => void
+  open: () => void
 }
 
 export function CalendaryCard({
   court,
-  modality,
-  openModal
+  ity,
+  open
 }: CalendaryCardProps) {
   const courtColors: {
     [key: number]: string
@@ -29,7 +29,7 @@ export function CalendaryCard({
     <>
       <div
         onClick={() => {
-          openModal()
+          open()
         }}
         className={cn(
           'z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 text-center shadow-md duration-300 hover:z-10 hover:-translate-y-1 hover:cursor-pointer',
@@ -37,7 +37,7 @@ export function CalendaryCard({
         )}
       >
         <p>{court == 0 ? 'Campo' : court == 6 ? `Beach` : `Quadra ${court}`}</p>
-        <p>{modality}</p>
+        <p>{ity}</p>
       </div>
     </>
   )
