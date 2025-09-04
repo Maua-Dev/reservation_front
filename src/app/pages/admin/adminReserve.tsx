@@ -42,6 +42,7 @@ export default function AdminReserve() {
     new Date().getFullYear()
   )
   const [clickedTime, setClickedTime] = useState<number>(0)
+  // Estado de quadra selecionada removido (não mais necessário após retirar bloqueio de modal)
 
   const handleDateSelect = async (date: Date) => {
     setLoading(true)
@@ -174,30 +175,9 @@ export default function AdminReserve() {
       return
     }
 
-    const occupiedCourts = new Set<number>()
-    reservasConvertidas.forEach(
-      (reserva: {
-        day: number
-        end_date: number
-        start_date: number
-        court_number: number
-      }) => {
-        if (
-          reserva.day === day &&
-          timestamp < reserva.end_date &&
-          timestamp >= reserva.start_date
-        ) {
-          occupiedCourts.add(reserva.court_number)
-        }
-      }
-    )
-
-    // Se todas as 3 quadras estiverem ocupadas, bloqueia o modal
-    if (occupiedCourts.size >= 3) {
-      console.log(
-        'Todas as quadras estão ocupadas neste horário. Não é possível fazer mais reservas.'
-      )
-    }
+    // Removida a lógica de bloqueio de modal baseada em quadras ocupadas.
+    // Agora sempre permitirá abrir (desde que o horário não tenha passado).
+    // Caso futuramente queira impedir reserva específica, tratar dentro do modal.
 
     setClickedTime(timestamp)
     setIsOptionsOpen(true)
@@ -259,7 +239,7 @@ export default function AdminReserve() {
     }
   })
 
-  const specialWidth = (timestamp: number, end_date: number, day: number) => {
+  const specialWidth = (timestamp: number, endDate: number, day: number) => {
     const sameTimeReservations = new Set()
 
     reservasConvertidas
@@ -272,7 +252,7 @@ export default function AdminReserve() {
         }) => {
           if (
             (timestamp < reserva.end_date && timestamp >= reserva.start_date) ||
-            (end_date <= reserva.end_date && end_date > reserva.start_date)
+            (endDate <= reserva.end_date && endDate > reserva.start_date)
           ) {
             sameTimeReservations.add(reserva.court_number)
           }
@@ -289,7 +269,7 @@ export default function AdminReserve() {
   const deslocation = (
     courtNumber: number,
     timestamp: number,
-    end_date: number,
+    endDate: number,
     day: number
   ) => {
     const sameTimeReservations = new Set()
@@ -304,7 +284,7 @@ export default function AdminReserve() {
         }) => {
           if (
             (timestamp < reserva.end_date && timestamp >= reserva.start_date) ||
-            (end_date <= reserva.end_date && end_date > reserva.start_date)
+            (endDate <= reserva.end_date && endDate > reserva.start_date)
           ) {
             sameTimeReservations.add(reserva.court_number)
           }
@@ -312,27 +292,73 @@ export default function AdminReserve() {
       )
 
     const isItOne = sameTimeReservations.has(1)
-
     switch (courtNumber) {
       case 1:
-        return 'lg:left-[4%] md:left-[2%] left-[1%]'
+        return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
       case 2:
         return sameTimeReservations.size > 1
-          ? sameTimeReservations.size === 2
+          ? sameTimeReservations.size == 2
             ? isItOne
-              ? 'lg:left-[46%] md:left-[42%] left-[33%]'
-              : 'lg:left-[4%] md:left-[2%] left-[1%]'
-            : 'lg:left-[30%] md:left-[25%] left-[18%]'
-          : 'lg:left-[4%] md:left-[2%] left-[1%]'
+              ? 'absolute w-20 h-20 left-[46%]'
+              : 'absolute w-20 h-20 left-[4%]'
+            : 'absolute w-20 h-20 left-[25%]'
+          : 'absolute w-20 h-20 left-[4%]'
       case 3:
         return sameTimeReservations.size > 1
-          ? sameTimeReservations.size === 2
-            ? 'lg:left-[46%] md:left-[42%] left-[33%]'
-            : 'lg:left-[56%] md:left-[52%] left-[66%]'
-          : 'lg:left-[4%] md:left-[2%] left-[1%]'
+          ? sameTimeReservations.size == 2
+            ? 'absolute w-20 h-20 left-[25%]'
+            : 'absolute w-20 h-20 left-[50%]'
+          : 'absolute w-20 h-20 left-[4%]'
+      case 0:
+        // Campo principal
+        return 'absolute w-20 h-20 left-[4%]'
+      case 6:
+        // Beach Tennis
+        return sameTimeReservations.size > 1
+          ? 'absolute w-20 h-20 left-[45%]'
+          : 'absolute w-20 h-20 left-[4%]'
       default:
         return ''
     }
+
+    // switch (courtNumber) {
+    //   case 1:
+    //     return 'lg:left-[4%] md:left-[2%] left-[1%]'
+    //   case 2:
+    //     return sameTimeReservations.size > 1
+    //       ? sameTimeReservations.size === 2
+    //         ? isItOne
+    //           ? 'lg:left-[46%] md:left-[42%] left-[33%]'
+    //           : 'lg:left-[4%] md:left-[2%] left-[1%]'
+    //         : 'lg:left-[30%] md:left-[25%] left-[18%]'
+    //       : 'lg:left-[4%] md:left-[2%] left-[1%]'
+    //   case 3:
+    //     return sameTimeReservations.size > 1
+    //       // ? sameTimeReservations.size === 2
+    //       //   ? isItOne
+    //           ? 'lg:left-[46%] md:left-[42%] left-[33%]'
+    //           : 'lg:left-[56%] md:left-[52%] left-[66%]'
+    //         : 'lg:left-[4%] md:left-[2%] left-[1%]'
+    //       : 'lg:left-[4%] md:left-[2%] left-[1%]'
+    //   // case 4:
+    //   //   return sameTimeReservations.size > 1
+    //   //     ? sameTimeReservations.size === 2
+    //   //       ? isItOne
+    //   //         ? 'lg:left-[46%] md:left-[42%] left-[33%]'
+    //   //         : 'lg:left-[56%] md:left-[52%] left-[66%]'
+    //   //       : 'lg:left-[4%] md:left-[2%] left-[1%]'
+    //   //     : 'lg:left-[4%] md:left-[2%] left-[1%]'
+    //   // case 5:
+    //   //   return sameTimeReservations.size > 1
+    //   //     ? sameTimeReservations.size === 2
+    //   //       ? isItOne
+    //   //         ? 'lg:left-[46%] md:left-[42%] left-[33%]'
+    //   //         : 'lg:left-[56%] md:left-[52%] left-[66%]'
+    //   //       : 'lg:left-[4%] md:left-[2%] left-[1%]'
+    //   //     : 'lg:left-[4%] md:left-[2%] left-[1%]'
+    //   default:
+    //     return ''
+    // }
   }
 
   const weekDays = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']

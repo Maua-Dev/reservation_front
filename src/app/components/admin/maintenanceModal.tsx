@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { useBookingsQuery } from '@/app/hooks/use-booking'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { FiLoader } from 'react-icons/fi'
 
 /* eslint-disable prettier/prettier */
@@ -12,15 +12,16 @@ interface MaintenanceModalProps {
 }
 
 const modalidade = [
-  'Futebol',
-  'Handbol',
-  'Voleibol',
-  'Basquetebol',
+  'Football',
+  'Handball',
+  'Volleyball',
+  'Basketball',
   'Futsal',
   'Rugby',
-  'Tênis'
+  'Beach Tennis',
+  'Tennis',
+  'Outros'
 ]
-
 // const [selectedModality, setSelectedModality] = useState('')
 // const [selectedEquipments, setSelectedEquipments] = useState<string[]>([])
 
@@ -31,6 +32,9 @@ export default function MaintenanceModal({
   timestamp
 }: MaintenanceModalProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [selectedCourt, setSelectedCourt] = useState<number>(1)
+  const [selectedSport, setSelectedSport] = useState<string>(modalidade[0])
+  const [selectedMaterials, setSelectedMaterials] = useState<string[]>([])
   const hour = new Date(timestamp || 0).getHours()
   const minute = new Date(timestamp || 0).getMinutes()
   const date = new Date(timestamp || 0).toLocaleDateString('pt-BR', {
@@ -38,15 +42,44 @@ export default function MaintenanceModal({
     month: '2-digit',
     day: '2-digit'
   })
-  const { createBookingMutation } = useBookingsQuery()
+  const { createBookingMutation, getBookingsOfTheWeek } = useBookingsQuery()
+
+  // Esportes permitidos por local
+  const allowedSportsByCourt: Record<number, string[]> = useMemo(
+    () => ({
+      0: ['Football', 'Rugby', 'Outros'],
+      6: ['Beach Tennis', 'Outros'],
+      1: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'Outros'],
+      2: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'Outros'],
+      3: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'Outros'],
+      4: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'Outros']
+    }),
+    []
+  )
+
+  const currentAllowedSports = useMemo(
+    () => allowedSportsByCourt[selectedCourt] || modalidade,
+    [allowedSportsByCourt, selectedCourt]
+  )
+
+  useEffect(() => {
+    if (!currentAllowedSports.includes(selectedSport)) {
+      setSelectedSport(currentAllowedSports[0])
+    }
+  }, [currentAllowedSports, selectedSport])
+  const weekData = getBookingsOfTheWeek.data
+  const weekIsLoading = getBookingsOfTheWeek.isLoading
+  const refetchWeek = getBookingsOfTheWeek.refetch
 
   useEffect(() => {
     if (isVisible) {
       setTimeout(() => {
         setIsOpen(true)
       }, 300)
+      // Refetch weekly bookings when modal opens to have fresh availability
+      refetchWeek()
     }
-  }, [isVisible])
+  }, [isVisible, refetchWeek])
 
   const handleClose = () => {
     setIsOpen(false)
@@ -55,24 +88,93 @@ export default function MaintenanceModal({
     }, 100)
   }
 
+  // Mapeamento de esporte para material
+  const sportMaterials: Record<string, string[]> = useMemo(
+    () => ({
+      Football: ['Bola de futebol'],
+      Rugby: ['Bola de rugby'],
+      'Beach Tennis': ['Raquete e Bola'],
+      Tennis: ['Bola e Raquete de tênis'],
+      Basketball: ['Bola de basquete'],
+      Volleyball: ['Bola de vôlei'],
+      Handball: ['Bola de handebol'],
+      Futsal: ['Bola de futsal']
+    }),
+    []
+  )
+
+  // Atualiza o material automaticamente ao selecionar o esporte
+  useEffect(() => {
+    if (selectedSport && sportMaterials[selectedSport]) {
+      setSelectedMaterials(sportMaterials[selectedSport])
+    } else {
+      setSelectedMaterials([])
+    }
+  }, [selectedSport, sportMaterials])
+
   const handleBook = async () => {
     const bookingdata = {
       start_date: Number(timestamp),
       end_date: Number(timestamp) + 3600000,
-      court_number: 2,
-      sport: 'Handball',
-      materials: ['Bola de vôlei']
+      court_number: selectedCourt,
+      sport: selectedSport,
+      materials: selectedMaterials
     }
     await createBookingMutation.mutateAsync(bookingdata)
 
-    handleClose();
-    
-    // Adiciona o recarregamento automático da página após a conclusão da reserva
-    window.location.reload();
+    handleClose()
+    window.location.reload()
   }
 
-  
-  
+  // Courts list
+  const courts = useMemo(
+    () => [
+      { value: 6, label: 'Beach Tenis' },
+      { value: 0, label: 'Campo' },
+      { value: 1, label: 'Quadra 1' },
+      { value: 2, label: 'Quadra 2' },
+      { value: 3, label: 'Quadra 3' },
+      { value: 4, label: 'Quadra 4' }
+    ],
+    []
+  )
+
+  // Determine which courts are booked at the selected timestamp (1h window)
+  const bookedCourtsAtTime = useMemo(() => {
+    if (!weekData?.bookings || !timestamp) return new Set<number>()
+    const start = Number(timestamp)
+    const end = start + 3600000
+    const overlaps = weekData.bookings.filter(
+      (b) => b.start_date < end && b.end_date > start
+    )
+    const set = new Set<number>()
+    overlaps.forEach((b) => set.add(b.court_number))
+    // Regra: se quadra 4 ocupada, esconder 1,2,3 também (0 e 6 permanecem)
+    if (set.has(4)) {
+      set.add(1)
+      set.add(2)
+      set.add(3)
+    }
+    return set
+  }, [weekData, timestamp])
+
+  // Available courts (exclude booked ones)
+  const availableCourts = useMemo(
+    () => courts.filter((c) => !bookedCourtsAtTime.has(c.value)),
+    [courts, bookedCourtsAtTime]
+  )
+
+  // Ensure selected court remains valid
+  useEffect(() => {
+    if (availableCourts.length > 0) {
+      if (!availableCourts.some((c) => c.value === selectedCourt)) {
+        setSelectedCourt(availableCourts[0].value)
+      }
+    } else {
+      setSelectedCourt(-1)
+    }
+  }, [availableCourts, selectedCourt])
+
   if (!isVisible) return null
   return (
     <div className={`fixed inset-0 z-20 flex items-center justify-center`}>
@@ -83,7 +185,7 @@ export default function MaintenanceModal({
         onClick={handleClose}
       />
       <div
-        className={`relative z-10 h-3/4 w-3/5 rounded-lg bg-white font-poppins shadow-lg transition-all duration-200 ${
+        className={`font-poppin relative z-10 h-3/4 w-3/5 rounded-lg bg-white shadow-lg transition-all duration-200 ${
           isOpen ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
         }`}
         onClick={(e) => e.stopPropagation()}
@@ -94,20 +196,14 @@ export default function MaintenanceModal({
         >
           &times;
         </button>
-        <button onClick={handleBook}
-        disabled={createBookingMutation.isPending}
-        > 
-          <div className="absolute bottom-4 right-4 w-40 rounded-md bg-blue-primary p-2 text-xl text-white hover:cursor-pointer hover:text-gray-200">
-          {createBookingMutation.isPending ? (
-            <>
-            Salvando...
-            <FiLoader className="animate-spin" />
-            </>
-          ) : (
-            'Salvar'
-          )}
+        <button onClick={handleBook} disabled={createBookingMutation.isPending}>
+          <div className="absolute bottom-4 right-4 flex w-40 items-center justify-center rounded-md bg-blue-primary p-2 text-xl text-white hover:cursor-pointer hover:text-gray-200 disabled:opacity-70">
+            {createBookingMutation.isPending ? (
+              <FiLoader className="h-6 w-6 animate-spin" />
+            ) : (
+              'Salvar'
+            )}
           </div>
-
         </button>
         <header className="flex h-12 w-full items-center justify-start gap-6 border-b-2 border-black px-4 pb-6">
           <h2 className="text-3xl font-semibold">CEAF</h2>
@@ -125,22 +221,40 @@ export default function MaintenanceModal({
             {/* Local */}
             <div className="flex w-full flex-col items-start justify-between gap-2 rounded-sm p-2">
               <h1 className="text-xl font-bold">Local</h1>
-              <select className="w-full rounded-sm bg-yellow p-2 outline-none">
-                <option value="1">Beach Tenis</option>
-                <option value="2">Campo</option>
-                <option value="3">Quadra 1</option>
-                <option value="4">Quadra 2</option>
-                <option value="5">Quadra 3</option>
-                <option value="6">Quadra 4</option>
-              </select>
+              {weekIsLoading ? (
+                <div className="flex w-full items-center justify-center rounded-sm bg-yellow p-2 text-sm">
+                  <FiLoader className="mr-2 h-5 w-5 animate-spin" />{' '}
+                  Carregando...
+                </div>
+              ) : (
+                <select
+                  className="w-full rounded-sm bg-yellow p-2 outline-none disabled:opacity-60"
+                  value={selectedCourt}
+                  onChange={(e) => setSelectedCourt(Number(e.target.value))}
+                  disabled={availableCourts.length === 0}
+                >
+                  {availableCourts.length === 0 && (
+                    <option value={-1}>Nenhuma quadra disponível</option>
+                  )}
+                  {availableCourts.map((c) => (
+                    <option key={c.value} value={c.value}>
+                      {c.label}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
             {/* Modalidade */}
             {!isMaintainance && (
               <div className="flex w-full flex-col items-start justify-between gap-2 rounded-sm p-2">
                 <h1 className="text-xl font-bold">Modalidades</h1>
-                <select className="w-full rounded-sm bg-yellow p-2 outline-none">
-                  {modalidade.map((item, index) => (
-                    <option key={index} value={item}>
+                <select
+                  className="w-full rounded-sm bg-yellow p-2 outline-none"
+                  value={selectedSport}
+                  onChange={(e) => setSelectedSport(e.target.value)}
+                >
+                  {currentAllowedSports.map((item) => (
+                    <option key={item} value={item}>
                       {item}
                     </option>
                   ))}

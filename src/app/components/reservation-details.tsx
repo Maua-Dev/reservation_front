@@ -60,8 +60,12 @@ export const ReservationDetails = ({
     if (bookingId) {
       try {
         await deleteBookingMutation.mutateAsync(bookingId)
-        toast.success('Reserva cancelada com sucesso!')
+        // onSuccess do mutation já mostra o toast
         onClose()
+        // Pequeno delay para permitir o usuário ver o toast antes do reload
+        setTimeout(() => {
+          window.location.reload()
+        }, 800)
       } catch (err) {
         toast.error('Erro ao cancelar reserva!')
         console.error(err)
