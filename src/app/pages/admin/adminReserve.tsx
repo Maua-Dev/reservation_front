@@ -396,7 +396,7 @@ export default function AdminReserve() {
               />
             </div>
             <div className="flex gap-2 text-sm">
-              <button
+              {/* <button
                 className="rounded-lg bg-grey-primary p-2 text-white shadow-lg duration-300 hover:bg-grey-primary/70"
                 onClick={() => console.log('Reserva clicked')}
               >
@@ -407,7 +407,7 @@ export default function AdminReserve() {
                 onClick={() => console.log('Manutenção clicked')}
               >
                 Manutenção
-              </button>
+              </button> */}
               <button
                 className="rounded-lg bg-grey-primary p-2 text-white shadow-lg duration-300 hover:bg-grey-primary/70"
                 onClick={() => console.log('Campo clicked')}

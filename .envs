@@ -1,0 +1,7 @@
+# VITE_AUTH_CLIENT_ID=e788fd99-a596-485e-b142-b36fcda3faed
+VITE_AUTH_CLIENT_ID=e74fec3c-2662-483f-878d-9d690f973bf4 # Suposto client id do app da mauá, acho q o redirect ta errado (n agrega localhost:3000)
+# VITE_AUTH_TENANT_ID=d5d669c0-f163-4965-b176-4bbabddcb0e2
+VITE_AUTH_TENANT_ID=c49e1939-4b53-4738-bb64-41fb2990e41c # Tenant da mauá
+VITE_USER_URL=https://nwiigqskb2.execute-api.us-east-1.amazonaws.com/prod/reservation-mss-user
+VITE_RESERVATION_URL=https://jd12hb69rd.execute-api.us-east-1.amazonaws.com/prod/reservation-api
+VITE_ALERT_URL=https://4f29l7d19j.execute-api.us-east-1.amazonaws.com/prod/reservation-mss-alert 
