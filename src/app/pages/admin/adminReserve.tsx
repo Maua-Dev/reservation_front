@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable prettier/prettier */
 import { cn } from '../../utils/cn'
-import { CiFilter } from 'react-icons/ci'
+// import { CiFilter } from 'react-icons/ci'
 import { useEffect, useState } from 'react'
 import ReserveOptionsModal from '@/app/components/admin/reserveOptionsModal'
 import MonthCalendarAdmin from '@/app/components/month-calendar-admin'
@@ -388,7 +388,7 @@ export default function AdminReserve() {
             </div>
           )}
           {/* Floating menu in the bottom-left corner */}
-          <div className="fixed bottom-4 left-4 z-50 flex flex-col gap-2">
+          {/* <div className="fixed bottom-4 left-4 z-50 flex flex-col gap-2">
             <div className="flex flex-col gap-2 text-black">
               <CiFilter
                 size={32}
@@ -396,7 +396,7 @@ export default function AdminReserve() {
               />
             </div>
             <div className="flex gap-2 text-sm">
-              {/* <button
+              <button
                 className="rounded-lg bg-grey-primary p-2 text-white shadow-lg duration-300 hover:bg-grey-primary/70"
                 onClick={() => console.log('Reserva clicked')}
               >
@@ -407,7 +407,7 @@ export default function AdminReserve() {
                 onClick={() => console.log('Manutenção clicked')}
               >
                 Manutenção
-              </button> */}
+              </button> 
               <button
                 className="rounded-lg bg-grey-primary p-2 text-white shadow-lg duration-300 hover:bg-grey-primary/70"
                 onClick={() => console.log('Campo clicked')}
@@ -421,18 +421,18 @@ export default function AdminReserve() {
                 Quadras
               </button>
             </div>
-          </div>
+          </div> */}
           {/* Coluna do mês - 25% em telas grandes, 100% em telas pequenas */}
-          <div className="sticky top-0 flex h-full min-h-screen w-full flex-grow flex-col bg-white md:w-1/4">
-            <h1 className="sticky top-0 flex h-20 w-full items-center justify-center bg-blue-primary p-4 text-xl text-white">
+          {/* <div className="sticky top-0 flex h-full min-h-screen w-full flex-grow flex-col bg-white md:w-1/4">
+            <h1 className="sticky top-0 flex h-20 w-full items-center justify-center bg-blue-primary p-4 text-xl text-white"> */}
               {/* {selectedDate.toLocaleDateString('pt-Br', {
                 month: 'long',
                 year: 'numeric'
               })} */}
-              Mês
-            </h1>
+              {/* Mês
+            </h1> */}
             {/* Month calendar */}
-            <MonthCalendarAdmin
+            {/* <MonthCalendarAdmin
               selectedDate={selectedDate}
               onDateSelect={handleDateSelect}
               currentMonth={currentMonth}
@@ -443,7 +443,7 @@ export default function AdminReserve() {
               <IoMdDownload />
               <span>RELATÓRIO</span>
             </div>
-          </div>
+          </div> */}
 
           {/* Coluna da semana - 75% em telas grandes, 100% em telas pequenas */}
           <div className="flex h-full w-full flex-col bg-white md:w-3/4">
