@@ -12,6 +12,8 @@ import { ModalityName } from '@/utils/enums/modality'
 import { useMsal } from '@azure/msal-react'
 import { FiLoader } from 'react-icons/fi'
 import { ReservationDetails } from '@/app/components/reservation-details'
+import { LuDownload } from "react-icons/lu";
+import { LuCalendar } from "react-icons/lu";
 
 export interface Reservation {
   id: string
@@ -381,12 +383,22 @@ export default function AdminReserve() {
         timestamp={clickedTime}
       />
       <div className="flex h-full w-full flex-col items-center justify-center">
-        <div className="relative z-[90] flex w-full flex-col font-poppins text-base font-semibold text-gray-600 md:flex-row">
+        <div className="relative z-[90] flex w-full flex-col font-poppins text-base font-semibold text-gray-600 ">
           {loading && (
             <div className="fixed inset-0 z-[999] flex h-full w-full items-center justify-center bg-black/20 backdrop-blur-sm">
               <FiLoader className="animate-spin" color="black" size={64} />
             </div>
           )}
+
+        <div className='flex-col'>
+          <div className='w-full justify-items-center'>
+            <div className='w-full flex items-end justify-end'>
+              <img className='w-full h-[150px]' src="src/app/assets/maua3.1.png" alt="" />
+                <button className='bg-blue-primary text-white h-[50px] w-[150px] rounded-lg justify-items-center absolute mr-10 mb-[75px] flex items-center justify-center gap-3'><LuDownload className='h-[30px] w-[30px]'/>Relatórios</button>
+                <button className='bg-blue-primary text-white h-[50px] w-[150px] rounded-lg justify-items-center absolute mr-10 mb-[10px] flex items-center justify-center gap-3'><LuCalendar className='h-[30px] w-[30px]'/>Calendário</button>
+            </div>
+          </div>
+
           {/* Floating menu in the bottom-left corner */}
           {/* <div className="fixed bottom-4 left-4 z-50 flex flex-col gap-2">
             <div className="flex flex-col gap-2 text-black">
@@ -446,7 +458,7 @@ export default function AdminReserve() {
           </div> */}
 
           {/* Coluna da semana - 75% em telas grandes, 100% em telas pequenas */}
-          <div className="flex h-full w-full flex-col bg-white md:w-3/4">
+          <div className="flex h-full w-full flex-col bg-white ">
             <div className="sticky top-0 z-30 flex h-20 w-full flex-col items-center bg-blue-primary p-4 text-xl text-white">
               <div className="flex w-full">
                 <div className="sticky top-0 ml-4 min-w-28 bg-blue-primary p-4 text-sm text-white md:text-base">
@@ -465,7 +477,7 @@ export default function AdminReserve() {
                 </div>
               </div>
             </div>
-
+        
             <div className="flex flex-col overflow-x-auto pl-6 pr-4">
               {[...Array(28)].map((_, index) => {
                 const hour = 8 + Math.floor(index / 2)
@@ -594,6 +606,7 @@ export default function AdminReserve() {
               />
             </div>
           )}
+        </div>
         </div>
       </div>
     </main>
