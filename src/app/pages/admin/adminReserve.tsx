@@ -12,8 +12,8 @@ import { ModalityName } from '@/utils/enums/modality'
 import { useMsal } from '@azure/msal-react'
 import { FiLoader } from 'react-icons/fi'
 import { ReservationDetails } from '@/app/components/reservation-details'
-import { LuDownload } from "react-icons/lu";
-import { LuCalendar } from "react-icons/lu";
+import { LuDownload } from 'react-icons/lu'
+import { LuCalendar } from 'react-icons/lu'
 
 export interface Reservation {
   id: string
@@ -45,6 +45,9 @@ export default function AdminReserve() {
   )
   const [clickedTime, setClickedTime] = useState<number>(0)
   // Estado de quadra selecionada removido (não mais necessário após retirar bloqueio de modal)
+
+  // Constante para reniderização do Mini CAlendário
+  const [showCalendar, setShowCalendar] = useState(false)
 
   const handleDateSelect = async (date: Date) => {
     setLoading(true)
@@ -383,24 +386,50 @@ export default function AdminReserve() {
         timestamp={clickedTime}
       />
       <div className="flex h-full w-full flex-col items-center justify-center">
-        <div className="relative z-[90] flex w-full flex-col font-poppins text-base font-semibold text-gray-600 ">
+        <div className="relative z-[90] flex w-full flex-col font-poppins text-base font-semibold text-gray-600">
           {loading && (
             <div className="fixed inset-0 z-[999] flex h-full w-full items-center justify-center bg-black/20 backdrop-blur-sm">
               <FiLoader className="animate-spin" color="black" size={64} />
             </div>
           )}
 
-        <div className='flex-col'>
-          <div className='w-full justify-items-center'>
-            <div className='w-full flex items-end justify-end'>
-              <img className='w-full h-[150px]' src="src/app/assets/maua3.1.png" alt="" />
-                <button className='bg-blue-primary text-white h-[50px] w-[150px] rounded-lg justify-items-center absolute mr-10 mb-[75px] flex items-center justify-center gap-3'><LuDownload className='h-[30px] w-[30px]'/>Relatórios</button>
-                <button className='bg-blue-primary text-white h-[50px] w-[150px] rounded-lg justify-items-center absolute mr-10 mb-[10px] flex items-center justify-center gap-3'><LuCalendar className='h-[30px] w-[30px]'/>Calendário</button>
+          <div className="flex-col">
+            <div className="w-full justify-items-center">
+              <div className="flex w-full items-end justify-center">
+                <img
+                  className="h-[150px] w-full"
+                  src="src/app/assets/maua3.1.png"
+                  alt=""
+                />{' '}
+                {/* <div className="h-2rem w-full"> */}
+                  <button className="absolute mb-[75px] mr-10 flex h-[50px] w-[150px] items-center justify-center justify-items-center gap-3 rounded-lg bg-blue-primary text-white">
+                    <LuDownload className="h-[30px] w-[30px]" />
+                    Relatórios
+                  </button>
+                  <button
+                    onClick={() => setShowCalendar(!showCalendar)}
+                    className="absolute mb-[10px] mr-10 flex h-[50px] w-[150px] items-center justify-center justify-items-center gap-3 rounded-lg bg-blue-primary text-white"
+                  >
+                    <LuCalendar className="h-[30px] w-[30px]" />
+                    Calendário
+                    {showCalendar && ( // Lógica de renderização
+                      <div className="flex h-16 justify-center rounded-lg bg-white p-10 shadow-lg">
+                        <MonthCalendarAdmin
+                          selectedDate={selectedDate}
+                          onDateSelect={handleDateSelect}
+                          currentMonth={currentMonth}
+                          currentYear={currentYear}
+                          onMonthChange={handleMonthChange}
+                        />
+                      </div>
+                    )}
+                  </button>
+                {/* </div> */}
+              </div>
             </div>
-          </div>
 
-          {/* Floating menu in the bottom-left corner */}
-          {/* <div className="fixed bottom-4 left-4 z-50 flex flex-col gap-2">
+            {/* Floating menu in the bottom-left corner */}
+            {/* <div className="fixed bottom-4 left-4 z-50 flex flex-col gap-2">
             <div className="flex flex-col gap-2 text-black">
               <CiFilter
                 size={32}
@@ -434,14 +463,14 @@ export default function AdminReserve() {
               </button>
             </div>
           </div> */}
-          {/* Coluna do mês - 25% em telas grandes, 100% em telas pequenas */}
-          {/* <div className="sticky top-0 flex h-full min-h-screen w-full flex-grow flex-col bg-white md:w-1/4">
+            {/* Coluna do mês - 25% em telas grandes, 100% em telas pequenas */}
+            {/* <div className="sticky top-0 flex h-full min-h-screen w-full flex-grow flex-col bg-white md:w-1/4">
             <h1 className="sticky top-0 flex h-20 w-full items-center justify-center bg-blue-primary p-4 text-xl text-white"> */}
-              {/* {selectedDate.toLocaleDateString('pt-Br', {
+            {/* {selectedDate.toLocaleDateString('pt-Br', {
                 month: 'long',
                 year: 'numeric'
               })} */}
-              {/* Mês
+            {/* Mês
             </h1> */}
             {/* Month calendar */}
             {/* <MonthCalendarAdmin
@@ -457,156 +486,156 @@ export default function AdminReserve() {
             </div>
           </div> */}
 
-          {/* Coluna da semana - 75% em telas grandes, 100% em telas pequenas */}
-          <div className="flex h-full w-full flex-col bg-white ">
-            <div className="sticky top-0 z-30 flex h-20 w-full flex-col items-center bg-blue-primary p-4 text-xl text-white">
-              <div className="flex w-full">
-                <div className="sticky top-0 ml-4 min-w-28 bg-blue-primary p-4 text-sm text-white md:text-base">
-                  Semana
-                </div>
-                <div className="flex flex-1 overflow-x-auto text-center text-lg text-white">
-                  {selectedWeek().map((date, index) => (
-                    <div
-                      key={index}
-                      className="flex min-w-10 flex-1 flex-col items-center justify-center bg-blue-primary p-1 text-lg font-normal md:min-w-12 md:text-xl"
-                    >
-                      <div>{date}</div>
-                      <div>{weekDays[index]}</div>
-                    </div>
-                  ))}
+            {/* Coluna da semana - 75% em telas grandes, 100% em telas pequenas */}
+            <div className="flex h-full w-full flex-col bg-white">
+              <div className="sticky top-0 z-30 flex h-20 w-full flex-col items-center bg-blue-primary p-4 text-xl text-white">
+                <div className="flex w-full">
+                  <div className="sticky top-0 ml-4 min-w-28 bg-blue-primary p-4 text-sm text-white md:text-base">
+                    Semana
+                  </div>
+                  <div className="flex flex-1 overflow-x-auto text-center text-lg text-white">
+                    {selectedWeek().map((date, index) => (
+                      <div
+                        key={index}
+                        className="flex min-w-10 flex-1 flex-col items-center justify-center bg-blue-primary p-1 text-lg font-normal md:min-w-12 md:text-xl"
+                      >
+                        <div>{date}</div>
+                        <div>{weekDays[index]}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-        
-            <div className="flex flex-col overflow-x-auto pl-6 pr-4">
-              {[...Array(28)].map((_, index) => {
-                const hour = 8 + Math.floor(index / 2)
-                const minute = index % 2
-                const isHourSeparator = minute === 0
-                return (
-                  <div key={index} className="flex min-w-full bg-white">
-                    <div className="flex h-16 min-w-24 items-center justify-center border-b border-r border-gray-400 bg-white px-2 font-poppins text-black md:min-w-32 md:px-4">
-                      {`${hour}:${minute === 0 ? '00' : '30'}`}
-                    </div>
-                    <div className="flex min-w-max flex-1">
-                      {[...Array(6)].map((_, dayIndex) => (
-                        <div
-                          key={dayIndex}
-                          onClick={() =>
-                            handleClickedTime(
-                              hour,
-                              minute,
-                              selectedWeek()[dayIndex]
-                            )
-                          }
-                          className={`relative flex min-w-14 flex-1 gap-2 border-b border-r border-gray-400 lg:min-w-24 ${
-                            isPassed(selectedWeek()[dayIndex], hour, minute)
-                              ? 'bg-gray-300'
-                              : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'
-                          } p-2 last:border-r-0`}
-                          style={{
-                            borderBottomStyle: isHourSeparator
-                              ? 'dashed'
-                              : 'solid',
-                            borderRightStyle: 'solid',
-                            height: '64px'
-                          }}
-                        >
-                          {reservasConvertidas.map((reserva) => {
-                            if (
-                              reserva.hour === hour &&
-                              reserva.minute === (minute == 1 ? 30 : 0) &&
-                              reserva.day === thisWeek()[dayIndex]
-                            ) {
-                              return (
-                                <div
-                                  key={reserva.booking_id}
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    setSelectedBooking({
-                                      id: reserva.booking_id || '',
-                                      court: `Quadra ${reserva.court_number}`,
-                                      courtNumber: reserva.court_number,
-                                      modality: reserva.sport,
-                                      time: reserva.start_date,
-                                      duration:
-                                        (reserva.end_date -
-                                          reserva.start_date) /
-                                        (1000 * 60), // duração em minutos
-                                      materials: reserva.materials || [],
-                                      userId: reserva.user_id || ''
-                                    })
-                                    setSelectedBookingVisible(true)
-                                  }}
-                                  className={cn(
-                                    'absolute flex',
-                                    specialWidth(
-                                      Number(reserva.start_date),
-                                      Number(reserva.end_date),
-                                      thisWeek()[dayIndex]
-                                    ),
-                                    deslocation(
-                                      reserva.court_number,
-                                      Number(reserva.start_date),
-                                      Number(reserva.end_date),
-                                      thisWeek()[dayIndex]
-                                    )
-                                  )}
-                                  style={{
-                                    height: `${1 * 50 * 2}px`
-                                  }}
-                                >
-                                  <CalendaryCard
-                                    court={reserva.court_number}
-                                    location={`Quadra ${reserva.court_number}`}
-                                    modality={
-                                      ModalityName[
-                                        reserva.sport as keyof typeof ModalityName
-                                      ]
-                                    }
-                                    time={reserva.start_date}
-                                    isChecked={[true, false]}
-                                    equipments={[]}
-                                    openModal={function (): void {
-                                      throw new Error(
-                                        'Function not implemented.'
-                                      )
-                                    }}
-                                  />
-                                </div>
+
+              <div className="flex flex-col overflow-x-auto pl-6 pr-4">
+                {[...Array(28)].map((_, index) => {
+                  const hour = 8 + Math.floor(index / 2)
+                  const minute = index % 2
+                  const isHourSeparator = minute === 0
+                  return (
+                    <div key={index} className="flex min-w-full bg-white">
+                      <div className="flex h-16 min-w-24 items-center justify-center border-b border-r border-gray-400 bg-white px-2 font-poppins text-black md:min-w-32 md:px-4">
+                        {`${hour}:${minute === 0 ? '00' : '30'}`}
+                      </div>
+                      <div className="flex min-w-max flex-1">
+                        {[...Array(6)].map((_, dayIndex) => (
+                          <div
+                            key={dayIndex}
+                            onClick={() =>
+                              handleClickedTime(
+                                hour,
+                                minute,
+                                selectedWeek()[dayIndex]
                               )
                             }
-                          })}
-                        </div>
-                      ))}
+                            className={`relative flex min-w-14 flex-1 gap-2 border-b border-r border-gray-400 lg:min-w-24 ${
+                              isPassed(selectedWeek()[dayIndex], hour, minute)
+                                ? 'bg-gray-300'
+                                : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'
+                            } p-2 last:border-r-0`}
+                            style={{
+                              borderBottomStyle: isHourSeparator
+                                ? 'dashed'
+                                : 'solid',
+                              borderRightStyle: 'solid',
+                              height: '64px'
+                            }}
+                          >
+                            {reservasConvertidas.map((reserva) => {
+                              if (
+                                reserva.hour === hour &&
+                                reserva.minute === (minute == 1 ? 30 : 0) &&
+                                reserva.day === thisWeek()[dayIndex]
+                              ) {
+                                return (
+                                  <div
+                                    key={reserva.booking_id}
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      setSelectedBooking({
+                                        id: reserva.booking_id || '',
+                                        court: `Quadra ${reserva.court_number}`,
+                                        courtNumber: reserva.court_number,
+                                        modality: reserva.sport,
+                                        time: reserva.start_date,
+                                        duration:
+                                          (reserva.end_date -
+                                            reserva.start_date) /
+                                          (1000 * 60), // duração em minutos
+                                        materials: reserva.materials || [],
+                                        userId: reserva.user_id || ''
+                                      })
+                                      setSelectedBookingVisible(true)
+                                    }}
+                                    className={cn(
+                                      'absolute flex',
+                                      specialWidth(
+                                        Number(reserva.start_date),
+                                        Number(reserva.end_date),
+                                        thisWeek()[dayIndex]
+                                      ),
+                                      deslocation(
+                                        reserva.court_number,
+                                        Number(reserva.start_date),
+                                        Number(reserva.end_date),
+                                        thisWeek()[dayIndex]
+                                      )
+                                    )}
+                                    style={{
+                                      height: `${1 * 50 * 2}px`
+                                    }}
+                                  >
+                                    <CalendaryCard
+                                      court={reserva.court_number}
+                                      location={`Quadra ${reserva.court_number}`}
+                                      modality={
+                                        ModalityName[
+                                          reserva.sport as keyof typeof ModalityName
+                                        ]
+                                      }
+                                      time={reserva.start_date}
+                                      isChecked={[true, false]}
+                                      equipments={[]}
+                                      openModal={function (): void {
+                                        throw new Error(
+                                          'Function not implemented.'
+                                        )
+                                      }}
+                                    />
+                                  </div>
+                                )
+                              }
+                            })}
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
+            {selectedBooking && (
+              <div
+                className={`duration-250 fixed inset-0 z-[999] flex items-center justify-center bg-black/50 transition-all ${selectedBookingVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
+                onClick={() => handleDiselectingBooking()}
+              >
+                <ReservationDetails
+                  location={selectedBooking.court}
+                  modality={
+                    ModalityName[
+                      selectedBooking.modality as keyof typeof ModalityName
+                    ]
+                  }
+                  equipments={selectedBooking.materials}
+                  time={selectedBooking.time}
+                  isChecked={[true, false]}
+                  onClose={() => handleDiselectingBooking()}
+                  bookingUserId={selectedBooking.userId}
+                  bookingId={selectedBooking.id}
+                />
+              </div>
+            )}
           </div>
-          {selectedBooking && (
-            <div
-              className={`duration-250 fixed inset-0 z-[999] flex items-center justify-center bg-black/50 transition-all ${selectedBookingVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
-              onClick={() => handleDiselectingBooking()}
-            >
-              <ReservationDetails
-                location={selectedBooking.court}
-                modality={
-                  ModalityName[
-                    selectedBooking.modality as keyof typeof ModalityName
-                  ]
-                }
-                equipments={selectedBooking.materials}
-                time={selectedBooking.time}
-                isChecked={[true, false]}
-                onClose={() => handleDiselectingBooking()}
-                bookingUserId={selectedBooking.userId}
-                bookingId={selectedBooking.id}
-              />
-            </div>
-          )}
-        </div>
         </div>
       </div>
     </main>
