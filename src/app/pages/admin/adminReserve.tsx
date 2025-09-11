@@ -14,6 +14,7 @@ import { FiLoader } from 'react-icons/fi'
 import { ReservationDetails } from '@/app/components/reservation-details'
 import { LuDownload } from 'react-icons/lu'
 import { LuCalendar } from 'react-icons/lu'
+import SelectDateModal from '@/app/components/select-date-modal'
 
 export interface Reservation {
   id: string
@@ -87,6 +88,7 @@ export default function AdminReserve() {
     setCurrentMonth(month)
     setCurrentYear(year)
   }
+
 
   const endOfTheWeek = () => {
     const now = new Date()
@@ -395,35 +397,30 @@ export default function AdminReserve() {
 
           <div className="flex-col">
             <div className="w-full justify-items-center">
-              <div className="flex w-full items-end justify-center">
+              <div className="flex w-full items-end justify-end">
                 <img
                   className="h-[150px] w-full"
                   src="src/app/assets/maua3.1.png"
                   alt=""
                 />{' '}
                 {/* <div className="h-2rem w-full"> */}
-                  <button className="absolute mb-[75px] mr-10 flex h-[50px] w-[150px] items-center justify-center justify-items-center gap-3 rounded-lg bg-blue-primary text-white">
-                    <LuDownload className="h-[30px] w-[30px]" />
-                    Relatórios
-                  </button>
-                  <button
-                    onClick={() => setShowCalendar(!showCalendar)}
-                    className="absolute mb-[10px] mr-10 flex h-[50px] w-[150px] items-center justify-center justify-items-center gap-3 rounded-lg bg-blue-primary text-white"
-                  >
-                    <LuCalendar className="h-[30px] w-[30px]" />
-                    Calendário
-                    {showCalendar && ( // Lógica de renderização
-                      <div className="flex h-16 justify-center rounded-lg bg-white p-10 shadow-lg">
-                        <MonthCalendarAdmin
-                          selectedDate={selectedDate}
-                          onDateSelect={handleDateSelect}
-                          currentMonth={currentMonth}
-                          currentYear={currentYear}
-                          onMonthChange={handleMonthChange}
-                        />
-                      </div>
-                    )}
-                  </button>
+                <button className="absolute mb-[75px] mr-10 flex h-[50px] w-[150px] items-center justify-center justify-items-center gap-3 rounded-lg bg-blue-primary text-white">
+                  <LuDownload className="h-[30px] w-[30px]" />
+                  Relatórios
+                </button>
+                <SelectDateModal
+                  isOpen={showCalendar}
+                  onClose={() => setShowCalendar(false)}
+                  selectedDate={selectedDate}
+                  onDateSelect={handleDateSelect}
+                />
+                <button
+                  onClick={() => setShowCalendar(!showCalendar)}
+                  className="absolute mb-[10px] mr-10 flex h-[50px] w-[150px] items-center justify-center justify-items-center gap-3 rounded-lg bg-blue-primary text-white"
+                >
+                  <LuCalendar className="h-[30px] w-[30px]" />
+                  Calendário
+                </button>
                 {/* </div> */}
               </div>
             </div>
