@@ -15,6 +15,8 @@ import { ReservationDetails } from '@/app/components/reservation-details'
 import { LuDownload } from 'react-icons/lu'
 import { LuCalendar } from 'react-icons/lu'
 import SelectDateModal from '@/app/components/select-date-modal'
+import SelectDateModalAdmin from '@/app/components/calendar-admin'
+import { Button } from '@/app/components/button'
 
 export interface Reservation {
   id: string
@@ -404,19 +406,15 @@ export default function AdminReserve() {
                   alt=""
                 />{' '}
                 {/* <div className="h-2rem w-full"> */}
-                <button className="absolute mb-[75px] mr-10 flex h-[50px] w-[150px] items-center justify-center justify-items-center gap-3 rounded-lg bg-blue-primary text-white">
-                  <LuDownload className="h-[30px] w-[30px]" />
-                  Relatórios
-                </button>
-                <SelectDateModal
+                <SelectDateModalAdmin
                   isOpen={showCalendar}
                   onClose={() => setShowCalendar(false)}
                   selectedDate={selectedDate}
                   onDateSelect={handleDateSelect}
                 />
-                <button
+                <button id="calendar_btn"
                   onClick={() => setShowCalendar(!showCalendar)}
-                  className="absolute mb-[10px] mr-10 flex h-[50px] w-[150px] items-center justify-center justify-items-center gap-3 rounded-lg bg-blue-primary text-white"
+                  className="absolute p-3 mb-[10px] mr-5 flex h-[50px] w-[160px] items-center justify-center justify-items-center gap-3 rounded-lg bg-blue-primary text-white"
                 >
                   <LuCalendar className="h-[30px] w-[30px]" />
                   Calendário
@@ -487,7 +485,7 @@ export default function AdminReserve() {
             <div className="flex h-full w-full flex-col bg-white">
               <div className="sticky top-0 z-30 flex h-20 w-full flex-col items-center bg-blue-primary p-4 text-xl text-white">
                 <div className="flex w-full">
-                  <div className="sticky top-0 ml-4 min-w-28 bg-blue-primary p-4 text-sm text-white md:text-base">
+                  <div className="sticky top-0  min-w-28 bg-blue-primary p-4 text-sm text-white md:text-base">
                     Semana
                   </div>
                   <div className="flex flex-1 overflow-x-auto text-center text-lg text-white">
@@ -504,14 +502,14 @@ export default function AdminReserve() {
                 </div>
               </div>
 
-              <div className="flex flex-col overflow-x-auto pl-6 pr-4">
+              <div className="flex flex-col overflow-x-auto">
                 {[...Array(28)].map((_, index) => {
                   const hour = 8 + Math.floor(index / 2)
                   const minute = index % 2
                   const isHourSeparator = minute === 0
                   return (
                     <div key={index} className="flex min-w-full bg-white">
-                      <div className="flex h-16 min-w-24 items-center justify-center border-b border-r border-gray-400 bg-white px-2 font-poppins text-black md:min-w-32 md:px-4">
+                      <div className="flex h-34 min-w-24 items-center justify-center border-b border-r border-gray-400 bg-white px-2 font-poppins text-black md:min-w-32 md:px-4">
                         {`${hour}:${minute === 0 ? '00' : '30'}`}
                       </div>
                       <div className="flex min-w-max flex-1">
@@ -535,7 +533,7 @@ export default function AdminReserve() {
                                 ? 'dashed'
                                 : 'solid',
                               borderRightStyle: 'solid',
-                              height: '64px'
+                              height: '130px'
                             }}
                           >
                             {reservasConvertidas.map((reserva) => {
