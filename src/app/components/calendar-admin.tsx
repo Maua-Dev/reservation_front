@@ -57,7 +57,7 @@ export default function SelectDateModalAdmin({
       onClick={handleClose}
     >
       <div
-        className={`w-auto transform justify-items-center rounded-lg bg-white pt-2 pl-6 pr-2 pb-6 transition-all duration-300 ${isVisible ? 'scale-100' : 'scale-95'}`}
+        className={`w-auto transform justify-items-center rounded-lg bg-white pb-6 pl-6 pr-2 pt-2 transition-all duration-300 ${isVisible ? 'scale-100' : 'scale-95'}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex">
@@ -74,7 +74,10 @@ export default function SelectDateModalAdmin({
               Relatório
             </button>
           </div>
-          <button className="h-[35px] w-[35px] text-blue-primary">
+          <button
+            className="h-[35px] w-[35px] text-blue-primary"
+            onClick={handleClose}
+          >
             <IoIosCloseCircleOutline className="h-[35px] w-[35px]" />
           </button>
         </div>
