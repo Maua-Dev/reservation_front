@@ -57,6 +57,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
       end_date: timestamp + 3600000,
       court_number: Number(courtNumber),
       sport: selectedModality,
+      type: 'Common',
       materials: selectedEquipments
     }
     await createBookingMutation.mutateAsync(bookingData)
