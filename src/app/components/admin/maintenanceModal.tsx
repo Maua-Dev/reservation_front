@@ -3,6 +3,7 @@ import { useBookingsQuery } from '@/app/hooks/use-booking'
 import { useEffect, useMemo, useState } from 'react'
 import { FiLoader } from 'react-icons/fi'
 import { BookingType } from '@/utils/enums/booking-type'
+import { ModalityName } from '@/utils/enums/modality'
 
 /* eslint-disable prettier/prettier */
 interface MaintenanceModalProps {
@@ -10,22 +11,10 @@ interface MaintenanceModalProps {
   onClose: () => void
   isMaintainance?: boolean
   timestamp?: number
+  type?: BookingType
 }
 
-const modalidade = [
-  'Football',
-  'Handball',
-  'Volleyball',
-  'Basketball',
-  'Futsal',
-  'Rugby',
-  'Beach Tennis',
-  'Tennis',
-  'Natação',
-  'Tênis de Mesa',
-  'Corrida',
-  'Outros'
-]
+const modalidade = Object.values(ModalityName)
 // const [selectedModality, setSelectedModality] = useState('')
 // const [selectedEquipments, setSelectedEquipments] = useState<string[]>([])
 
@@ -33,7 +22,8 @@ export default function MaintenanceModal({
   isVisible,
   onClose,
   isMaintainance,
-  timestamp
+  timestamp,
+  type
 }: MaintenanceModalProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedCourt, setSelectedCourt] = useState<number>(1)
@@ -55,16 +45,15 @@ export default function MaintenanceModal({
   const { createBookingMutation, getBookingsOfTheWeek, deleteBookingMutation } =
     useBookingsQuery()
 
-  // Esportes permitidos por local
   const allowedSportsByCourt: Record<number, string[]> = useMemo(
     () => ({
-      0: ['Football', 'Rugby', 'Outros'],
-      6: ['Beach Tennis', 'Outros'],
-      1: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'Outros'],
-      2: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'Outros'],
-      3: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'Outros'],
-      4: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'Outros'],
-      5: ['Natação', ' Tênis de Mesa', 'Corrida', 'Outros']
+      0: ['Football', 'Rugby', 'NA'],
+      6: ['Beach Tennis', 'NA'],
+      1: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA'],
+      2: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA'],
+      3: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA'],
+      4: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA'],
+      5: ['Ping Pong', 'NA']
     }),
     []
   )
@@ -74,11 +63,11 @@ export default function MaintenanceModal({
     [allowedSportsByCourt, selectedCourt]
   )
 
-  useEffect(() => {
-    if (!currentAllowedSports.includes(selectedSport)) {
-      setSelectedSport(currentAllowedSports[0])
-    }
-  }, [currentAllowedSports, selectedSport])
+  const validSelectedSport = useMemo(() => {
+    return currentAllowedSports.includes(selectedSport)
+      ? selectedSport
+      : currentAllowedSports[0]
+  }, [selectedSport, currentAllowedSports])
   const weekData = getBookingsOfTheWeek.data
   const weekIsLoading = getBookingsOfTheWeek.isLoading
   const refetchWeek = getBookingsOfTheWeek.refetch
@@ -110,19 +99,21 @@ export default function MaintenanceModal({
       Basketball: ['Bola de basquete'],
       Volleyball: ['Bola de vôlei'],
       Handball: ['Bola de handebol'],
-      Futsal: ['Bola de futsal']
+      Futsal: ['Bola de futsal'],
+      'Ping Pong': ['Raquete e Bolinha'],
+      NA: []
     }),
     []
   )
 
   // Atualiza o material automaticamente ao selecionar o esporte
   useEffect(() => {
-    if (selectedSport && sportMaterials[selectedSport]) {
-      setSelectedMaterials(sportMaterials[selectedSport])
+    if (validSelectedSport && sportMaterials[validSelectedSport]) {
+      setSelectedMaterials(sportMaterials[validSelectedSport])
     } else {
       setSelectedMaterials([])
     }
-  }, [selectedSport, sportMaterials])
+  }, [validSelectedSport, sportMaterials])
 
   const handleBook = async () => {
     // Calcula end_date baseado nos selects
@@ -139,7 +130,7 @@ export default function MaintenanceModal({
         ? start + 3600000 // fallback mínimo 1h se usuário escolher algo inválido
         : computedEnd.getTime()
 
-    // Se for manutenção e a quadra já está ocupada no horário selecionado, cancelar a reserva existente
+    //Se for manutenção e a quadra já está ocupada no horário selecionado, cancelar a reserva existente
     if (isMaintainance && weekData?.bookings) {
       const overlapping = weekData.bookings.find(
         (b) =>
@@ -159,9 +150,9 @@ export default function MaintenanceModal({
       start_date: start,
       end_date: endDateMs,
       court_number: selectedCourt,
-      sport: selectedSport,
+      sport: isMaintainance ? 'NA' : validSelectedSport,
       materials: selectedMaterials,
-      type: isMaintainance ? BookingType.MAINTENCE : BookingType.COMMON
+      type: type
     }
     await createBookingMutation.mutateAsync(bookingdata)
 
@@ -314,7 +305,7 @@ export default function MaintenanceModal({
                 <h1 className="text-xl font-bold">Modalidades</h1>
                 <select
                   className="w-full rounded-sm bg-yellow p-2 outline-none"
-                  value={selectedSport}
+                  value={validSelectedSport}
                   onChange={(e) => setSelectedSport(e.target.value)}
                 >
                   {currentAllowedSports.map((item) => (

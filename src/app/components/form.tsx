@@ -9,6 +9,7 @@ import { IoClose } from 'react-icons/io5'
 import { useBookingsQuery } from '../hooks/use-booking'
 import { useUser } from '../hooks/use-user'
 import { ModalityName } from '@/utils/enums/modality'
+import { BookingType } from '@/utils/enums/booking-type'
 
 type FormProps = {
   modalities: string[]
@@ -57,7 +58,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
       end_date: timestamp + 3600000,
       court_number: Number(courtNumber),
       sport: selectedModality,
-      type: 'Common',
+      type: BookingType.COMMON,
       materials: selectedEquipments
     }
     await createBookingMutation.mutateAsync(bookingData)

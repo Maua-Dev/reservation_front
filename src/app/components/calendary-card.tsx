@@ -61,7 +61,9 @@ export function CalendaryCard({
   const showShort = isCompact
 
   const shortModality =
-    modality.length > 9 ? `${modality.slice(0, 8)}…` : modality
+    modality && modality.length > 9
+      ? `${modality.slice(0, 8)}…`
+      : modality || ''
 
   return (
     <div

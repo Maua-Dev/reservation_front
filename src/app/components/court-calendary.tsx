@@ -76,7 +76,7 @@ export function Court({ isField }: CourtProps) {
   //       (mod) => mod !== 'Football' && mod !== 'Rugby' && mod !== 'Beach Tennis'
   //     )
   const modalities = isField
-    ? [ModalityName.Football, ModalityName.Rugby, ModalityName['Beach Tennis']]
+    ? [ModalityName.Football, ModalityName.Rugby, ModalityName.Beach_Tennis]
     : [
         ModalityName.Tennis,
         ModalityName.Basketball,
