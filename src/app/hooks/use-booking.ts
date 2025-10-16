@@ -1,4 +1,5 @@
 import { useQuery, useMutation, QueryClient } from '@tanstack/react-query'
+import { BookingType } from '@/utils/enums/booking-type'
 import {
   BookingsService,
   MyBookingsResponse
@@ -15,6 +16,7 @@ export interface Booking {
   user_id?: string
   booking_id?: string
   materials: string[]
+  type?: BookingType
 }
 
 export const queryClient = new QueryClient()

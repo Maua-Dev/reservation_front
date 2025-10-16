@@ -28,12 +28,13 @@ export default function ReserveOptionsModal({
   }, [isOpen])
 
   const handleMaintenance = () => {
+    setIsMaintainance(true)
     setIsVisible(false)
     setModalOpen(true)
-    setIsMaintainance(true)
   }
 
   const handleReserve = () => {
+    setIsMaintainance(false)
     setIsVisible(false)
     setModalOpen(true)
   }
@@ -41,8 +42,8 @@ export default function ReserveOptionsModal({
   const handleClose = () => {
     setIsVisible(false)
     setTimeout(() => {
-      setModalOpen(false) // Resetar o estado de manutenção
-      setIsMaintainance(false) // Resetar o estado de manutenção
+      setModalOpen(false)
+      setIsMaintainance(false)
       onClose()
     }, 100)
   }

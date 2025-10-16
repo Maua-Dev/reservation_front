@@ -30,8 +30,8 @@ export const useAlertsQuery = () => {
   const getAlerts = useQuery({
     queryKey: ['alerts'],
     queryFn: async (): Promise<{
-      Alerts: { 
-        alert: Alert 
+      Alerts: {
+        alert: Alert
       }[]
       message: string
     }> => {

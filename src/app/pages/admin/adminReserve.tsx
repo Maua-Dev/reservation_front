@@ -91,7 +91,6 @@ export default function AdminReserve() {
     setCurrentYear(year)
   }
 
-
   const endOfTheWeek = () => {
     const now = new Date()
     const dayOfWeek = now.getDay()
@@ -412,9 +411,10 @@ export default function AdminReserve() {
                   selectedDate={selectedDate}
                   onDateSelect={handleDateSelect}
                 />
-                <button id="calendar_btn"
+                <button
+                  id="calendar_btn"
                   onClick={() => setShowCalendar(!showCalendar)}
-                  className="absolute p-3 mb-[10px] mr-5 flex h-[50px] w-[160px] items-center justify-center justify-items-center gap-3 rounded-lg bg-blue-primary text-white"
+                  className="absolute mb-[10px] mr-5 flex h-[50px] w-[160px] items-center justify-center justify-items-center gap-3 rounded-lg bg-blue-primary p-3 text-white"
                 >
                   <LuCalendar className="h-[30px] w-[30px]" />
                   Calendário
@@ -485,7 +485,7 @@ export default function AdminReserve() {
             <div className="flex h-full w-full flex-col bg-white">
               <div className="sticky top-0 z-30 flex h-20 w-full flex-col items-center bg-blue-primary p-4 text-xl text-white">
                 <div className="flex w-full">
-                  <div className="sticky top-0  min-w-28 bg-blue-primary p-4 text-sm text-white md:text-base">
+                  <div className="sticky top-0 min-w-28 bg-blue-primary p-4 text-sm text-white md:text-base">
                     Semana
                   </div>
                   <div className="flex flex-1 overflow-x-auto text-center text-lg text-white">
@@ -509,7 +509,7 @@ export default function AdminReserve() {
                   const isHourSeparator = minute === 0
                   return (
                     <div key={index} className="flex min-w-full bg-white">
-                      <div className="flex h-34 min-w-24 items-center justify-center border-b border-r border-gray-400 bg-white px-2 font-poppins text-black md:min-w-32 md:px-4">
+                      <div className="h-34 flex min-w-24 items-center justify-center border-b border-r border-gray-400 bg-white px-2 font-poppins text-black md:min-w-32 md:px-4">
                         {`${hour}:${minute === 0 ? '00' : '30'}`}
                       </div>
                       <div className="flex min-w-max flex-1">
@@ -577,7 +577,14 @@ export default function AdminReserve() {
                                       )
                                     )}
                                     style={{
-                                      height: `${1 * 50 * 2}px`
+                                      // altura dinâmica: cada meia hora = 130px (célula atual), 1h = 260px
+                                      height: `${Math.max(
+                                        130,
+                                        ((reserva.end_date -
+                                          reserva.start_date) /
+                                          (1000 * 60 * 30)) *
+                                          130
+                                      )}px`
                                     }}
                                   >
                                     <CalendaryCard

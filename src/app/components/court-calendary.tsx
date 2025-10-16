@@ -510,10 +510,6 @@ export function Court({ isField }: CourtProps) {
                                 )
                     }
                     className={`relative flex min-w-[120px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 sm:min-w-[90px] ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? 'bg-gray-300' : cannotReserve(thisWeek()[dayIndex], hour, minute) ? 'bg-gray-300' : isLastHalfHour(hour, minute) ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
-                    style={{
-                      borderBottomStyle: isHourSeparator ? 'dashed' : 'solid',
-                      borderRightStyle: 'solid'
-                    }}
                   >
                     {reservasConvertidas.map((reserva) => {
                       if (
@@ -540,7 +536,8 @@ export function Court({ isField }: CourtProps) {
                               )
                             )}
                             style={{
-                              height: `${1 * 50 * 2}px`
+                              // altura dinâmica do bloco: 50px por meia hora (slot base)
+                              height: `${((reserva.end_date - reserva.start_date) / (1000 * 60 * 30)) * 50}px`
                             }}
                           >
                             <CalendaryCard

@@ -2,6 +2,7 @@
 import { useBookingsQuery } from '@/app/hooks/use-booking'
 import { useEffect, useMemo, useState } from 'react'
 import { FiLoader } from 'react-icons/fi'
+import { BookingType } from '@/utils/enums/booking-type'
 
 /* eslint-disable prettier/prettier */
 interface MaintenanceModalProps {
@@ -20,6 +21,9 @@ const modalidade = [
   'Rugby',
   'Beach Tennis',
   'Tennis',
+  'Natação',
+  'Tênis de Mesa',
+  'Corrida',
   'Outros'
 ]
 // const [selectedModality, setSelectedModality] = useState('')
@@ -35,6 +39,12 @@ export default function MaintenanceModal({
   const [selectedCourt, setSelectedCourt] = useState<number>(1)
   const [selectedSport, setSelectedSport] = useState<string>(modalidade[0])
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([])
+  const [endHour, setEndHour] = useState<number>(
+    new Date(timestamp || 0).getHours() + 1
+  )
+  const [endMinute, setEndMinute] = useState<number>(
+    new Date(timestamp || 0).getMinutes()
+  )
   const hour = new Date(timestamp || 0).getHours()
   const minute = new Date(timestamp || 0).getMinutes()
   const date = new Date(timestamp || 0).toLocaleDateString('pt-BR', {
@@ -42,7 +52,8 @@ export default function MaintenanceModal({
     month: '2-digit',
     day: '2-digit'
   })
-  const { createBookingMutation, getBookingsOfTheWeek } = useBookingsQuery()
+  const { createBookingMutation, getBookingsOfTheWeek, deleteBookingMutation } =
+    useBookingsQuery()
 
   // Esportes permitidos por local
   const allowedSportsByCourt: Record<number, string[]> = useMemo(
@@ -52,7 +63,8 @@ export default function MaintenanceModal({
       1: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'Outros'],
       2: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'Outros'],
       3: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'Outros'],
-      4: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'Outros']
+      4: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'Outros'],
+      5: ['Natação', ' Tênis de Mesa', 'Corrida', 'Outros']
     }),
     []
   )
@@ -113,12 +125,43 @@ export default function MaintenanceModal({
   }, [selectedSport, sportMaterials])
 
   const handleBook = async () => {
+    // Calcula end_date baseado nos selects
+    const start = Number(timestamp)
+    const startDateObj = new Date(start)
+    const computedEnd = new Date(start)
+    computedEnd.setHours(endHour)
+    computedEnd.setMinutes(endMinute)
+    computedEnd.setSeconds(0)
+    computedEnd.setMilliseconds(0)
+
+    const endDateMs =
+      computedEnd.getTime() <= startDateObj.getTime()
+        ? start + 3600000 // fallback mínimo 1h se usuário escolher algo inválido
+        : computedEnd.getTime()
+
+    // Se for manutenção e a quadra já está ocupada no horário selecionado, cancelar a reserva existente
+    if (isMaintainance && weekData?.bookings) {
+      const overlapping = weekData.bookings.find(
+        (b) =>
+          b.court_number === selectedCourt &&
+          b.start_date < endDateMs &&
+          b.end_date > start
+      )
+      if (overlapping?.booking_id) {
+        await deleteBookingMutation.mutateAsync(overlapping.booking_id)
+        handleClose()
+        window.location.reload()
+        return
+      }
+    }
+
     const bookingdata = {
-      start_date: Number(timestamp),
-      end_date: Number(timestamp) + 3600000,
+      start_date: start,
+      end_date: endDateMs,
       court_number: selectedCourt,
       sport: selectedSport,
-      materials: selectedMaterials
+      materials: selectedMaterials,
+      type: isMaintainance ? BookingType.MAINTENCE : BookingType.COMMON
     }
     await createBookingMutation.mutateAsync(bookingdata)
 
@@ -134,34 +177,43 @@ export default function MaintenanceModal({
       { value: 1, label: 'Quadra 1' },
       { value: 2, label: 'Quadra 2' },
       { value: 3, label: 'Quadra 3' },
-      { value: 4, label: 'Quadra 4' }
+      { value: 4, label: 'Quadra 4' },
+      { value: 5, label: 'Atividades Livres' }
     ],
     []
   )
 
-  // Determine which courts are booked at the selected timestamp (1h window)
-  const bookedCourtsAtTime = useMemo(() => {
-    if (!weekData?.bookings || !timestamp) return new Set<number>()
+  // Courts ocupadas no horário selecionado (janela de 1h a partir do start)
+  const { occupiedCourtsSet, occupiedCourtsToHide } = useMemo(() => {
+    if (!weekData?.bookings || !timestamp)
+      return {
+        occupiedCourtsSet: new Set<number>(),
+        occupiedCourtsToHide: new Set<number>()
+      }
     const start = Number(timestamp)
     const end = start + 3600000
-    const overlaps = weekData.bookings.filter(
+    const overlapping = weekData.bookings.filter(
       (b) => b.start_date < end && b.end_date > start
     )
-    const set = new Set<number>()
-    overlaps.forEach((b) => set.add(b.court_number))
-    // Regra: se quadra 4 ocupada, esconder 1,2,3 também (0 e 6 permanecem)
-    if (set.has(4)) {
-      set.add(1)
-      set.add(2)
-      set.add(3)
+    const raw = new Set<number>()
+    overlapping.forEach((b) => raw.add(b.court_number))
+    const toHide = new Set<number>(raw)
+    // Regra de esconder 1,2,3 quando 4 ocupada só para não manutenção
+    if (!isMaintainance && toHide.has(4)) {
+      toHide.add(1)
+      toHide.add(2)
+      toHide.add(3)
     }
-    return set
-  }, [weekData, timestamp])
+    return { occupiedCourtsSet: raw, occupiedCourtsToHide: toHide }
+  }, [weekData, timestamp, isMaintainance])
 
-  // Available courts (exclude booked ones)
+  // Lista de quadras disponíveis (ou todas se manutenção)
   const availableCourts = useMemo(
-    () => courts.filter((c) => !bookedCourtsAtTime.has(c.value)),
-    [courts, bookedCourtsAtTime]
+    () =>
+      isMaintainance
+        ? courts
+        : courts.filter((c) => !occupiedCourtsToHide.has(c.value)),
+    [courts, occupiedCourtsToHide, isMaintainance]
   )
 
   // Ensure selected court remains valid
@@ -196,10 +248,18 @@ export default function MaintenanceModal({
         >
           &times;
         </button>
-        <button onClick={handleBook} disabled={createBookingMutation.isPending}>
+        <button
+          onClick={handleBook}
+          disabled={
+            createBookingMutation.isPending || deleteBookingMutation.isPending
+          }
+        >
           <div className="absolute bottom-4 right-4 flex w-40 items-center justify-center rounded-md bg-blue-primary p-2 text-xl text-white hover:cursor-pointer hover:text-gray-200 disabled:opacity-70">
-            {createBookingMutation.isPending ? (
+            {createBookingMutation.isPending ||
+            deleteBookingMutation.isPending ? (
               <FiLoader className="h-6 w-6 animate-spin" />
+            ) : isMaintainance && occupiedCourtsSet.has(selectedCourt) ? (
+              'Cancelar'
             ) : (
               'Salvar'
             )}
@@ -236,11 +296,15 @@ export default function MaintenanceModal({
                   {availableCourts.length === 0 && (
                     <option value={-1}>Nenhuma quadra disponível</option>
                   )}
-                  {availableCourts.map((c) => (
-                    <option key={c.value} value={c.value}>
-                      {c.label}
-                    </option>
-                  ))}
+                  {availableCourts.map((c) => {
+                    const ocupada = occupiedCourtsSet.has(c.value)
+                    return (
+                      <option key={c.value} value={c.value}>
+                        {c.label}
+                        {isMaintainance && ocupada ? 'Está reservada' : ''}
+                      </option>
+                    )
+                  })}
                 </select>
               )}
             </div>
@@ -284,33 +348,26 @@ export default function MaintenanceModal({
                 <div className="flex w-2/5 flex-col items-center rounded-sm border-2 border-black/30 bg-yellow">
                   <div className="flex w-full items-center justify-center gap-2 p-2">
                     <select
-                      name="hour"
-                      id=""
+                      name="end-hour"
                       className="flex h-16 w-2/5 items-center justify-center rounded-md border-2 border-black/20 bg-white/40 p-2 shadow-inner outline-none"
+                      value={endHour}
+                      onChange={(e) => setEndHour(Number(e.target.value))}
                     >
-                      <option value="08">08</option>
-                      <option value="09">09</option>
-                      <option value="10">10</option>
-                      <option value="11">11</option>
-                      <option value="12">12</option>
-                      <option value="13">13</option>
-                      <option value="14">14</option>
-                      <option value="15">15</option>
-                      <option value="16">16</option>
-                      <option value="17">17</option>
-                      <option value="18">18</option>
-                      <option value="19">19</option>
-                      <option value="20">20</option>
-                      <option value="21">21</option>
+                      {Array.from({ length: 14 }, (_, i) => 8 + i).map((h) => (
+                        <option key={h} value={h}>
+                          {h.toString().padStart(2, '0')}
+                        </option>
+                      ))}
                     </select>
                     <div>:</div>
                     <select
-                      name="minute"
-                      id=""
+                      name="end-minute"
                       className="flex h-16 w-2/5 items-center justify-center rounded-md border-2 border-black/20 bg-white/40 p-2 shadow-inner outline-none"
+                      value={endMinute}
+                      onChange={(e) => setEndMinute(Number(e.target.value))}
                     >
-                      <option value="00">00</option>
-                      <option value="30">30</option>
+                      <option value={0}>00</option>
+                      <option value={30}>30</option>
                     </select>
                   </div>
                 </div>
