@@ -35,7 +35,7 @@ export const baixarRelatorio = (deslocamentoSemana: number = 0): void => {
   const dataAlvo = calcularUltimaSextaFeira(deslocamentoSemana)
   const dataFormatada = formatarDataParaLink(dataAlvo) // B. Construção da URL
 
-  const URL_BASE = 'https://d13wyu3ld41l6l.cloudfront.net/relatorios/'
+  const URL_BASE = 'https://d12o8fo0qgb5uc.cloudfront.net/relatorios/'
   const NOME_ARQUIVO_BASE = 'relatorio_gerado_em_'
   const EXTENSAO = '.xlsx'
 
