@@ -24,8 +24,8 @@ export default function Terms() {
 
   return (
     <div className="flex w-full flex-col items-center justify-start gap-10 p-4 pt-24 font-poppins">
-      <div className="flex h-[52px] w-[720px] items-center justify-center rounded-b-xl bg-blue-primary text-center text-2xl font-bold text-white">
-        <p>Termos de Uso</p>
+      <div className="flex h-[57px] w-[640px] items-center justify-center rounded-b-xl bg-blue-primary text-center text-2xl font-bold text-white">
+        <p>TERMOS DE USO</p>
       </div>
       <div
         // ref={editRef}
