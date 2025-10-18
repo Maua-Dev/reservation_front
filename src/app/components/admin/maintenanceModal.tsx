@@ -42,6 +42,7 @@ export default function MaintenanceModal({
     month: '2-digit',
     day: '2-digit'
   })
+  
   const { createBookingMutation, getBookingsOfTheWeek, deleteBookingMutation } =
     useBookingsQuery()
 
@@ -344,7 +345,7 @@ export default function MaintenanceModal({
                       value={endHour}
                       onChange={(e) => setEndHour(Number(e.target.value))}
                     >
-                      {Array.from({ length: 14 }, (_, i) => 8 + i).map((h) => (
+                      {Array.from({ length: 22-hour }, (_, i) => (hour+1) + (i)).map((h) => (
                         <option key={h} value={h}>
                           {h.toString().padStart(2, '0')}
                         </option>
@@ -357,8 +358,12 @@ export default function MaintenanceModal({
                       value={endMinute}
                       onChange={(e) => setEndMinute(Number(e.target.value))}
                     >
-                      <option value={0}>00</option>
-                      <option value={30}>30</option>
+                      {endHour === 22 ? (<option value={0}>00</option>) : (
+                      <>
+                        <option value={0}>00</option>
+                        <option value={30}>30</option>
+                      </>
+                    )}
                     </select>
                   </div>
                 </div>
