@@ -16,29 +16,39 @@ export default function EditModal({ onClose }: { onClose: () => void }) {
           <IoClose className="text-2xl" />
         </button>
         <div className="flex h-[320px] w-full flex-col gap-2 overflow-auto rounded-lg border border-gray-300 bg-gray-50 p-4 text-black">
-          What is Lorem Ipsum? <p></p> Lorem Ipsum is simply dummy text of the
-          printing and typesetting industry. Lorem Ipsum has been the industrys
-          standard dummy text ever since the 1500s, when an
-          <p></p>
-          unknown printer took a galley of type and scrambled it to make a type
-          specimen book. It has survived not only five centuries, but also the
-          leap into electronic typesetting,
-          <p></p>
-          remaining essentially unchanged. It was popularised in the 1960s with
-          the release of Letraset sheets containing
-          <p></p>
-          Lorem Ipsum passages, and more recently with desktop publishing
-          software like Aldus PageMaker including
-          <p></p>
-          versions of Lorem Ipsum.
-          <p></p>
-          remaining essentially unchanged. It was popularised in the 1960s with
-          the release of Letraset sheets containing
-          <p></p>
-          Lorem Ipsum passages, and more recently with desktop publishing
-          software like Aldus PageMaker including
-          <p></p>
-          versions of Lorem Ipsum.
+          <section>
+            <h2>Regras das Quadras</h2>
+            <ul>
+              <li>
+                Não é permitido entrar com alimentos ou bebidas de qualquer
+                espécie nas quadras.
+              </li>
+              <li>Não cuspir no piso.</li>
+              <li>
+                Não fumar nas quadras ou nas dependências do ginásio (incluindo
+                vestiários).
+              </li>
+              <li>Não jogar descalço, de chinelo ou sapato.</li>
+              <li>
+                Não é permitido jogar com brincos, relógios, anéis, pulseiras,
+                bonés, óculos ou qualquer objeto que possa ferir outros colegas.
+              </li>
+              <li>Evitar palavrões.</li>
+              <li>
+                Fazer reserva antecipada das quadras na secretaria do CCA.
+              </li>
+              <li>
+                Os coletes deverão ser devolvidos obrigatoriamente após o
+                término da aula (entregá-los na bancada da monitora Renata).
+              </li>
+              <li>
+                Utilizar roupa adequada para a prática esportiva: camiseta,
+                shorts ou calça legging, meias e tênis. Não é permitido
+                participar de bermudas, saias, vestidos, jeans ou chinelos.
+              </li>
+              <li>Limpar os pés antes de entrar nas quadras.</li>
+            </ul>
+          </section>
         </div>
         <Button
           className="mt-4 bg-blue-primary px-16 py-2 text-base text-white"

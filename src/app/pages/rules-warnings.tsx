@@ -109,7 +109,23 @@ export default function RulesWarnings() {
           )}
 
           <div className="flex h-[60vh] w-full flex-col justify-between">
-            <RulesWarningCard content=" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. " />
+            <RulesWarningCard
+              content={`
+    <h2 style="font-weight: extrabold; color: #000000;">Regras das Quadras</h2>
+    <ul style="margin-top: 8px; padding-left: 20px; list-style-type: disc;">
+      <li>Não é permitido entrar com alimentos ou bebidas de qualquer espécie nas quadras.</li>
+      <li>Não cuspir no piso.</li>
+      <li>Não fumar nas quadras ou nas dependências do ginásio (incluindo vestiários).</li>
+      <li>Não jogar descalço, de chinelo ou sapato.</li>
+      <li>Não é permitido jogar com brincos, relógios, anéis, pulseiras, bonés, óculos ou qualquer objeto que possa ferir outros colegas.</li>
+      <li>Evitar palavrões.</li>
+      <li>Fazer reserva antecipada das quadras na secretaria do CCA.</li>
+      <li>Os coletes deverão ser devolvidos obrigatoriamente após o término da aula (entregá-los na bancada da monitora Renata).</li>
+      <li>Utilizar roupa adequada para a prática esportiva: camiseta, shorts ou calça legging, meias e tênis. Não é permitido participar de bermudas, saias, vestidos, jeans ou chinelos.</li>
+      <li>Limpar os pés antes de entrar nas quadras.</li>
+    </ul>
+  `}
+            />
           </div>
           {showEditModal && (
             <EditModal onClose={() => setShowEditModal(false)} />
