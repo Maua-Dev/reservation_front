@@ -590,7 +590,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
             </div>
           )
         })}
-        <div className="mt-16 border-t-4 border-blue-primary pt-6">
+        {/* <div className="mt-16 border-t-4 border-blue-primary pt-6">
           <h2 className="mb-4 text-2xl font-semibold text-gray-700">
             Atividades Livres
           </h2>
@@ -625,7 +625,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                 />
               ))}
           </div>
-        </div>
+        </div> */}
         {isReservationModalOpen && selectedTime && (
           <div
             className={`duration-250 fixed inset-0 z-[100] flex items-center justify-center bg-black/50 transition-all ${bookingModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
@@ -674,11 +674,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
           >
             <ReservationDetails
               location={selectedBooking.court}
-              modality={
-                ModalityName[
-                  selectedBooking.modality as keyof typeof ModalityName
-                ]
-              }
+              modality={selectedBooking.modality}
               equipments={selectedBooking.materials}
               time={selectedBooking.time}
               isChecked={[true, false]}
