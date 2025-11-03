@@ -42,6 +42,7 @@ export function Court({ isField }: CourtProps) {
   const isAuth = useIsAuthenticated()
 
   const { data } = useUserQuery()
+  const extraCourts = [5]
 
   useEffect(() => {
     if (data?.userId) {
@@ -76,13 +77,20 @@ export function Court({ isField }: CourtProps) {
   //       (mod) => mod !== 'Football' && mod !== 'Rugby' && mod !== 'Beach Tennis'
   //     )
   const modalities = isField
-    ? [ModalityName.Football, ModalityName.Rugby, ModalityName.Beach_Tennis]
+    ? [
+        ModalityName.FOOTBALL,
+        ModalityName.RUGBY,
+        ModalityName.BEACH_TENNIS
+        //ModalityName.CORRIDA,
+        //ModalityName.NATACAO,
+        //ModalityName.PING_PONG
+      ]
     : [
-        ModalityName.Tennis,
-        ModalityName.Basketball,
-        ModalityName.Volleyball,
-        ModalityName.Handball,
-        ModalityName.Futsal
+        ModalityName.TENNIS,
+        ModalityName.BASKETBALL,
+        ModalityName.VOLLEYBALL,
+        ModalityName.HANDBOLL,
+        ModalityName.FUTSAL
       ]
   const equipments = [
     'Bola e Raquete de tênis',
@@ -220,6 +228,7 @@ export function Court({ isField }: CourtProps) {
           return sameTimeReservations.size > 1
             ? 'absolute w-20 h-20 left-[45%]'
             : 'absolute w-20 h-20 left-[4%]'
+
         default:
           return ''
       }
@@ -252,8 +261,11 @@ export function Court({ isField }: CourtProps) {
   const reservasConvertidas = reservas
     .filter((reserva) =>
       isField
-        ? reserva.court_number === 0 || reserva.court_number === 6
-        : reserva.court_number !== 0 && reserva.court_number !== 6
+        ? [0, 6].includes(reserva.court_number)
+        : reserva.court_number !== 0 &&
+          reserva.court_number !== 6 &&
+          !extraCourts.includes(reserva.court_number) &&
+          reserva.court_number !== 5
     )
     .map((reserva) => {
       const date = new Date(Number(reserva.start_date))
@@ -576,6 +588,42 @@ export function Court({ isField }: CourtProps) {
             </div>
           )
         })}
+        <div className="mt-16 border-t-4 border-blue-primary pt-6">
+          <h2 className="mb-4 text-2xl font-semibold text-gray-700">
+            Atividades Livres
+          </h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {bookings
+              .filter((reserva) => extraCourts.includes(reserva.court_number))
+              .map((reserva) => (
+                <CalendaryCard
+                  key={reserva.booking_id}
+                  court={reserva.court_number}
+                  location={`Atividade Livres ${reserva.court_number}`}
+                  modality={
+                    ModalityName[reserva.sport as keyof typeof ModalityName]
+                  }
+                  equipments={equipments}
+                  time={reserva.start_date}
+                  isChecked={[true, false]}
+                  openModal={() =>
+                    handleSelectingBooking({
+                      id: Number(reserva.booking_id) ?? 0,
+                      court: `Quadra Especial ${reserva.court_number}`,
+                      courtNumber: reserva.court_number,
+                      modality: reserva.sport,
+                      time: reserva.start_date,
+                      duration:
+                        (reserva.end_date - reserva.start_date) /
+                        (1000 * 60 * 60),
+                      materials: reserva.materials,
+                      userId: reserva.user_id ?? ''
+                    })
+                  }
+                />
+              ))}
+          </div>
+        </div>
         {isReservationModalOpen && selectedTime && (
           <div
             className={`duration-250 fixed inset-0 z-[100] flex items-center justify-center bg-black/50 transition-all ${bookingModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
@@ -597,9 +645,16 @@ export function Court({ isField }: CourtProps) {
                     ]
                   : equipments
               }
-              options={availableCourts.map((court) =>
-                isField ? (court === 6 ? `Beach` : `Campo`) : `Quadra ${court}`
-              )}
+              options={
+                isField
+                  ? availableCourts.map((court) =>
+                      court === 6 ? 'Beach' : 'Campo'
+                    )
+                  : [
+                      ...availableCourts.map((court) => `Quadra ${court}`),
+                      'Quadra 5'
+                    ]
+              }
             />
           </div>
         )}

@@ -42,7 +42,7 @@ export default function MaintenanceModal({
     month: '2-digit',
     day: '2-digit'
   })
-  
+
   const { createBookingMutation, getBookingsOfTheWeek, deleteBookingMutation } =
     useBookingsQuery()
 
@@ -54,7 +54,7 @@ export default function MaintenanceModal({
       2: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA'],
       3: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA'],
       4: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA'],
-      5: ['Ping Pong', 'NA']
+      5: ['Ping Pong', 'Natacao', 'Corrida', 'A']
     }),
     []
   )
@@ -102,6 +102,8 @@ export default function MaintenanceModal({
       Handball: ['Bola de handebol'],
       Futsal: ['Bola de futsal'],
       'Ping Pong': ['Raquete e Bolinha'],
+      Corrida: [],
+      Natacao: [],
       NA: []
     }),
     []
@@ -132,6 +134,23 @@ export default function MaintenanceModal({
         : computedEnd.getTime()
 
     //Se for manutenção e a quadra já está ocupada no horário selecionado, cancelar a reserva existente
+    if (!isMaintainance && selectedCourt === 4 && weekData?.bookings) {
+      const courtsToCancel = [1, 2, 3]
+
+      for (const courtNumber of courtsToCancel) {
+        const overlappingBooking = weekData.bookings.find(
+          (b) =>
+            b.court_number === courtNumber &&
+            b.start_date < endDateMs &&
+            b.end_date > start
+        )
+
+        if (overlappingBooking?.booking_id) {
+          await deleteBookingMutation.mutateAsync(overlappingBooking.booking_id)
+        }
+      }
+    }
+
     if (isMaintainance && weekData?.bookings) {
       const overlapping = weekData.bookings.find(
         (b) =>
@@ -191,13 +210,13 @@ export default function MaintenanceModal({
     overlapping.forEach((b) => raw.add(b.court_number))
     const toHide = new Set<number>(raw)
     // Regra de esconder 1,2,3 quando 4 ocupada só para não manutenção
-    if (!isMaintainance && toHide.has(4)) {
+    if (toHide.has(4)) {
       toHide.add(1)
       toHide.add(2)
       toHide.add(3)
     }
     return { occupiedCourtsSet: raw, occupiedCourtsToHide: toHide }
-  }, [weekData, timestamp, isMaintainance])
+  }, [weekData, timestamp])
 
   // Lista de quadras disponíveis (ou todas se manutenção)
   const availableCourts = useMemo(
@@ -345,7 +364,10 @@ export default function MaintenanceModal({
                       value={endHour}
                       onChange={(e) => setEndHour(Number(e.target.value))}
                     >
-                      {Array.from({ length: 22-hour }, (_, i) => (hour+1) + (i)).map((h) => (
+                      {Array.from(
+                        { length: 22 - hour },
+                        (_, i) => hour + 1 + i
+                      ).map((h) => (
                         <option key={h} value={h}>
                           {h.toString().padStart(2, '0')}
                         </option>
@@ -358,12 +380,14 @@ export default function MaintenanceModal({
                       value={endMinute}
                       onChange={(e) => setEndMinute(Number(e.target.value))}
                     >
-                      {endHour === 22 ? (<option value={0}>00</option>) : (
-                      <>
+                      {endHour === 22 ? (
                         <option value={0}>00</option>
-                        <option value={30}>30</option>
-                      </>
-                    )}
+                      ) : (
+                        <>
+                          <option value={0}>00</option>
+                          <option value={30}>30</option>
+                        </>
+                      )}
                     </select>
                   </div>
                 </div>

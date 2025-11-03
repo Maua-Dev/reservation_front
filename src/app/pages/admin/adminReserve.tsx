@@ -35,17 +35,17 @@ export default function AdminReserve() {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [loading, setLoading] = useState(false)
-  const [currentMonth, setCurrentMonth] = useState<number>(
-    new Date().getMonth()
-  )
+  // const [currentMonth, setCurrentMonth] = useState<number>(
+  //   new Date().getMonth()
+  // )
   const { allBookings, setAllBookings } = useBookings()
   const [selectedBooking, setSelectedBooking] = useState<
     Reservation | undefined
   >(undefined)
   const [selectedBookingVisible, setSelectedBookingVisible] = useState(false)
-  const [currentYear, setCurrentYear] = useState<number>(
-    new Date().getFullYear()
-  )
+  // const [currentYear, setCurrentYear] = useState<number>(
+  //   new Date().getFullYear()
+  // )
   const [clickedTime, setClickedTime] = useState<number>(0)
   // Estado de quadra selecionada removido (não mais necessário após retirar bloqueio de modal)
 
@@ -85,11 +85,11 @@ export default function AdminReserve() {
 
   const { getBookingsOfTheWeek } = useBookingsQuery()
 
-  // Função chamada quando o mês é alterado no calendário
-  const handleMonthChange = (month: number, year: number) => {
-    setCurrentMonth(month)
-    setCurrentYear(year)
-  }
+  // // Função chamada quando o mês é alterado no calendário
+  // const handleMonthChange = (month: number, year: number) => {
+  //   setCurrentMonth(month)
+  //   setCurrentYear(year)
+  // }
 
   const endOfTheWeek = () => {
     const now = new Date()
@@ -243,130 +243,82 @@ export default function AdminReserve() {
       ...reserva,
       day: date.getDate(),
       hour: date.getHours(),
-      minute: date.getMinutes()
+      minute: date.getMinutes(),
+      courtNumber: Number((reserva as any).court_number)
     }
   })
 
-  const specialWidth = (timestamp: number, endDate: number, day: number) => {
-    const sameTimeReservations = new Set()
+  // const specialWidth = (timestamp: number, endDate: number, day: number) => {
+  //   const sameTimeReservations = new Set<number>()
 
-    reservasConvertidas
-      .filter((reserva: { day: any }) => Number(reserva.day) === day)
-      .forEach(
-        (reserva: {
-          end_date: number
-          start_date: number
-          court_number: unknown
-        }) => {
-          if (
-            (timestamp < reserva.end_date && timestamp >= reserva.start_date) ||
-            (endDate <= reserva.end_date && endDate > reserva.start_date)
-          ) {
-            sameTimeReservations.add(reserva.court_number)
-          }
-        }
-      )
+  //   reservasConvertidas
+  //     .filter((reserva: { day: any }) => Number(reserva.day) === day)
+  //     .forEach(
+  //       (reserva: {
+  //         end_date: number
+  //         start_date: number
+  //         court_number: unknown | number
+  //       }) => {
+  //         if (
+  //           (timestamp < reserva.end_date && timestamp >= reserva.start_date) ||
+  //           (endDate <= reserva.end_date && endDate > reserva.start_date)
+  //         ) {
+  //           sameTimeReservations.add(Number(reserva.court_number))
+  //         }
+  //       }
+  //     )
 
-    return sameTimeReservations.size > 1
-      ? sameTimeReservations.size > 2
-        ? 'xl:w-2/5 lg:w-1/3 md:w-1/2 w-4/5'
-        : 'xl:w-[45%] lg:w-2/5 md:w-1/2 w-4/5'
-      : 'xl:w-[86%] lg:w-4/5 md:w-3/4 w-4/5'
-  }
+  //   return sameTimeReservations.size > 1
+  //     ? sameTimeReservations.size > 2
+  //       ? 'xl:w-2/5 lg:w-1/3 md:w-1/2 w-4/5'
+  //       : 'xl:w-[45%] lg:w-2/5 md:w-1/2 w-4/5'
+  //     : 'xl:w-[86%] lg:w-4/5 md:w-3/4 w-4/5'
+  // }
 
-  const deslocation = (
+  function getReservationOffset(
     courtNumber: number,
     timestamp: number,
     endDate: number,
-    day: number
-  ) => {
-    const sameTimeReservations = new Set()
-
-    reservasConvertidas
-      .filter((reserva: { day: any }) => Number(reserva.day) === day)
-      .forEach(
-        (reserva: {
-          end_date: number
-          start_date: number
-          court_number: unknown
-        }) => {
-          if (
-            (timestamp < reserva.end_date && timestamp >= reserva.start_date) ||
-            (endDate <= reserva.end_date && endDate > reserva.start_date)
-          ) {
-            sameTimeReservations.add(reserva.court_number)
-          }
-        }
+    day: number,
+    allReservations: any[]
+  ) {
+    const sameTimeReservations = allReservations.filter((reserva) => {
+      return (
+        reserva.day === day &&
+        ((timestamp < reserva.end_date && timestamp >= reserva.start_date) ||
+          (endDate <= reserva.end_date && endDate > reserva.start_date))
       )
+    })
 
-    const isItOne = sameTimeReservations.has(1)
-    switch (courtNumber) {
-      case 1:
-        return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
-      case 2:
-        return sameTimeReservations.size > 1
-          ? sameTimeReservations.size == 2
-            ? isItOne
-              ? 'absolute w-20 h-20 left-[46%]'
-              : 'absolute w-20 h-20 left-[4%]'
-            : 'absolute w-20 h-20 left-[25%]'
-          : 'absolute w-20 h-20 left-[4%]'
-      case 3:
-        return sameTimeReservations.size > 1
-          ? sameTimeReservations.size == 2
-            ? 'absolute w-20 h-20 left-[25%]'
-            : 'absolute w-20 h-20 left-[50%]'
-          : 'absolute w-20 h-20 left-[4%]'
-      case 0:
-        // Campo principal
-        return 'absolute w-20 h-20 left-[4%]'
-      case 6:
-        // Beach Tennis
-        return sameTimeReservations.size > 1
-          ? 'absolute w-20 h-20 left-[45%]'
-          : 'absolute w-20 h-20 left-[4%]'
-      default:
-        return ''
+    if (sameTimeReservations.length <= 1) {
+      return {
+        className: 'absolute transition-all',
+        style: { left: '0%', width: '100px', zIndex: 40 }
+      }
     }
 
-    // switch (courtNumber) {
-    //   case 1:
-    //     return 'lg:left-[4%] md:left-[2%] left-[1%]'
-    //   case 2:
-    //     return sameTimeReservations.size > 1
-    //       ? sameTimeReservations.size === 2
-    //         ? isItOne
-    //           ? 'lg:left-[46%] md:left-[42%] left-[33%]'
-    //           : 'lg:left-[4%] md:left-[2%] left-[1%]'
-    //         : 'lg:left-[30%] md:left-[25%] left-[18%]'
-    //       : 'lg:left-[4%] md:left-[2%] left-[1%]'
-    //   case 3:
-    //     return sameTimeReservations.size > 1
-    //       // ? sameTimeReservations.size === 2
-    //       //   ? isItOne
-    //           ? 'lg:left-[46%] md:left-[42%] left-[33%]'
-    //           : 'lg:left-[56%] md:left-[52%] left-[66%]'
-    //         : 'lg:left-[4%] md:left-[2%] left-[1%]'
-    //       : 'lg:left-[4%] md:left-[2%] left-[1%]'
-    //   // case 4:
-    //   //   return sameTimeReservations.size > 1
-    //   //     ? sameTimeReservations.size === 2
-    //   //       ? isItOne
-    //   //         ? 'lg:left-[46%] md:left-[42%] left-[33%]'
-    //   //         : 'lg:left-[56%] md:left-[52%] left-[66%]'
-    //   //       : 'lg:left-[4%] md:left-[2%] left-[1%]'
-    //   //     : 'lg:left-[4%] md:left-[2%] left-[1%]'
-    //   // case 5:
-    //   //   return sameTimeReservations.size > 1
-    //   //     ? sameTimeReservations.size === 2
-    //   //       ? isItOne
-    //   //         ? 'lg:left-[46%] md:left-[42%] left-[33%]'
-    //   //         : 'lg:left-[56%] md:left-[52%] left-[66%]'
-    //   //       : 'lg:left-[4%] md:left-[2%] left-[1%]'
-    //   //     : 'lg:left-[4%] md:left-[2%] left-[1%]'
-    //   default:
-    //     return ''
-    // }
+    const sorted = sameTimeReservations.sort(
+      (a, b) => Number(a.court_number) - Number(b.court_number)
+    )
+
+    const index = sorted.findIndex(
+      (r) => Number(r.court_number) === courtNumber
+    )
+
+    const total = sameTimeReservations.length
+    const gapPercent = -20
+
+    const widthPercent = (85 - gapPercent * (total - 1)) / total
+    const leftPercent = index * (widthPercent + gapPercent)
+
+    return {
+      className: 'absolute transition-all',
+      style: {
+        left: `${leftPercent}%`,
+        width: `${widthPercent}%`,
+        zIndex: 10 + index * 2
+      }
+    }
   }
 
   const weekDays = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
@@ -389,9 +341,12 @@ export default function AdminReserve() {
         timestamp={clickedTime}
       />
       <div className="flex h-full w-full flex-col items-center justify-center">
-        <div className="relative z-[90] flex w-full flex-col font-poppins text-base font-semibold text-gray-600">
+        <div className="relative z-[80] flex w-full flex-col font-poppins text-base font-semibold text-gray-600">
           {loading && (
-            <div className="fixed inset-0 z-[999] flex h-full w-full items-center justify-center bg-black/20 backdrop-blur-sm">
+            <div
+              className="fixed inset-0 z-[999] flex h-full w-full items-center justify-center bg-black/20 backdrop-blur-sm"
+              style={{ pointerEvents: 'none' }}
+            >
               <FiLoader className="animate-spin" color="black" size={64} />
             </div>
           )}
@@ -422,64 +377,6 @@ export default function AdminReserve() {
                 {/* </div> */}
               </div>
             </div>
-
-            {/* Floating menu in the bottom-left corner */}
-            {/* <div className="fixed bottom-4 left-4 z-50 flex flex-col gap-2">
-            <div className="flex flex-col gap-2 text-black">
-              <CiFilter
-                size={32}
-                className="duration-300 hover:scale-110 hover:cursor-pointer"
-              />
-            </div>
-            <div className="flex gap-2 text-sm">
-              <button
-                className="rounded-lg bg-grey-primary p-2 text-white shadow-lg duration-300 hover:bg-grey-primary/70"
-                onClick={() => console.log('Reserva clicked')}
-              >
-                Reserva
-              </button>
-              <button
-                className="rounded-lg bg-yellow p-2 text-white shadow-lg duration-300 hover:bg-yellow/70"
-                onClick={() => console.log('Manutenção clicked')}
-              >
-                Manutenção
-              </button> 
-              <button
-                className="rounded-lg bg-grey-primary p-2 text-white shadow-lg duration-300 hover:bg-grey-primary/70"
-                onClick={() => console.log('Campo clicked')}
-              >
-                Campo
-              </button>
-              <button
-                className="rounded-lg bg-yellow p-2 text-white shadow-lg duration-300 hover:bg-yellow/70"
-                onClick={() => console.log('Quadras clicked')}
-              >
-                Quadras
-              </button>
-            </div>
-          </div> */}
-            {/* Coluna do mês - 25% em telas grandes, 100% em telas pequenas */}
-            {/* <div className="sticky top-0 flex h-full min-h-screen w-full flex-grow flex-col bg-white md:w-1/4">
-            <h1 className="sticky top-0 flex h-20 w-full items-center justify-center bg-blue-primary p-4 text-xl text-white"> */}
-            {/* {selectedDate.toLocaleDateString('pt-Br', {
-                month: 'long',
-                year: 'numeric'
-              })} */}
-            {/* Mês
-            </h1> */}
-            {/* Month calendar */}
-            {/* <MonthCalendarAdmin
-              selectedDate={selectedDate}
-              onDateSelect={handleDateSelect}
-              currentMonth={currentMonth}
-              currentYear={currentYear}
-              onMonthChange={handleMonthChange}
-            />
-            <div className="-mt-2 flex cursor-pointer flex-row items-center justify-center gap-2 text-start font-poppins">
-              <IoMdDownload />
-              <span>RELATÓRIO</span>
-            </div>
-          </div> */}
 
             {/* Coluna da semana - 75% em telas grandes, 100% em telas pequenas */}
             <div className="flex h-full w-full flex-col bg-white">
@@ -523,7 +420,7 @@ export default function AdminReserve() {
                                 selectedWeek()[dayIndex]
                               )
                             }
-                            className={`relative flex min-w-14 flex-1 gap-2 border-b border-r border-gray-400 lg:min-w-24 ${
+                            className={`relative flex min-w-14 flex-1 gap-2 border-b border-r border-gray-400 pl-1 lg:min-w-24 ${
                               isPassed(selectedWeek()[dayIndex], hour, minute)
                                 ? 'bg-gray-300'
                                 : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'
@@ -542,6 +439,14 @@ export default function AdminReserve() {
                                 reserva.minute === (minute == 1 ? 30 : 0) &&
                                 reserva.day === thisWeek()[dayIndex]
                               ) {
+                                const offset = getReservationOffset(
+                                  Number(reserva.court_number),
+                                  Number(reserva.start_date),
+                                  Number(reserva.end_date),
+                                  Number(reserva.day),
+                                  reservasConvertidas
+                                )
+
                                 return (
                                   <div
                                     key={reserva.booking_id}
@@ -562,29 +467,17 @@ export default function AdminReserve() {
                                       })
                                       setSelectedBookingVisible(true)
                                     }}
-                                    className={cn(
-                                      'absolute flex',
-                                      specialWidth(
-                                        Number(reserva.start_date),
-                                        Number(reserva.end_date),
-                                        thisWeek()[dayIndex]
-                                      ),
-                                      deslocation(
-                                        reserva.court_number,
-                                        Number(reserva.start_date),
-                                        Number(reserva.end_date),
-                                        thisWeek()[dayIndex]
-                                      )
-                                    )}
+                                    className={cn('flex', offset.className)}
                                     style={{
-                                      // altura dinâmica: cada meia hora = 130px (célula atual), 1h = 260px
+                                      ...offset.style,
                                       height: `${Math.max(
                                         130,
                                         ((reserva.end_date -
                                           reserva.start_date) /
                                           (1000 * 60 * 30)) *
                                           130
-                                      )}px`
+                                      )}px`,
+                                      paddingBottom: '10px'
                                     }}
                                   >
                                     <CalendaryCard

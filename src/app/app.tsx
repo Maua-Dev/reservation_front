@@ -13,6 +13,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import RulesWarnings from './pages/rules-warnings'
 import Terms from './pages/terms-of-use'
+import { ActivityReserve } from './components/activity-reserve'
 
 export function App() {
   return (
@@ -40,6 +41,7 @@ export function App() {
             <Route path="/rules-warnings" element={<RulesWarnings />} />
             <Route path="/terms-of-use" element={<Terms />} />
             <Route path="/fieldbeach-reserve" element={<FieldBeachReserve />} />
+            <Route path="/activity" element={<ActivityReserve />} />
             <Route path="/admin-home" element={<AdminHome />} />
             <Route path="/admin-report" element={<AdminReport />} />
             <Route path="/admin-reserve" element={<AdminReserve />} />

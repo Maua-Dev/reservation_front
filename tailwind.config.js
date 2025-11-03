@@ -21,7 +21,8 @@ export default {
       },
       backgroundImage: {
         campo: "url('../assets/imagem-campo.png')",
-        quadra: "url('../assets/maua3.1.png')"
+        quadra: "url('../assets/maua3.1.png')",
+        atividadesLivre: "url('../assets/imagem-beachtenis.png')"
       }
     }
   },

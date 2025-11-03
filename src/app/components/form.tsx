@@ -19,6 +19,7 @@ type FormProps = {
   isOpen: boolean
   timestamp: number
   isField: boolean
+  isSpecialCourt?: boolean
 }
 
 const formSchema = z.object({
@@ -75,7 +76,10 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     Basketball: ['Bola de basquete'],
     Volleyball: ['Bola de vôlei'],
     Handball: ['Bola de handebol'],
-    Futsal: ['Bola de futsal']
+    Futsal: ['Bola de futsal'],
+    Corrida: [],
+    Natacao: [],
+    'Ping Pong': ['Raquete e bolinha']
   }
   const equipmentToModality: Record<string, string> = {
     'Bola de futebol': 'Football',
@@ -86,7 +90,10 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     'Bola de basquete': 'Basketball',
     'Bola de vôlei': 'Volleyball',
     'Bola de handebol': 'Handball',
-    'Bola de futsal': 'Futsal'
+    'Bola de futsal': 'Futsal',
+    'Sem equipamento': 'Corrida',
+    'Sem equipamentos': 'Natacao',
+    'Raquete e bolinha': 'Ping Pong'
   }
 
   const handleModalitySelect = (modality: string) => {
@@ -124,6 +131,9 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
       }
       return ['Football', 'Rugby', 'Beach Tennis']
     }
+    if (options.includes('Quadra 5')) {
+      return ['Ping Pong', 'Corrida', 'Natação']
+    }
     return ['Tennis', 'Basketball', 'Volleyball', 'Handball', 'Futsal']
   }
   const equipamento = () => {
@@ -135,6 +145,14 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
         return ['Bola de futebol', 'Bola de rugby']
       }
       return ['Bola de futebol', 'Bola de rugby', 'Raquete e Bola']
+    }
+    if (options.includes('Quadra 5')) {
+      return [
+        'Raquete de Ping Pong',
+        'Bola de Ping Pong',
+        'Sem material',
+        'Sem material'
+      ]
     }
     return [
       'Bola e Raquete de tênis',

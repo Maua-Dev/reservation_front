@@ -14,18 +14,22 @@ interface CalendaryCardProps {
 export function CalendaryCard({
   court,
   modality,
-  openModal
+  openModal,
+  equipments,
+  time,
+  isChecked
 }: CalendaryCardProps) {
   const courtColors: {
     [key: number]: string
   } = {
     // BEACH AS COURT 6 MUST BE A TEMPORARY FIX
-    6: 'border-[#E5CBA8] text-black z-[1]',
-    0: 'border-yellow text-yellow z-[2]',
-    1: 'border-blue-primary text-blue-primary z-[1]',
-    2: 'border-blue-secondary text-blue-secondary z-[2]',
-    3: 'border-blue-tertiary text-blue-tertiary z-[3]',
-    4: 'border-blue-950 text-blue-950 z-[4]'
+    6: 'border-[#CBBD93] text-black z-[6]',
+    0: 'border-[#008000] text-[#008000] z-[7]',
+    1: 'border-[#0080f5] text-[#0080f5] z-[1]',
+    2: 'border-[#9414F5] text-[#9414F5]z-[2]',
+    3: 'border-[#cb066C] text-[#cb066C] z-[3]',
+    4: 'border-[#fd3055] text-[#fd3055] z-[4]',
+    5: 'border-[#d2b202] text-[#d2b202] z-[5]'
   }
 
   const courtNameMap: Record<number, { full: string; short: string }> = {
@@ -34,6 +38,7 @@ export function CalendaryCard({
     2: { full: 'Quadra 2', short: 'Qua.2' },
     3: { full: 'Quadra 3', short: 'Qua.3' },
     4: { full: 'Quadra 4', short: 'Qua.4' },
+    5: { full: 'Atividades Livres', short: 'Ativ. Liv.' },
     6: { full: 'Beach Tennis', short: 'Bea.' }
   }
 
@@ -43,22 +48,23 @@ export function CalendaryCard({
   }
 
   const containerRef = useRef<HTMLDivElement | null>(null)
-  const [isCompact, setIsCompact] = useState(false)
+  const [width, setWidth] = useState(0)
+  const [hovered, setHovered] = useState(false)
 
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
-        const width = entry.contentRect.width
-        setIsCompact(width < 90)
+        setWidth(entry.contentRect.width)
       }
     })
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
 
-  const showShort = isCompact
+  const showShort = width < 60 && width >= 40
+  const hideAllText = width < 10
 
   const shortModality =
     modality && modality.length > 9
@@ -75,12 +81,16 @@ export function CalendaryCard({
       )}
       title={`${courtLabel.full} - ${modality}`}
     >
-      <span className="font-semibold leading-tight">
-        {showShort ? courtLabel.short : courtLabel.full}
-      </span>
-      <p className="mt-1 w-full truncate text-xs font-semibold sm:text-sm">
-        {showShort ? shortModality : modality}
-      </p>
+      {!hideAllText && (
+        <>
+          <span className="font-semibold leading-tight">
+            {showShort ? courtLabel.short : courtLabel.full}
+          </span>
+          <p className="mt-1 w-full truncate text-xs font-semibold sm:text-sm">
+            {showShort ? shortModality : modality}
+          </p>
+        </>
+      )}
     </div>
   )
 }
