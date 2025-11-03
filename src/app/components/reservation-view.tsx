@@ -53,40 +53,40 @@ export function ReservationCard({
   }
 
   const sportIcons: Record<string, JSX.Element> = {
-    Futebol: <FaFutbol />,
-    Vôlei: <FaVolleyballBall />,
+    Football: <FaFutbol />,
+    Volleyball: <FaVolleyballBall />,
     Futsal: <FaRegFutbol />,
     Rugby: <MdSportsRugby />,
-    Tênis: <GiTennisRacket />,
-    Basquete: <FaBasketball />,
-    Handebol: <TbPlayHandball />,
-    'Beach Tênis': <TbBeach />,
+    Tennis: <GiTennisRacket />,
+    Basketball: <FaBasketball />,
+    Handball: <TbPlayHandball />,
+    'Beach Tennis': <TbBeach />,
     Natacao: <FaSwimmer />,
     Corrida: <MdDirectionsRun />,
     'Ping Pong': <GiPingPongBat />
   }
   const sportImages: Record<string, string> = {
-    Futebol: futebol,
-    Vôlei: volei,
+    Football: futebol,
+    Volleyball: volei,
     Futsal: futsal,
     Rugby: rugby,
-    Tênis: tenis,
-    Basquete: basquete,
-    Handebol: handebol,
-    'Beach Tênis': beachTenis,
+    Tennis: tenis,
+    Basketball: basquete,
+    Handball: handebol,
+    'Beach Tennis': beachTenis,
     Natacao: natacao,
     Corrida: corrida,
     'Ping Pong': pingPong
   }
   const sportColors: Record<string, string> = {
-    Futebol: '#32CD32',
-    Vôlei: '#0000FF',
+    Football: '#32CD32',
+    Volleyball: '#0000FF',
     Futsal: '#3b82f6',
     Rugby: '#a16207',
-    Tênis: '#228B22',
-    Basquete: '#FF8C00',
-    Handebol: '#ef4444',
-    'Beach Tênis': '#14b8a6',
+    Tennis: '#228B22',
+    Basketball: '#FF8C00',
+    Handball: '#ef4444',
+    'Beach Tennis': '#14b8a6',
     Natacao: '#3b82f6',
     Corrida: '#228B22',
     'Ping Pong': '#ef4444'
