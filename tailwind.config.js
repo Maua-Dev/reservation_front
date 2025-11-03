@@ -12,7 +12,7 @@ export default {
         'blue-primary': '#0080F5',
         'blue-secondary': '#090CE8',
         'blue-tertiary': '#1011A6',
-        yellow: '#D1DC35',
+        yellow: '#b3bd2d',
         'yellow-secondary': '#a0a823',
         'grey-primary': '#999999',
         'grey-secondary': '#656565',

@@ -25,9 +25,10 @@ export interface Reservation {
 
 interface CourtProps {
   isField: boolean
+  isQuadra5?: boolean
 }
 
-export function Court({ isField }: CourtProps) {
+export function Court({ isField, isQuadra5 }: CourtProps) {
   const [isMyBookingsModalOpen, setIsMyBookingsModalOpen] = useState(false)
   const [isMyBookingsModalVisible, setIsMyBookingsModalVisible] =
     useState(false)
@@ -260,12 +261,13 @@ export function Court({ isField }: CourtProps) {
 
   const reservasConvertidas = reservas
     .filter((reserva) =>
-      isField
-        ? [0, 6].includes(reserva.court_number)
-        : reserva.court_number !== 0 &&
-          reserva.court_number !== 6 &&
-          !extraCourts.includes(reserva.court_number) &&
-          reserva.court_number !== 5
+      isQuadra5
+        ? reserva.court_number === 5
+        : isField
+          ? [0, 6].includes(reserva.court_number)
+          : reserva.court_number !== 0 &&
+            reserva.court_number !== 6 &&
+            reserva.court_number !== 5
     )
     .map((reserva) => {
       const date = new Date(Number(reserva.start_date))
@@ -381,7 +383,7 @@ export function Court({ isField }: CourtProps) {
         occupiedCourts.add(reserva.court_number)
       }
     })
-    const allCourts = isField ? [0, 6] : [1, 2, 3]
+    const allCourts = isQuadra5 ? [5] : isField ? [0, 6] : [1, 2, 3]
     const availableCourts = allCourts.filter((court) => {
       const reservasDaQuadra = reservasConvertidas.filter(
         (reserva) => reserva.court_number === court && reserva.day === day
@@ -442,7 +444,7 @@ export function Court({ isField }: CourtProps) {
         <div className="flex h-full w-full flex-col bg-black/50 md:flex-row">
           <div className="bottom-0 left-0 p-5 font-poppins text-white md:absolute">
             <p className="text-3xl font-semibold">
-              {isField ? 'Campo' : 'Quadras'}
+              {isQuadra5 ? 'Atividades Livres' : isField ? 'Campo' : 'Quadras'}
             </p>
             <p className="text-2xl font-normal">
               {today
@@ -646,14 +648,13 @@ export function Court({ isField }: CourtProps) {
                   : equipments
               }
               options={
-                isField
-                  ? availableCourts.map((court) =>
-                      court === 6 ? 'Beach' : 'Campo'
-                    )
-                  : [
-                      ...availableCourts.map((court) => `Quadra ${court}`),
-                      'Quadra 5'
-                    ]
+                isQuadra5
+                  ? ['Quadra 5']
+                  : isField
+                    ? availableCourts.map((court) =>
+                        court === 6 ? 'Beach' : 'Campo'
+                      )
+                    : availableCourts.map((court) => `Quadra ${court}`)
               }
             />
           </div>

@@ -84,6 +84,7 @@ export const ReservationDetails = ({
       </div>
     )
   }
+  console.log('ReservationDetails modality:', modality)
 
   return (
     <>
@@ -108,12 +109,14 @@ export const ReservationDetails = ({
           </div>
 
           <div className="flex w-full flex-col justify-start gap-10 font-poppins text-xl font-medium text-white lg:flex-row">
-            <h1 className="inline-flex h-16 w-36 items-center justify-center text-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4">
+            <h1 className="inline-flex h-16 items-center justify-center text-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4">
               {location.split(' ')[1] === '0'
                 ? 'Campo'
                 : location.split(' ')[1] === '6'
                   ? 'Beach'
-                  : location}
+                  : location.split(' ')[1] === '5'
+                    ? 'Atividades Livres'
+                    : location}
             </h1>
             <h1 className="inline-flex h-16 w-60 items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4">
               Horário: {formattedTime} -{' '}

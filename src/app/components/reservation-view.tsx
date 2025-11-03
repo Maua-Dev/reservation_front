@@ -2,11 +2,16 @@ import { FiLoader } from 'react-icons/fi'
 import { useBookingsQuery } from '../hooks/use-booking'
 import { Button } from './button'
 import { toast } from 'react-toastify'
-import { FaFutbol, FaRegFutbol, FaVolleyballBall } from 'react-icons/fa'
-import { MdSportsRugby } from 'react-icons/md'
+import {
+  FaFutbol,
+  FaRegFutbol,
+  FaSwimmer,
+  FaVolleyballBall
+} from 'react-icons/fa'
+import { MdDirectionsRun, MdSportsRugby } from 'react-icons/md'
 import { FaBasketball } from 'react-icons/fa6'
 import { TbBeach, TbPlayHandball } from 'react-icons/tb'
-import { GiTennisRacket } from 'react-icons/gi'
+import { GiPingPongBat, GiTennisRacket } from 'react-icons/gi'
 import futebol from '../assets//futebol.jpg'
 import volei from '../assets/Volei.jpg'
 import futsal from '../assets/futsal.jpg'
@@ -15,6 +20,9 @@ import tenis from '../assets/tenisbola1.jpg'
 import basquete from '../assets/basquete.jpg'
 import handebol from '../assets/handball1.jpg'
 import beachTenis from '../assets/beach.jpg'
+import corrida from '../assets/corrida.jpg'
+import natacao from '../assets/natacao.jpg'
+import pingPong from '../assets/tenisbola1.jpg'
 
 interface ReservationCardProps {
   startDate: number
@@ -52,7 +60,10 @@ export function ReservationCard({
     Tênis: <GiTennisRacket />,
     Basquete: <FaBasketball />,
     Handebol: <TbPlayHandball />,
-    'Beach Tênis': <TbBeach />
+    'Beach Tênis': <TbBeach />,
+    Natacao: <FaSwimmer />,
+    Corrida: <MdDirectionsRun />,
+    'Ping Pong': <GiPingPongBat />
   }
   const sportImages: Record<string, string> = {
     Futebol: futebol,
@@ -62,7 +73,10 @@ export function ReservationCard({
     Tênis: tenis,
     Basquete: basquete,
     Handebol: handebol,
-    'Beach Tênis': beachTenis
+    'Beach Tênis': beachTenis,
+    Natacao: natacao,
+    Corrida: corrida,
+    'Ping Pong': pingPong
   }
   const sportColors: Record<string, string> = {
     Futebol: '#32CD32',
@@ -72,7 +86,10 @@ export function ReservationCard({
     Tênis: '#228B22',
     Basquete: '#FF8C00',
     Handebol: '#ef4444',
-    'Beach Tênis': '#14b8a6'
+    'Beach Tênis': '#14b8a6',
+    Natacao: '#3b82f6',
+    Corrida: '#228B22',
+    'Ping Pong': '#ef4444'
   }
   return (
     <div

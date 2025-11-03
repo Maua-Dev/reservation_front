@@ -34,7 +34,8 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   const {
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
+    getValues
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,13 +55,14 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   const { user } = useUser()
 
   const onSubmit = async () => {
+    const formValues = getValues()
     const bookingData = {
       start_date: timestamp,
       end_date: timestamp + 3600000,
       court_number: Number(courtNumber),
-      sport: selectedModality,
+      sport: formValues.modality,
       type: BookingType.COMMON,
-      materials: selectedEquipments
+      materials: formValues.equipment
     }
     await createBookingMutation.mutateAsync(bookingData)
     onClose()
@@ -77,9 +79,9 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     Volleyball: ['Bola de vôlei'],
     Handball: ['Bola de handebol'],
     Futsal: ['Bola de futsal'],
-    Corrida: [],
-    Natacao: [],
-    'Ping Pong': ['Raquete e bolinha']
+    Corrida: ['Sem equipamento (Corrida)'],
+    Natacao: ['Sem equipamento (Natação)'],
+    'Ping Pong': ['Raquete e bola de Ping Pong']
   }
   const equipmentToModality: Record<string, string> = {
     'Bola de futebol': 'Football',
@@ -91,9 +93,9 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     'Bola de vôlei': 'Volleyball',
     'Bola de handebol': 'Handball',
     'Bola de futsal': 'Futsal',
-    'Sem equipamento': 'Corrida',
-    'Sem equipamentos': 'Natacao',
-    'Raquete e bolinha': 'Ping Pong'
+    'Sem equipamento (Corrida)': 'Corrida',
+    'Sem equipamento (Natação)': 'Natacao',
+    'Raquete e bola de Ping Pong': 'Ping Pong'
   }
 
   const handleModalitySelect = (modality: string) => {
@@ -132,7 +134,11 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
       return ['Football', 'Rugby', 'Beach Tennis']
     }
     if (options.includes('Quadra 5')) {
-      return ['Ping Pong', 'Corrida', 'Natação']
+      return [
+        ModalityName.PING_PONG,
+        ModalityName.CORRIDA,
+        ModalityName.NATACAO
+      ]
     }
     return ['Tennis', 'Basketball', 'Volleyball', 'Handball', 'Futsal']
   }
@@ -148,10 +154,9 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     }
     if (options.includes('Quadra 5')) {
       return [
-        'Raquete de Ping Pong',
-        'Bola de Ping Pong',
-        'Sem material',
-        'Sem material'
+        'Raquete e bola de Ping Pong',
+        'Sem equipamento (Corrida)',
+        'Sem equipamento (Natação)'
       ]
     }
     return [
@@ -290,7 +295,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
                     : 'text-slate-700'
                 }`}
               >
-                {ModalityName[modality as keyof typeof ModalityName]}
+                {modality}
               </button>
             ))}
             {errors.modality && (

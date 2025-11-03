@@ -13,7 +13,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import RulesWarnings from './pages/rules-warnings'
 import Terms from './pages/terms-of-use'
-import { ActivityReserve } from './components/activity-reserve'
+import { ActivityReserve } from './pages/activity-reserve'
 
 export function App() {
   return (
