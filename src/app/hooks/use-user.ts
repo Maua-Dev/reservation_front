@@ -21,10 +21,7 @@ export const useUser = () => {
     throw new Error('useUser must be used within a UserProvider')
   }
 
-  const { user } = context
-  const isAuth = useIsAuthenticated()
-
-  return { user, useUserQuery, isAuth }
+  return context
 }
 
 export const useUserQuery = () => {

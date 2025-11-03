@@ -1,4 +1,5 @@
 import { useQuery, useMutation, QueryClient } from '@tanstack/react-query'
+import { BookingType } from '@/utils/enums/booking-type'
 import {
   BookingsService,
   MyBookingsResponse
@@ -15,6 +16,7 @@ export interface Booking {
   user_id?: string
   booking_id?: string
   materials: string[]
+  type?: BookingType
 }
 
 export const queryClient = new QueryClient()
@@ -75,7 +77,8 @@ export const useBookingsQuery = () => {
     queryKey: ['bookingsOfTheWeek'],
     queryFn: async () => {
       try {
-        return await BookingsService.getBookingsOfTheWeek() //Criar uma função para o meu try
+        const data = await BookingsService.getBookingsOfTheWeek()
+        return data
       } catch (error) {
         toast.error('Erro ao buscar reservas!: ' + error)
         throw new Error('Failed to fetch bookings')

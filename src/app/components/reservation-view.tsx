@@ -2,11 +2,16 @@ import { FiLoader } from 'react-icons/fi'
 import { useBookingsQuery } from '../hooks/use-booking'
 import { Button } from './button'
 import { toast } from 'react-toastify'
-import { FaFutbol, FaRegFutbol, FaVolleyballBall } from 'react-icons/fa'
-import { MdSportsRugby } from 'react-icons/md'
+import {
+  FaFutbol,
+  FaRegFutbol,
+  FaSwimmer,
+  FaVolleyballBall
+} from 'react-icons/fa'
+import { MdDirectionsRun, MdSportsRugby } from 'react-icons/md'
 import { FaBasketball } from 'react-icons/fa6'
 import { TbBeach, TbPlayHandball } from 'react-icons/tb'
-import { GiTennisRacket } from 'react-icons/gi'
+import { GiPingPongBat, GiTennisRacket } from 'react-icons/gi'
 import futebol from '../assets//futebol.jpg'
 import volei from '../assets/Volei.jpg'
 import futsal from '../assets/futsal.jpg'
@@ -15,6 +20,9 @@ import tenis from '../assets/tenisbola1.jpg'
 import basquete from '../assets/basquete.jpg'
 import handebol from '../assets/handball1.jpg'
 import beachTenis from '../assets/beach.jpg'
+import corrida from '../assets/corrida.jpg'
+import natacao from '../assets/natacao.jpg'
+import pingPong from '../assets/tenisbola1.jpg'
 
 interface ReservationCardProps {
   startDate: number
@@ -45,34 +53,43 @@ export function ReservationCard({
   }
 
   const sportIcons: Record<string, JSX.Element> = {
-    Futebol: <FaFutbol />,
-    Vôlei: <FaVolleyballBall />,
+    Football: <FaFutbol />,
+    Volleyball: <FaVolleyballBall />,
     Futsal: <FaRegFutbol />,
     Rugby: <MdSportsRugby />,
-    Tênis: <GiTennisRacket />,
-    Basquete: <FaBasketball />,
-    Handebol: <TbPlayHandball />,
-    'Beach Tênis': <TbBeach />
+    Tennis: <GiTennisRacket />,
+    Basketball: <FaBasketball />,
+    Handball: <TbPlayHandball />,
+    'Beach Tennis': <TbBeach />,
+    Natacao: <FaSwimmer />,
+    Corrida: <MdDirectionsRun />,
+    'Ping Pong': <GiPingPongBat />
   }
   const sportImages: Record<string, string> = {
-    Futebol: futebol,
-    Vôlei: volei,
+    Football: futebol,
+    Volleyball: volei,
     Futsal: futsal,
     Rugby: rugby,
-    Tênis: tenis,
-    Basquete: basquete,
-    Handebol: handebol,
-    'Beach Tênis': beachTenis
+    Tennis: tenis,
+    Basketball: basquete,
+    Handball: handebol,
+    'Beach Tennis': beachTenis,
+    Natacao: natacao,
+    Corrida: corrida,
+    'Ping Pong': pingPong
   }
   const sportColors: Record<string, string> = {
-    Futebol: '#32CD32',
-    Vôlei: '#0000FF',
+    Football: '#32CD32',
+    Volleyball: '#0000FF',
     Futsal: '#3b82f6',
     Rugby: '#a16207',
-    Tênis: '#228B22',
-    Basquete: '#FF8C00',
-    Handebol: '#ef4444',
-    'Beach Tênis': '#14b8a6'
+    Tennis: '#228B22',
+    Basketball: '#FF8C00',
+    Handball: '#ef4444',
+    'Beach Tennis': '#14b8a6',
+    Natacao: '#3b82f6',
+    Corrida: '#228B22',
+    'Ping Pong': '#ef4444'
   }
   return (
     <div

@@ -1,4 +1,5 @@
 import { cn } from '../utils/cn'
+import { useEffect, useRef, useState } from 'react'
 
 interface CalendaryCardProps {
   court: number
@@ -13,32 +14,83 @@ interface CalendaryCardProps {
 export function CalendaryCard({
   court,
   modality,
-  openModal
+  openModal,
+  equipments,
+  time,
+  isChecked
 }: CalendaryCardProps) {
   const courtColors: {
     [key: number]: string
   } = {
     // BEACH AS COURT 6 MUST BE A TEMPORARY FIX
-    6: 'border-[#E5CBA8] text-black z-[1]',
-    0: 'border-yellow text-black z-[2]',
-    1: 'border-blue-primary text-blue-primary z-[1]',
-    2: 'border-blue-secondary text-blue-secondary z-[2]',
-    3: 'border-blue-tertiary text-blue-tertiary z-[3]'
+    6: 'border-[#CBBD93] text-black z-[6]',
+    0: 'border-[#008000] text-[#008000] z-[7]',
+    1: 'border-[#0080f5] text-[#0080f5] z-[1]',
+    2: 'border-[#9414F5] text-[#9414F5]z-[2]',
+    3: 'border-[#cb066C] text-[#cb066C] z-[3]',
+    4: 'border-[#fd3055] text-[#fd3055] z-[4]',
+    5: 'border-[#d2b202] text-[#d2b202] z-[5]'
   }
+
+  const courtNameMap: Record<number, { full: string; short: string }> = {
+    0: { full: 'Campo', short: 'Cam' },
+    1: { full: 'Quadra 1', short: 'Qua.1' },
+    2: { full: 'Quadra 2', short: 'Qua.2' },
+    3: { full: 'Quadra 3', short: 'Qua.3' },
+    4: { full: 'Quadra 4', short: 'Qua.4' },
+    5: { full: 'Atividades Livres', short: 'Ativ. Liv.' },
+    6: { full: 'Beach Tennis', short: 'Bea.' }
+  }
+
+  const courtLabel = courtNameMap[court] ?? {
+    full: `Quadra ${court}`,
+    short: `Q${court}`
+  }
+
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const [width, setWidth] = useState(0)
+  const [hovered, setHovered] = useState(false)
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setWidth(entry.contentRect.width)
+      }
+    })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  const showShort = width < 60 && width >= 40
+  const hideAllText = width < 10
+
+  const shortModality =
+    modality && modality.length > 9
+      ? `${modality.slice(0, 8)}…`
+      : modality || ''
+
   return (
-    <>
-      <div
-        onClick={() => {
-          openModal()
-        }}
-        className={cn(
-          'z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 text-center shadow-md duration-300 hover:z-10 hover:-translate-y-1 hover:cursor-pointer',
-          courtColors[court]
-        )}
-      >
-        <p>{court == 0 ? 'Campo' : court == 6 ? `Beach` : `Quadra ${court}`}</p>
-        <p>{modality}</p>
-      </div>
-    </>
+    <div
+      ref={containerRef}
+      onClick={openModal}
+      className={cn(
+        'group z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 px-1 text-center shadow-md duration-300 hover:z-10 hover:-translate-y-1 hover:cursor-pointer',
+        courtColors[court]
+      )}
+      title={`${courtLabel.full} - ${modality}`}
+    >
+      {!hideAllText && (
+        <>
+          <span className="font-semibold leading-tight">
+            {showShort ? courtLabel.short : courtLabel.full}
+          </span>
+          <p className="mt-1 w-full truncate text-xs font-semibold sm:text-sm">
+            {showShort ? shortModality : modality}
+          </p>
+        </>
+      )}
+    </div>
   )
 }

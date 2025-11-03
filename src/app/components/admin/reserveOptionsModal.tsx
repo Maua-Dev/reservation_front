@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { CiCalendar } from 'react-icons/ci'
 import { FiTool } from 'react-icons/fi'
 import MaintenanceModal from './maintenanceModal'
+import { BookingType } from '@/utils/enums/booking-type'
 
 interface reserverOptionsModalProps {
   isOpen: boolean
@@ -18,6 +19,7 @@ export default function ReserveOptionsModal({
   const [isVisible, setIsVisible] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [isMaintainance, setIsMaintainance] = useState(false)
+  const [type, setType] = useState<BookingType | undefined>(undefined)
 
   useEffect(() => {
     if (isOpen) {
@@ -28,21 +30,25 @@ export default function ReserveOptionsModal({
   }, [isOpen])
 
   const handleMaintenance = () => {
+    setIsMaintainance(true)
     setIsVisible(false)
     setModalOpen(true)
-    setIsMaintainance(true)
+    setType(BookingType.MAINTENCE)
   }
 
   const handleReserve = () => {
+    setIsMaintainance(false)
     setIsVisible(false)
     setModalOpen(true)
+    setType(BookingType.COMMON)
   }
 
   const handleClose = () => {
     setIsVisible(false)
     setTimeout(() => {
-      setModalOpen(false) // Resetar o estado de manutenção
-      setIsMaintainance(false) // Resetar o estado de manutenção
+      setModalOpen(false)
+      setIsMaintainance(false)
+      setType(undefined)
       onClose()
     }, 100)
   }
@@ -57,6 +63,7 @@ export default function ReserveOptionsModal({
           onClose={() => handleClose()}
           isMaintainance={isMaintainance}
           timestamp={timestamp}
+          type={type}
         />
       )}
       <div
