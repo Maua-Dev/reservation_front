@@ -11,9 +11,10 @@ export function Home() {
   const { user } = useUser()
   const navigate = useNavigate()
   console.log(user)
+  useUserQuery()
+
   const CheckIsAdmin = async () => {
     if (user && user.role === 'ADMIN') {
-      await useUserQuery()
       toast.success('Welcome back, Admin!')
       navigate('/admin-home')
     }
