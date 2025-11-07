@@ -7,7 +7,6 @@ interface CalendaryCardProps {
   modality: string
   equipments: string[]
   time: number
-  index: number
   isChecked: boolean[]
   openModal: () => void
 }
@@ -15,8 +14,7 @@ interface CalendaryCardProps {
 export function CalendaryCard({
   court,
   modality,
-  openModal,
-  index
+  openModal
   // equipments,
   // time,
   // isChecked

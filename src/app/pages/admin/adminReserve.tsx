@@ -481,31 +481,6 @@ export default function AdminReserve() {
                                         reserva.sport as keyof typeof ModalityName
                                       ]
                                       }
-                                      index={
-                                      reservasConvertidas
-                                        .filter(
-                                        (r) =>
-                                          r.day === reserva.day &&
-                                          ((Number(reserva.start_date) <
-                                          r.end_date &&
-                                          Number(reserva.start_date) >=
-                                            r.start_date) ||
-                                          (Number(reserva.end_date) <=
-                                            r.end_date &&
-                                            Number(reserva.end_date) >
-                                            r.start_date))
-                                        )
-                                        .sort(
-                                        (a, b) =>
-                                          Number(a.court_number) -
-                                          Number(b.court_number)
-                                        )
-                                        .findIndex(
-                                        (r) =>
-                                          Number(r.court_number) ===
-                                          Number(reserva.court_number)
-                                        )
-                                      }
                                       time={reserva.start_date}
                                       isChecked={[true, false]}
                                       equipments={[]}
