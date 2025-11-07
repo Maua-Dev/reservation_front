@@ -133,7 +133,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
       }
       return ['Football', 'Rugby', 'Beach Tennis']
     }
-    if (options.includes('Quadra 5')) {
+    if (options.includes('Atividades Livres')) {
       return [
         ModalityName.PING_PONG,
         ModalityName.CORRIDA,
@@ -152,7 +152,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
       }
       return ['Bola de futebol', 'Bola de rugby', 'Raquete e Bola']
     }
-    if (options.includes('Quadra 5')) {
+    if (options.includes('Atividades Livres')) {
       return [
         'Raquete e bola de Ping Pong',
         'Sem equipamento (Corrida)',
@@ -258,9 +258,9 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
           </label>
         </div>
         <div className="flex flex-col items-start justify-start gap-1 md:flex-row">
-          <label className="flex items-center justify-center gap-1 font-poppins text-xl">
+          <label className="flex items-center justify-center font-poppins text-xl">
             <span></span>
-            <p>Horário</p>
+            <p className="px-20">Horário</p>
             <div className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2 text-white">
               {formatDate(selectedDate.getHours())}:
               {formatDate(selectedDate.getMinutes())}

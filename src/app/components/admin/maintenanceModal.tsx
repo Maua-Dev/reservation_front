@@ -246,7 +246,8 @@ export default function MaintenanceModal({
         onClick={handleClose}
       />
       <div
-        className={`font-poppin relative z-10 h-3/4 w-3/5 rounded-lg bg-white shadow-lg transition-all duration-200 ${y-100' : 'translate-y-full opacity-0'
+        className={`font-poppin relative z-10 h-3/4 w-3/5 rounded-lg bg-white shadow-lg transition-all duration-200 ${
+          isOpen ? '' : 'translate-y-full opacity-0'
         }`}
         onClick={(e) => e.stopPropagation()}
       >

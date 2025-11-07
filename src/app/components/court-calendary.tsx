@@ -649,7 +649,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
               }
               options={
                 isQuadra5
-                  ? ['Quadra 5']
+                  ? ['Atividades Livres']
                   : isField
                     ? availableCourts.map((court) =>
                         court === 6 ? 'Beach' : 'Campo'
