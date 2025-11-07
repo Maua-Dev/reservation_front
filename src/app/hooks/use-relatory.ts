@@ -1,25 +1,30 @@
-function calcularUltimaSextaFeira(deslocamentoSemana: number = 0): Date {
-  const hoje = new Date()
+function calcularUltimaSextaFeira(deslocamentoSemana: number): Date {
+  // deslocamentoSemana = index do dia da semana [segunda=1, terça=2,...]
+  const hoje = new Date(deslocamentoSemana)
+  console.log('Data alvo recebida:', hoje)
 
   // O método getDay() retorna o dia da semana (0=Domingo, 6=Sábado)
   const diaDaSemanaIndex = hoje.getDay()
-  // dia alvo (sexta feira)
-  const diaAlvo = 5
 
   // Se hoje for Sábado (6), subtraímos 1 dia (6 - 5 = 1).
   // Se hoje for Segunda (1), subtraímos 3 dias (1 - 5 = -4. Adicionamos 7: 3).
-  let diasParaSubtrair: number
-  if (diaDaSemanaIndex >= diaAlvo) {
-    diasParaSubtrair = diaDaSemanaIndex - diaAlvo
-  } else {
-    diasParaSubtrair = diaDaSemanaIndex - diaAlvo + 7
-  }
+  // let diasParaSubtrair
+  // if (diaDaSemanaIndex >= diaAlvo) {
+  //   diasParaSubtrair = diaDaSemanaIndex - diaAlvo
+  // } else {
+  //   diasParaSubtrair = diaDaSemanaIndex - diaAlvo + 7
+  // }
 
-  diasParaSubtrair += deslocamentoSemana * 7
+  // diasParaSubtrair += deslocamentoSemana * 7
 
-  const dataAlvo = new Date(hoje)
-  dataAlvo.setDate(hoje.getDate() - diasParaSubtrair)
+  // const dataAlvo = new Date(hoje)
+  // dataAlvo.setDate(hoje.getDate() - diasParaSubtrair)
 
+  const dataAlvo = new Date(
+    deslocamentoSemana + (5 - diaDaSemanaIndex) * 24 * 60 * 60 * 1000
+  )
+
+  console.log('Data alvo calculada (última sexta-feira):', dataAlvo)
   return dataAlvo
 }
 function formatarDataParaLink(data: Date): string {
@@ -41,7 +46,6 @@ export const baixarRelatorio = (deslocamentoSemana: number = 0): void => {
 
   const urlCompleta = `${URL_BASE}${NOME_ARQUIVO_BASE}${dataFormatada}${EXTENSAO}`
 
-  console.log(`Abrindo URL para download: ${urlCompleta}`)
   window.open(urlCompleta, '_blank')
 }
 

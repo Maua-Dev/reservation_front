@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import MonthCalendarAdmin from '@/app/components/month-calendar-admin'
 import { LuDownload } from 'react-icons/lu'
 import { IoIosCloseCircleOutline } from 'react-icons/io'
-import { baixarRelatorio } from '@/app/hooks/use-relatory' 
+import { baixarRelatorio } from '@/app/hooks/use-relatory'
 
 interface SelectDateModalProps {
   isOpen: boolean
@@ -72,7 +72,7 @@ export default function SelectDateModalAdmin({
             />
             <button
               className="flex h-[45px] w-[200px] items-center justify-center justify-items-center gap-4 rounded-lg bg-blue-primary font-poppins text-white"
-              onClick={() => baixarRelatorio(0)}
+              onClick={() => baixarRelatorio(selectedDate.getTime())}
             >
               <LuDownload className="h-[30px] w-[30px]" />
               Relatório
