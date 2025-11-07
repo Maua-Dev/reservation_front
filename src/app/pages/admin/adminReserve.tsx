@@ -378,7 +378,6 @@ export default function AdminReserve() {
               </div>
             </div>
 
-            {/* Coluna da semana - 75% em telas grandes, 100% em telas pequenas */}
             <div className="flex h-full w-full flex-col bg-white">
               <div className="sticky top-0 z-30 flex h-20 w-full flex-col items-center bg-blue-primary p-4 text-xl text-white">
                 <div className="flex w-full">
@@ -399,7 +398,7 @@ export default function AdminReserve() {
                 </div>
               </div>
 
-              <div className="flex flex-col overflow-x-auto">
+              <div className="flex flex-col overflow-x-auto overflow-y-hidden">
                 {[...Array(28)].map((_, index) => {
                   const hour = 8 + Math.floor(index / 2)
                   const minute = index % 2

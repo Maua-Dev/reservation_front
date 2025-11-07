@@ -26,7 +26,7 @@ export function CalendaryCard({
     6: 'border-[#CBBD93] text-black z-[6]',
     0: 'border-[#008000] text-[#008000] z-[7]',
     1: 'border-[#0080f5] text-[#0080f5] z-[1]',
-    2: 'border-[#9414F5] text-[#9414F5]z-[2]',
+    2: 'border-[#9414F5] text-[#9414F5] z-[2]',
     3: 'border-[#cb066C] text-[#cb066C] z-[3]',
     4: 'border-[#fd3055] text-[#fd3055] z-[4]',
     5: 'border-[#d2b202] text-[#d2b202] z-[5]'
@@ -75,7 +75,7 @@ export function CalendaryCard({
       ref={containerRef}
       onClick={openModal}
       className={cn(
-        'group z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 px-1 text-center shadow-md duration-300 hover:z-10 hover:-translate-y-1 hover:cursor-pointer',
+        'group z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 px-1 text-center shadow-md duration-300 hover:z-[100] hover:-translate-y-1 hover:cursor-pointer',
         courtColors[court]
       )}
       title={`${courtLabel.full} - ${modality}`}
