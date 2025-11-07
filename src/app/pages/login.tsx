@@ -5,7 +5,7 @@ import { Button } from '../components/button'
 import { useIsAuthenticated, useMsal } from '@azure/msal-react'
 import { useNavigate } from 'react-router-dom'
 import { loginRequest } from '../auth/auth-config'
-import { useUser, useUserQuery } from '../hooks/use-user'
+import { useUser } from '../hooks/use-user'
 import { useEffect, useState } from 'react'
 import { UserService } from '@/services/user-service'
 

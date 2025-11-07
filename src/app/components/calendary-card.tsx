@@ -14,10 +14,10 @@ interface CalendaryCardProps {
 export function CalendaryCard({
   court,
   modality,
-  openModal,
-  equipments,
-  time,
-  isChecked
+  openModal
+  // equipments,
+  // time,
+  // isChecked
 }: CalendaryCardProps) {
   const courtColors: {
     [key: number]: string
@@ -48,8 +48,7 @@ export function CalendaryCard({
   }
 
   const containerRef = useRef<HTMLDivElement | null>(null)
-  const [width, setWidth] = useState(0)
-  const [hovered, setHovered] = useState(false)
+  const [width, setWidth] = useState<number>(0)
 
   useEffect(() => {
     const el = containerRef.current

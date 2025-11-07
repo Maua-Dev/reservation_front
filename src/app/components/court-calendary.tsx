@@ -43,7 +43,6 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
   const isAuth = useIsAuthenticated()
 
   const { data } = useUserQuery()
-  const extraCourts = [5]
 
   useEffect(() => {
     if (data?.userId) {
@@ -488,7 +487,6 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
         {[...Array(isField ? 18 : 25)].map((_, index) => {
           const hour = 8 + Math.floor((index + 1) / 2)
           const minute = (index + 1) % 2
-          const isHourSeparator = minute === 0
           return (
             <div key={index} className="flex min-w-[100vw] sm:min-w-0">
               <div className="sticky left-0 z-20 flex min-h-16 min-w-16 max-w-16 items-start border-r border-gray-400 bg-white px-4 font-poppins">{`${hour}:${minute === 0 ? '00' : '30'}`}</div>

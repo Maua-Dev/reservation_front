@@ -1,4 +1,3 @@
-import { PiPencilSimpleLine } from 'react-icons/pi'
 import { Alert } from '../contexts/alerts-context'
 import { useUser } from '../hooks/use-user'
 import { FaRegTrashAlt } from 'react-icons/fa'

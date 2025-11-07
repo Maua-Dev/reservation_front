@@ -1,5 +1,5 @@
-import { createContext, ReactNode, useEffect, useState } from 'react'
-import { User, useUserQuery } from '../hooks/use-user'
+import { createContext, ReactNode, useState } from 'react'
+import { User } from '../hooks/use-user'
 
 type UserContextType = {
   user: User | null
