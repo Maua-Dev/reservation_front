@@ -42,7 +42,7 @@ export const baixarRelatorio = (deslocamentoSemana: number = 0): void => {
   const urlCompleta = `${URL_BASE}${NOME_ARQUIVO_BASE}${dataFormatada}${EXTENSAO}`
 
   console.log(`Abrindo URL para download: ${urlCompleta}`)
-  window.location.href = urlCompleta
+  window.open(urlCompleta, '_blank')
 }
 
 // Para a sexta-feira "retrasada" (a sexta-feira anterior à última), como o leo pediu
