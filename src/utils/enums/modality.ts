@@ -1,14 +1,14 @@
 export enum ModalityName {
-  TENNIS = 'Tennis',
-  FOOTBALL = 'Football',
-  BASKETBALL = 'Basketball',
-  VOLLEYBALL = 'Volleyball',
-  HANDBOLL = 'Handball',
+  TENNIS = 'Tênis',
+  FOOTBALL = 'Futebol',
+  BASKETBALL = 'Basquetebol',
+  VOLLEYBALL = 'Voleibol',
+  HANDBOLL = 'Handebol',
   FUTSAL = 'Futsal',
   RUGBY = 'Rugby',
-  BEACH_TENNIS = 'Beach Tennis',
-  PING_PONG = 'Ping Pong',
-  NATACAO = 'Natacao',
+  BEACH_TENNIS = 'Tênis de Praia',
+  PING_PONG = 'Tênis de Mesa',
+  NATACAO = 'Natação',
   CORRIDA = 'Corrida',
   NA = 'NA'
 }

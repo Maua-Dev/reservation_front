@@ -518,7 +518,7 @@ export default function AdminReserve() {
                   location={selectedBooking.court}
                   modality={
                     ModalityName[
-                      selectedBooking.modality as keyof typeof ModalityName
+                      selectedBooking.modality.toUpperCase().split(' ').join('_') as keyof typeof ModalityName
                     ]
                   }
                   equipments={selectedBooking.materials}
