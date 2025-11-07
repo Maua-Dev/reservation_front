@@ -290,34 +290,28 @@ export default function AdminReserve() {
       )
     })
 
-    if (sameTimeReservations.length <= 1) {
-      return {
-        className: 'absolute transition-all',
-        style: { left: '0%', width: '100px', zIndex: 40 }
-      }
-    }
-
-    const sorted = sameTimeReservations.sort(
-      (a, b) => Number(a.court_number) - Number(b.court_number)
-    )
-
-    const index = sorted.findIndex(
-      (r) => Number(r.court_number) === courtNumber
-    )
-
-    const total = sameTimeReservations.length
-    const gapPercent = -20
-
-    const widthPercent = (85 - gapPercent * (total - 1)) / total
-    const leftPercent = index * (widthPercent + gapPercent)
-
-    return {
-      className: 'absolute transition-all',
-      style: {
+    let overlapIndex = 0
+    let style = { left: '0%', width: '100px' }
+    if (sameTimeReservations.length > 1) {
+      const sorted = [...sameTimeReservations].sort(
+        (a, b) => Number(a.court_number) - Number(b.court_number)
+      )
+      overlapIndex = sorted.findIndex(
+        (r) => Number(r.court_number) === courtNumber
+      )
+      const total = sameTimeReservations.length
+      const gapPercent = -20
+      const widthPercent = (85 - gapPercent * (total - 1)) / total
+      const leftPercent = overlapIndex * (widthPercent + gapPercent)
+      style = {
         left: `${leftPercent}%`,
         width: `${widthPercent}%`,
-        zIndex: 10 + index * 2
       }
+    }
+    return {
+      className: 'absolute transition-all',
+      style,
+      overlapIndex
     }
   }
 
@@ -470,22 +464,47 @@ export default function AdminReserve() {
                                     style={{
                                       ...offset.style,
                                       height: `${Math.max(
-                                        130,
-                                        ((reserva.end_date -
-                                          reserva.start_date) /
-                                          (1000 * 60 * 30)) *
-                                          130
+                                      130,
+                                      ((reserva.end_date -
+                                        reserva.start_date) /
+                                        (1000 * 60 * 30)) *
+                                        130
                                       )}px`,
                                       paddingBottom: '10px'
                                     }}
-                                  >
+                                    >
                                     <CalendaryCard
                                       court={reserva.court_number}
                                       location={`Quadra ${reserva.court_number}`}
                                       modality={
-                                        ModalityName[
-                                          reserva.sport as keyof typeof ModalityName
-                                        ]
+                                      ModalityName[
+                                        reserva.sport as keyof typeof ModalityName
+                                      ]
+                                      }
+                                      index={
+                                      reservasConvertidas
+                                        .filter(
+                                        (r) =>
+                                          r.day === reserva.day &&
+                                          ((Number(reserva.start_date) <
+                                          r.end_date &&
+                                          Number(reserva.start_date) >=
+                                            r.start_date) ||
+                                          (Number(reserva.end_date) <=
+                                            r.end_date &&
+                                            Number(reserva.end_date) >
+                                            r.start_date))
+                                        )
+                                        .sort(
+                                        (a, b) =>
+                                          Number(a.court_number) -
+                                          Number(b.court_number)
+                                        )
+                                        .findIndex(
+                                        (r) =>
+                                          Number(r.court_number) ===
+                                          Number(reserva.court_number)
+                                        )
                                       }
                                       time={reserva.start_date}
                                       isChecked={[true, false]}
