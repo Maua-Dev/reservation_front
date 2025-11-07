@@ -77,7 +77,6 @@ export default function MaintenanceModal({
       setTimeout(() => {
         setIsOpen(true)
       }, 300)
-      // Refetch weekly bookings when modal opens to have fresh availability
       refetchWeek()
     }
   }, [isVisible, refetchWeek])
@@ -159,8 +158,8 @@ export default function MaintenanceModal({
       )
       if (overlapping?.booking_id) {
         await deleteBookingMutation.mutateAsync(overlapping.booking_id)
+        getBookingsOfTheWeek.refetch()
         handleClose()
-        window.location.reload()
         return
       }
     }
@@ -176,7 +175,7 @@ export default function MaintenanceModal({
     await createBookingMutation.mutateAsync(bookingdata)
 
     handleClose()
-    window.location.reload()
+    getBookingsOfTheWeek.refetch()
   }
 
   // Courts list

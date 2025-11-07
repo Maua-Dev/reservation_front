@@ -28,7 +28,7 @@ export const ReservationDetails = ({
   onClose,
   bookingUserId
 }: ReservationDetailsProps) => {
-  const { deleteBookingMutation } = useBookingsQuery()
+  const { deleteBookingMutation, getBookingsOfTheWeek } = useBookingsQuery()
   const date = new Date(time)
   const { user } = useUser()
   const formattedDate = date.toLocaleDateString('pt-BR', {
@@ -60,12 +60,12 @@ export const ReservationDetails = ({
     if (bookingId) {
       try {
         await deleteBookingMutation.mutateAsync(bookingId)
-        // onSuccess do mutation já mostra o toast
+        getBookingsOfTheWeek.refetch()
         onClose()
-        // Pequeno delay para permitir o usuário ver o toast antes do reload
-        setTimeout(() => {
-          window.location.reload()
-        }, 800)
+        // If you have a refetch function, call it here. Otherwise, remove this block.
+        // setTimeout(() => {
+        //   getBookingsOfTheWeek.refetch()
+        // }, 800)
       } catch (err) {
         toast.error('Erro ao cancelar reserva!')
         console.error(err)
