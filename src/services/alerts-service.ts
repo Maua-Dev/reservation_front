@@ -12,7 +12,10 @@ export const AlertsService = {
   },
   createAlert: async (alert: CreateAlert) => {
     try {
-      const response = await alertsApi.post('/create-alert', alert)
+      const accessToken = localStorage.getItem('accessToken') || ''
+      const response = await alertsApi.post('/create-alert', alert, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      })
       return response.data
     } catch (error) {
       console.error('Error creating alert:', error)
@@ -22,7 +25,11 @@ export const AlertsService = {
 
   deleteAlert: async (alert_id: string) => {
     try {
-      await alertsApi.delete(`/delete-alert`, { params: { alert_id } })
+      const accessToken = localStorage.getItem('accessToken') || ''
+      await alertsApi.delete(`/delete-alert`, {
+        params: { alert_id },
+        headers: { Authorization: `Bearer ${accessToken}` }
+      })
     } catch (error) {
       console.error('Error deleting alert:', error)
       throw error
