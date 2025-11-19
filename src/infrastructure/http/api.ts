@@ -15,6 +15,13 @@ export const bookingsApi = axios.create({
   }
 })
 
+export const alertsApi = axios.create({
+  baseURL: environments.alertsurl,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+
 bookingsApi.interceptors.response.use(
   (response) => {
     return response
@@ -26,6 +33,16 @@ bookingsApi.interceptors.response.use(
 )
 
 api.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  async (error) => {
+    console.log(`Intercepted error: ${(error as AxiosError).message}`)
+    return Promise.reject(error)
+  }
+)
+
+alertsApi.interceptors.response.use(
   (response) => {
     return response
   },

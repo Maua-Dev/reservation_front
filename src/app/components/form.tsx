@@ -9,6 +9,7 @@ import { IoClose } from 'react-icons/io5'
 import { useBookingsQuery } from '../hooks/use-booking'
 import { useUser } from '../hooks/use-user'
 import { ModalityName } from '@/utils/enums/modality'
+import { BookingType } from '@/utils/enums/booking-type'
 
 type FormProps = {
   modalities: string[]
@@ -18,6 +19,7 @@ type FormProps = {
   isOpen: boolean
   timestamp: number
   isField: boolean
+  isSpecialCourt?: boolean
 }
 
 const formSchema = z.object({
@@ -32,7 +34,8 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   const {
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
+    getValues
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,12 +55,14 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   const { user } = useUser()
 
   const onSubmit = async () => {
+    const formValues = getValues()
     const bookingData = {
       start_date: timestamp,
       end_date: timestamp + 3600000,
       court_number: Number(courtNumber),
-      sport: selectedModality,
-      materials: selectedEquipments
+      sport: formValues.modality,
+      type: BookingType.COMMON,
+      materials: formValues.equipment
     }
     await createBookingMutation.mutateAsync(bookingData)
     onClose()
@@ -68,23 +73,29 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   const modalityToEquipament: Record<string, string[]> = {
     Football: ['Bola de futebol'],
     Rugby: ['Bola de rugby'],
-    'Beach Tennis': ['Raquete e Bola', 'Tamboréu e Bola'],
-    Tennis: ['Bola e Raquete de tênis'],
+    'Beach Tennis': ['Raquete e Bola'],
+    Tennis: ['Bola e Raquete de tênis', 'Tamboréu e Bola'],
     Basketball: ['Bola de basquete'],
     Volleyball: ['Bola de vôlei'],
     Handball: ['Bola de handebol'],
-    Futsal: ['Bola de futsal']
+    Futsal: ['Bola de futsal'],
+    Corrida: ['Sem equipamento (Corrida)'],
+    Natacao: ['Sem equipamento (Natação)'],
+    'Ping Pong': ['Raquete e bola de Ping Pong']
   }
   const equipmentToModality: Record<string, string> = {
     'Bola de futebol': 'Football',
     'Bola de rugby': 'Rugby',
     'Raquete e Bola': 'Beach Tennis',
-    'Tamboréu e Bola': 'Beach Tennis',
+    'Tamboréu e Bola': 'Tennis',
     'Bola e Raquete de tênis': 'Tennis',
     'Bola de basquete': 'Basketball',
     'Bola de vôlei': 'Volleyball',
     'Bola de handebol': 'Handball',
-    'Bola de futsal': 'Futsal'
+    'Bola de futsal': 'Futsal',
+    'Sem equipamento (Corrida)': 'Corrida',
+    'Sem equipamento (Natação)': 'Natacao',
+    'Raquete e bola de Ping Pong': 'Ping Pong'
   }
 
   const handleModalitySelect = (modality: string) => {
@@ -122,25 +133,35 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
       }
       return ['Football', 'Rugby', 'Beach Tennis']
     }
+    if (options.includes('Atividades Livres')) {
+      return [
+        ModalityName.PING_PONG,
+        ModalityName.CORRIDA,
+        ModalityName.NATACAO
+      ]
+    }
     return ['Tennis', 'Basketball', 'Volleyball', 'Handball', 'Futsal']
   }
   const equipamento = () => {
     if (isField) {
       if (options.length === 1 && options[0] === 'Beach') {
-        return ['Raquete e Bola', 'Tamboréu e Bola']
+        return ['Raquete e Bola']
       }
       if (options.length === 1 && options[0] === 'Campo') {
         return ['Bola de futebol', 'Bola de rugby']
       }
+      return ['Bola de futebol', 'Bola de rugby', 'Raquete e Bola']
+    }
+    if (options.includes('Atividades Livres')) {
       return [
-        'Bola de futebol',
-        'Bola de rugby',
-        'Raquete e Bola',
-        'Tamboréu e Bola'
+        'Raquete e bola de Ping Pong',
+        'Sem equipamento (Corrida)',
+        'Sem equipamento (Natação)'
       ]
     }
     return [
       'Bola e Raquete de tênis',
+      'Tamboréu e Bola',
       'Bola de basquete',
       'Bola de vôlei',
       'Bola de handebol',
@@ -163,6 +184,16 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   }, [onClose])
 
   const formatDate = (date: number) => date.toString().padStart(2, '0')
+
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center rounded-xl bg-white p-8">
+        <p className="font-poppins text-xl text-red-500">
+          Usuário não encontrado. Por favor, faça login novamente.
+        </p>
+      </div>
+    )
+  }
 
   return (
     <form
@@ -227,9 +258,9 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
           </label>
         </div>
         <div className="flex flex-col items-start justify-start gap-1 md:flex-row">
-          <label className="flex items-center justify-center gap-1 font-poppins text-xl">
+          <label className="flex items-center justify-center font-poppins text-xl">
             <span></span>
-            <p>Horário</p>
+            <p className="px-20">Horário</p>
             <div className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2 text-white">
               {formatDate(selectedDate.getHours())}:
               {formatDate(selectedDate.getMinutes())}
@@ -264,7 +295,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
                     : 'text-slate-700'
                 }`}
               >
-                {ModalityName[modality as keyof typeof ModalityName]}
+                {modality}
               </button>
             ))}
             {errors.modality && (

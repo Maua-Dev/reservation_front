@@ -93,6 +93,7 @@ jobs:
           VITE_AUTH_TENANT_ID: ${{ vars.VITE_AUTH_TENANT_ID }}
           VITE_USER_URL: ${{ vars.VITE_USER_URL }}
           VITE_RESERVATION_URL: ${{ vars.VITE_RESERVATION_URL }}
+          VITE_ALERT_URL: ${{ vars.VITE_ALERT_URL }}
 
       - name: Setup envs
         run: |
@@ -101,8 +102,8 @@ jobs:
           echo STACK_NAME=${{ env.STACK_NAME }} >> $GITHUB_ENV
           echo GITHUB_REF_NAME=${{ env.STAGE }} >> $GITHUB_ENV
           echo AWS_BUCKET_ASSETS=${{ vars.AWS_BUCKET_ASSETS }} >> $GITHUB_ENV
-          echo VITE_RESERVATION_API=${{ vars.VITE_RESERVATION_API }} >> $GITHUB_ENV
           echo VITE_USER_URL=${{vars.VITE_USER_URL }} >> $GITHUB_ENV
+          echo VITE_ALERT_URL=${{ vars.VITE_ALERT_URL }} >> $GITHUB_ENV
 
       - name: Deploy with CDK
         env:
