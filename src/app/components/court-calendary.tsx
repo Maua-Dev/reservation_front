@@ -307,10 +307,11 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
   }
 
   const cannotReserve = (day: number, hour: number, minute: number) => {
+    // TODO: Trocar, ao invés de pegar as minhas reservas por user_id, fazer a request de my bookings e checar se tem alguma com o mesmo booking_id de dentro de 1 hora
     const userId = localStorage.getItem('user_id')
 
     const userReservations = reservasConvertidas.filter(
-      (reserva) => reserva.user_id === userId && reserva.day === day
+      (reserva) => reserva.booking_id === userId && reserva.day === day
     )
 
     const tryingDate = new Date()
