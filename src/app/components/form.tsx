@@ -47,19 +47,34 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   const [open, setOpen] = useState(false)
   const [selectedModality, setSelectedModality] = useState('')
   const [selectedEquipments, setSelectedEquipments] = useState<string[]>([])
-  const [courtNumber, setCourtNumber] = useState(
-    isField ? (options[0] == 'Beach' ? 6 : 0) : options[0].split(' ')[1]
-  )
+  const [courtNumber, setCourtNumber] = useState<number>(() => {
+  if (isField) {
+    return options[0] === 'Beach' ? 6 : 0
+  }
+
+  return Number(options[0].split(' ')[1])
+})
   const selectedDate = new Date(timestamp)
   const { createBookingMutation } = useBookingsQuery()
   const { user } = useUser()
+  const FREE_ACTIVITY_SPORTS = [
+  ModalityName.PING_PONG,
+  ModalityName.CORRIDA,
+  ModalityName.NATACAO
+]
 
   const onSubmit = async () => {
     const formValues = getValues()
+    const isFreeActivity = FREE_ACTIVITY_SPORTS.includes(
+    formValues.modality as ModalityName
+  )
+
+  const finalCourtNumber = isFreeActivity ? 5 : Number(courtNumber)
+
     const bookingData = {
       start_date: timestamp,
       end_date: timestamp + 3600000,
-      court_number: Number(courtNumber),
+      court_number: finalCourtNumber,
       sport: formValues.modality,
       type: BookingType.COMMON,
       materials: formValues.equipment
@@ -80,8 +95,8 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     Handball: ['Bola de handebol'],
     Futsal: ['Bola de futsal'],
     Corrida: ['Sem equipamento (Corrida)'],
-    Natacao: ['Sem equipamento (Natação)'],
-    'Ping Pong': ['Raquete e bola de Ping Pong']
+    Natação: ['Sem equipamento (Natação)'],
+    'Ping Pong': ['Raquete e bola de Tênis de Mesa']
   }
   const equipmentToModality: Record<string, string> = {
     'Bola de futebol': 'Football',
@@ -94,8 +109,8 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     'Bola de handebol': 'Handball',
     'Bola de futsal': 'Futsal',
     'Sem equipamento (Corrida)': 'Corrida',
-    'Sem equipamento (Natação)': 'Natacao',
-    'Raquete e bola de Ping Pong': 'Ping Pong'
+    'Sem equipamento (Natação)': 'Natação',
+    'Raquete e bola de Tênis de Mesa': 'Ping Pong'
   }
 
   const handleModalitySelect = (modality: string) => {
@@ -154,7 +169,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     }
     if (options.includes('Atividades Livres')) {
       return [
-        'Raquete e bola de Ping Pong',
+        'Raquete e bola de Tênis de Mesa',
         'Sem equipamento (Corrida)',
         'Sem equipamento (Natação)'
       ]
@@ -210,7 +225,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
             <p className="w-1/2 font-poppins text-xl font-bold md:text-3xl">
               {user.name}
             </p>
-            <p className="mr-4 flex w-1/2 justify-end font-poppins text-2xl font-bold sm:justify-end md:text-3xl">
+            <p className="mr-16 flex w-1/2 justify-end font-poppins text-2xl font-bold sm:justify-end md:text-3xl">
               {user.ra}
             </p>
           </div>
@@ -229,10 +244,8 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
         <div className="flex w-32 items-center justify-between rounded">
           <label className="flex-grow text-center font-poppins text-lg text-white">
             <select
-              defaultValue={courtNumber}
-              onChange={(e) => {
-                setCourtNumber(e.target.value)
-              }}
+              value={courtNumber}
+  onChange={(e) => setCourtNumber(Number(e.target.value))}
               className={`${isField ? 'hidden' : ''} inline-flex items-start justify-start rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2`}
             >
               {options.map((option) => (
