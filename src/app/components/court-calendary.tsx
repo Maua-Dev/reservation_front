@@ -589,7 +589,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                               location={`Quadra ${reserva.court_number}`}
                               modality={
                                 ModalityName[
-                                  reserva.sport as keyof typeof ModalityName
+                                  reserva.modality as keyof typeof ModalityName
                                 ]
                               }
                               equipments={equipments}
@@ -600,7 +600,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                                   id: Number(reserva.booking_id) ?? 0,
                                   court: `Quadra ${reserva.court_number}`,
                                   courtNumber: reserva.court_number,
-                                  modality: reserva.sport,
+                                  modality: reserva.modality,
                                   time: reserva.start_date,
                                   duration:
                                     (reserva.end_date - reserva.start_date) /

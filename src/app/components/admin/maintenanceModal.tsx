@@ -168,7 +168,7 @@ export default function MaintenanceModal({
       start_date: start,
       end_date: endDateMs,
       court_number: selectedCourt,
-      sport: isMaintainance ? 'NA' : validSelectedSport,
+      modality: isMaintainance ? 'NA' : validSelectedSport,
       materials: selectedMaterials,
       type: type
     }

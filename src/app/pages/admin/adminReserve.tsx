@@ -449,7 +449,7 @@ export default function AdminReserve() {
                                         id: reserva.booking_id || '',
                                         court: `Quadra ${reserva.court_number}`,
                                         courtNumber: reserva.court_number,
-                                        modality: reserva.sport,
+                                        modality: reserva.modality,
                                         time: reserva.start_date,
                                         duration:
                                           (reserva.end_date -
@@ -478,7 +478,7 @@ export default function AdminReserve() {
                                       location={`Quadra ${reserva.court_number}`}
                                       modality={
                                       ModalityName[
-                                        reserva.sport as keyof typeof ModalityName
+                                        reserva.modality as keyof typeof ModalityName
                                       ]
                                       }
                                       time={reserva.start_date}

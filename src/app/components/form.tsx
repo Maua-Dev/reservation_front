@@ -75,7 +75,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
       start_date: timestamp,
       end_date: timestamp + 3600000,
       court_number: finalCourtNumber,
-      sport: formValues.modality,
+      modality: formValues.modality,
       type: BookingType.COMMON,
       materials: formValues.equipment
     }
