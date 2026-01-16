@@ -96,7 +96,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     Futsal: ['Bola de futsal'],
     Corrida: ['Sem equipamento (Corrida)'],
     Natação: ['Sem equipamento (Natação)'],
-    'Ping Pong': ['Raquete e bola de Tênis de Mesa']
+    'Ping Pong': ['Raquete e bola de Ping Pong']
   }
   const equipmentToModality: Record<string, string> = {
     'Bola de futebol': 'Football',
@@ -110,7 +110,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     'Bola de futsal': 'Futsal',
     'Sem equipamento (Corrida)': 'Corrida',
     'Sem equipamento (Natação)': 'Natação',
-    'Raquete e bola de Tênis de Mesa': 'Ping Pong'
+    'Raquete e bola de Ping Pong': 'Ping Pong'
   }
 
   const handleModalitySelect = (modality: string) => {
@@ -169,7 +169,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     }
     if (options.includes('Atividades Livres')) {
       return [
-        'Raquete e bola de Tênis de Mesa',
+        'Raquete e bola de Ping Pong',
         'Sem equipamento (Corrida)',
         'Sem equipamento (Natação)'
       ]

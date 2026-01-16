@@ -29,7 +29,7 @@ interface ReservationCardProps {
   endDate: number
   court?: string
   bookingId?: string
-  sport?: string
+  modality?: string
   reload: () => void
 }
 
@@ -38,9 +38,10 @@ export function ReservationCard({
   endDate,
   court,
   bookingId,
-  sport,
+  modality,
   reload
 }: ReservationCardProps) {
+  
   const { deleteBookingMutation } = useBookingsQuery()
   const today = new Date().getTime()
   const isPassed = startDate < today
@@ -51,54 +52,67 @@ export function ReservationCard({
       reload()
     }
   }
+  
 
-  const sportIcons: Record<string, JSX.Element> = {
-    Football: <FaFutbol />,
-    Volleyball: <FaVolleyballBall />,
-    Futsal: <FaRegFutbol />,
-    Rugby: <MdSportsRugby />,
-    Tennis: <GiTennisRacket />,
-    Basketball: <FaBasketball />,
-    Handball: <TbPlayHandball />,
-    'Beach Tennis': <TbBeach />,
-    Natacao: <FaSwimmer />,
-    Corrida: <MdDirectionsRun />,
-    'Ping Pong': <GiPingPongBat />
+  const modalityIcons: Record<string, JSX.Element> = {
+    FOOTBALL: <FaFutbol />,
+    VOLLEYBALL : <FaVolleyballBall />,
+    FUTSAL: <FaRegFutbol />,
+    RUGBY: <MdSportsRugby />,
+    TENNIS : <GiTennisRacket />,
+    BASKETBALL: <FaBasketball />,
+    HANDBALL: <TbPlayHandball />,
+    'BEACH TENNIS': <TbBeach />,
+    NATACAO: <FaSwimmer />,
+    CORRIDA: <MdDirectionsRun />,
+    'PING PONG': <GiPingPongBat />
   }
-  const sportImages: Record<string, string> = {
-    Football: futebol,
-    Volleyball: volei,
-    Futsal: futsal,
-    Rugby: rugby,
-    Tennis: tenis,
-    Basketball: basquete,
-    Handball: handebol,
-    'Beach Tennis': beachTenis,
-    Natacao: natacao,
-    Corrida: corrida,
-    'Ping Pong': pingPong
+  const modalityImages: Record<string, string> = {
+    FOOTBALL: futebol,
+    VOLLEYBALL : volei,
+    FUTSAL: futsal,
+    RUGBY: rugby,
+    TENNIS : tenis,
+    BASKETBALL: basquete,
+    HANDBALL: handebol,
+    'BEACH TENNIS': beachTenis,
+    NATACAO: natacao,
+    CORRIDA: corrida,
+    'PING PONG': pingPong
   }
-  const sportColors: Record<string, string> = {
-    Football: '#32CD32',
-    Volleyball: '#0000FF',
-    Futsal: '#3b82f6',
-    Rugby: '#a16207',
-    Tennis: '#228B22',
-    Basketball: '#FF8C00',
-    Handball: '#ef4444',
-    'Beach Tennis': '#14b8a6',
-    Natacao: '#3b82f6',
-    Corrida: '#228B22',
-    'Ping Pong': '#ef4444'
+  const modalityColors: Record<string, string> = {
+    FOOTBALL: '#32CD32',
+    VOLLEYBALL : '#0000FF',
+    FUTSAL: '#3b82f6',
+    RUGBY: '#a16207',
+    TENNIS : '#228B22',
+    BASKETBALL: '#FF8C00',
+    HANDBALL: '#ef4444',
+    'BEACH TENNIS': '#14b8a6',
+    NATACAO: '#3b82f6',
+    CORRIDA: '#228B22',
+    'PING PONG': '#ef4444'
   }
+
+  const getModalityImage = () => {
+    if (!modality || !modalityImages[modality]) return ''
+    return `url(${modalityImages[modality]})`
+  }
+
+  console.log('Modality:', modality)
+console.log('Image path:', modality ? modalityImages[modality] : 'No modality')
+
+// E verifique se as importações funcionam:
+console.log('Imported images:', {
+  futebol, volei, futsal, rugby, tenis, basquete, handebol, beachTenis, natacao, corrida, pingPong
+})
+
+
   return (
     <div
       className="relative flex h-36 min-h-36 w-full flex-row items-start overflow-hidden rounded-lg p-4 md:h-44 md:min-h-44"
       style={{
-        backgroundImage:
-          sport && sportImages[sport]
-            ? `url(${sportImages[sport]})`
-            : undefined,
+        backgroundImage: getModalityImage(),
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}
@@ -106,7 +120,7 @@ export function ReservationCard({
       <div
         className="pointer-events-none absolute inset-0 rounded-lg"
         style={{
-          backgroundColor: sport ? sportColors[sport] || '#6b7280' : '#6b7280',
+          backgroundColor: modality ? modalityColors[modality] || '#6b7280' : '#6b7280',
           opacity: 0.4
         }}
       />
@@ -134,7 +148,7 @@ export function ReservationCard({
         </p>
         <p className="flex flex-row justify-between gap-3 text-xs font-normal text-white sm:text-base md:text-lg">
           <span className="flex items-center gap-2">
-            Esporte: {sport} {sport && sportIcons[sport]}
+            Esporte: {modality} {modality && modalityIcons[modality]}
           </span>
         </p>
       </div>

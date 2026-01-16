@@ -6,11 +6,13 @@ import { View } from './view'
 import { ReservationDetails } from './reservation-details'
 import { cn } from '../utils/cn'
 import { useUserQuery } from '../hooks/use-user'
-import { useBookingsQuery } from '../hooks/use-booking'
+import { useBookingsQuery, useBookings } from '../hooks/use-booking'
 import { useIsAuthenticated, useMsal } from '@azure/msal-react'
 import { ModalityName } from '@/utils/enums/modality'
 import { FiLoader } from 'react-icons/fi'
 import { toast } from 'react-toastify'
+//import { any } from 'zod'
+
 
 export interface Reservation {
   id: number
@@ -305,15 +307,44 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
 
     return date.getTime() < today.getTime()
   }
+  const { getMyBookingsQuery } = useBookingsQuery()
+  
+  const { myBookings, setMyBookings } = useBookings()
+
+  const fetchBookings = async () => {
+    const bookings = await getMyBookingsQuery.refetch()
+    setMyBookings(bookings.data?.bookings || [])
+  }
+   useEffect(() => {
+    setMyBookings(getMyBookingsQuery.data?.bookings || [])
+  }, [getMyBookingsQuery.data, setMyBookings])
+
+  
 
   const cannotReserve = (day: number, hour: number, minute: number) => {
-    const userId = localStorage.getItem('user_id')
+    
 
-    const userReservations = reservasConvertidas.filter(
-      (reserva) => reserva.user_id === userId && reserva.day === day
-    )
+    if (!myBookings || myBookings.length === 0) return false
+  
+  // Pega os IDs das reservas do usuário para o dia específico
+  // Primeiro converte myBookings para o mesmo formato de reservasConvertidas
+  const userReservations = myBookings
+    .map(booking => {
+      const date = new Date(Number(booking.start_date))
+      return {
+        ...booking,
+        day: date.getDate(),
+        hour: date.getHours(),
+        minute: date.getMinutes(),
+        start_date: Number(booking.start_date),
+        end_date: Number(booking.end_date)
+      }
+    })
+    .filter(reserva => reserva.day === day)
 
-    const tryingDate = new Date()
+  if (userReservations.length === 0) return false
+    
+  const tryingDate = new Date()
     tryingDate.setDate(day)
     tryingDate.setHours(hour)
     tryingDate.setMinutes(minute === 0 ? 0 : 30)
@@ -430,6 +461,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
     }, 200)
   }
 
+  
   return (
     <div className="relative w-full">
       {getBookingsOfTheWeek?.isLoading && (

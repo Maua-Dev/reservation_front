@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { AdminOption } from '@/app/components/adminOption'
 import Footer from '@/app/components/footer'
-import imgBeachTenis from '../../assets/imagem-beachtenis.png'
+//import imgBeachTenis from '../../assets/imagem-beachtenis.png'
 import imgCampo from '../../assets/imagem-campo.png'
 // import imgQuadra from '../../assets/imagem-quadra.png'
 
@@ -18,12 +18,12 @@ const options = [
   //   action: 'Visualizar',
   //   dir: '/admin-report'
   // },
-  {
-    image: imgBeachTenis,
-    title: 'Professores Autorizados',
-    action: 'Visualizar',
-    dir: '/fieldbeach-reserve'
-  }
+  //{
+    //image: imgBeachTenis,
+    //title: 'Professores Autorizados',
+    //action: 'Visualizar',
+    //dir: '/fieldbeach-reserve'
+  //}
 ]
 
 export default function AdminHome() {
