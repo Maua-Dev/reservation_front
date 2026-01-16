@@ -311,10 +311,10 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
   
   const { myBookings, setMyBookings } = useBookings()
 
-  const fetchBookings = async () => {
-    const bookings = await getMyBookingsQuery.refetch()
-    setMyBookings(bookings.data?.bookings || [])
-  }
+  //const fetchBookings = async () => {
+  //  const bookings = await getMyBookingsQuery.refetch()
+  //  setMyBookings(bookings.data?.bookings || [])
+ // }
    useEffect(() => {
     setMyBookings(getMyBookingsQuery.data?.bookings || [])
   }, [getMyBookingsQuery.data, setMyBookings])
