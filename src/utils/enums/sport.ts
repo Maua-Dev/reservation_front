@@ -1,4 +1,4 @@
-export enum ModalityName {
+export enum SportName {
   TENNIS = 'Tênis',
   FOOTBALL = 'Futebol',
   BASKETBALL = 'Basquetebol',

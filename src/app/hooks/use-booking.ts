@@ -12,7 +12,7 @@ export interface Booking {
   start_date: number
   end_date: number
   court_number: number
-  modality: string
+  sport: string
   user_id?: string
   booking_id?: string
   materials: string[]

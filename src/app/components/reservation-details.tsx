@@ -8,7 +8,7 @@ import { toast } from 'react-toastify'
 
 type ReservationDetailsProps = {
   location: string
-  modality: string
+  sport: string
   equipments: string[]
   time: number
   isChecked: boolean[]
@@ -21,7 +21,7 @@ type ReservationDetailsProps = {
 export const ReservationDetails = ({
   equipments,
   location,
-  modality,
+  sport,
   time,
   bookingId,
   //isChecked,
@@ -84,7 +84,6 @@ export const ReservationDetails = ({
       </div>
     )
   }
-  console.log('ReservationDetails modality:', modality)
 
   return (
     <>
@@ -139,7 +138,7 @@ export const ReservationDetails = ({
                   'inline-flex items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4 font-poppins text-lg font-medium text-white md:text-xl'
                 }
               >
-                {modality}
+                {sport}
               </h1>
             </div>
           </div>

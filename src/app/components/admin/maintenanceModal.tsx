@@ -3,7 +3,7 @@ import { useBookingsQuery } from '@/app/hooks/use-booking'
 import { useEffect, useMemo, useState } from 'react'
 import { FiLoader } from 'react-icons/fi'
 import { BookingType } from '@/utils/enums/booking-type'
-import { ModalityName } from '@/utils/enums/modality'
+import { SportName } from '@/utils/enums/sport'
 
 /* eslint-disable prettier/prettier */
 interface MaintenanceModalProps {
@@ -14,9 +14,7 @@ interface MaintenanceModalProps {
   type?: BookingType
 }
 
-const modalidade = Object.values(ModalityName)
-// const [selectedModality, setSelectedModality] = useState('')
-// const [selectedEquipments, setSelectedEquipments] = useState<string[]>([])
+const sports = Object.values(SportName)
 
 export default function MaintenanceModal({
   isVisible,
@@ -27,7 +25,7 @@ export default function MaintenanceModal({
 }: MaintenanceModalProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedCourt, setSelectedCourt] = useState<number>(1)
-  const [selectedSport, setSelectedSport] = useState<string>(modalidade[0])
+  const [selectedSport, setSelectedSport] = useState<string>(sports[0])
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([])
   const [endHour, setEndHour] = useState<number>(
     new Date(timestamp || 0).getHours() + 1
@@ -60,7 +58,7 @@ export default function MaintenanceModal({
   )
 
   const currentAllowedSports = useMemo(
-    () => allowedSportsByCourt[selectedCourt] || modalidade,
+    () => allowedSportsByCourt[selectedCourt] || sports,
     [allowedSportsByCourt, selectedCourt]
   )
 
@@ -168,7 +166,7 @@ export default function MaintenanceModal({
       start_date: start,
       end_date: endDateMs,
       court_number: selectedCourt,
-      modality: isMaintainance ? 'NA' : validSelectedSport,
+      sport: isMaintainance ? 'NA' : validSelectedSport,
       materials: selectedMaterials,
       type: type
     }

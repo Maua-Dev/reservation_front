@@ -29,7 +29,7 @@ interface ReservationCardProps {
   endDate: number
   court?: string
   bookingId?: string
-  modality?: string
+  sport?: string
   reload: () => void
 }
 
@@ -38,10 +38,9 @@ export function ReservationCard({
   endDate,
   court,
   bookingId,
-  modality,
+  sport,
   reload
 }: ReservationCardProps) {
-  
   const { deleteBookingMutation } = useBookingsQuery()
   const today = new Date().getTime()
   const isPassed = startDate < today
@@ -52,14 +51,13 @@ export function ReservationCard({
       reload()
     }
   }
-  
 
-  const modalityIcons: Record<string, JSX.Element> = {
+  const sportIcons: Record<string, JSX.Element> = {
     FOOTBALL: <FaFutbol />,
-    VOLLEYBALL : <FaVolleyballBall />,
+    VOLLEYBALL: <FaVolleyballBall />,
     FUTSAL: <FaRegFutbol />,
     RUGBY: <MdSportsRugby />,
-    TENNIS : <GiTennisRacket />,
+    TENNIS: <GiTennisRacket />,
     BASKETBALL: <FaBasketball />,
     HANDBALL: <TbPlayHandball />,
     'BEACH TENNIS': <TbBeach />,
@@ -67,12 +65,12 @@ export function ReservationCard({
     CORRIDA: <MdDirectionsRun />,
     'PING PONG': <GiPingPongBat />
   }
-  const modalityImages: Record<string, string> = {
+  const sportImages: Record<string, string> = {
     FOOTBALL: futebol,
-    VOLLEYBALL : volei,
+    VOLLEYBALL: volei,
     FUTSAL: futsal,
     RUGBY: rugby,
-    TENNIS : tenis,
+    TENNIS: tenis,
     BASKETBALL: basquete,
     HANDBALL: handebol,
     'BEACH TENNIS': beachTenis,
@@ -80,12 +78,12 @@ export function ReservationCard({
     CORRIDA: corrida,
     'PING PONG': pingPong
   }
-  const modalityColors: Record<string, string> = {
+  const sportColors: Record<string, string> = {
     FOOTBALL: '#32CD32',
-    VOLLEYBALL : '#0000FF',
+    VOLLEYBALL: '#0000FF',
     FUTSAL: '#3b82f6',
     RUGBY: '#a16207',
-    TENNIS : '#228B22',
+    TENNIS: '#228B22',
     BASKETBALL: '#FF8C00',
     HANDBALL: '#ef4444',
     'BEACH TENNIS': '#14b8a6',
@@ -94,25 +92,31 @@ export function ReservationCard({
     'PING PONG': '#ef4444'
   }
 
-  const getModalityImage = () => {
-    if (!modality || !modalityImages[modality]) return ''
-    return `url(${modalityImages[modality]})`
+  const getSportImage = () => {
+    if (!sport || !sportImages[sport]) return ''
+    return `url(${sportImages[sport]})`
   }
 
-  console.log('Modality:', modality)
-console.log('Image path:', modality ? modalityImages[modality] : 'No modality')
-
-// E verifique se as importações funcionam:
-console.log('Imported images:', {
-  futebol, volei, futsal, rugby, tenis, basquete, handebol, beachTenis, natacao, corrida, pingPong
-})
-
+  // E verifique se as importações funcionam:
+  console.log('Imported images:', {
+    futebol,
+    volei,
+    futsal,
+    rugby,
+    tenis,
+    basquete,
+    handebol,
+    beachTenis,
+    natacao,
+    corrida,
+    pingPong
+  })
 
   return (
     <div
       className="relative flex h-36 min-h-36 w-full flex-row items-start overflow-hidden rounded-lg p-4 md:h-44 md:min-h-44"
       style={{
-        backgroundImage: getModalityImage(),
+        backgroundImage: getSportImage(),
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}
@@ -120,7 +124,7 @@ console.log('Imported images:', {
       <div
         className="pointer-events-none absolute inset-0 rounded-lg"
         style={{
-          backgroundColor: modality ? modalityColors[modality] || '#6b7280' : '#6b7280',
+          backgroundColor: sport ? sportColors[sport] || '#009000' : '#009000',
           opacity: 0.4
         }}
       />
@@ -146,11 +150,11 @@ console.log('Imported images:', {
         <p className="text-xs font-normal text-white sm:text-base md:text-lg">
           Quadra: {court}
         </p>
-        <p className="flex flex-row justify-between gap-3 text-xs font-normal text-white sm:text-base md:text-lg">
+        {/* <p className="flex flex-row justify-between gap-3 text-xs font-normal text-white sm:text-base md:text-lg">
           <span className="flex items-center gap-2">
-            Esporte: {modality} {modality && modalityIcons[modality]}
+            Esporte: {sport} {sport && sportIcons[sport]}
           </span>
-        </p>
+        </p> */}
       </div>
       <div className="relative z-10 ml-auto flex h-full justify-end gap-4">
         <Button

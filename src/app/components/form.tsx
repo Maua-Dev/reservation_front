@@ -8,11 +8,11 @@ import { z } from 'zod'
 import { IoClose } from 'react-icons/io5'
 import { useBookingsQuery } from '../hooks/use-booking'
 import { useUser } from '../hooks/use-user'
-import { ModalityName } from '@/utils/enums/modality'
+import { SportName } from '@/utils/enums/sport'
 import { BookingType } from '@/utils/enums/booking-type'
 
 type FormProps = {
-  modalities: string[]
+  sports: string[]
   equipments: string[]
   options: string[]
   onClose: () => void
@@ -23,7 +23,7 @@ type FormProps = {
 }
 
 const formSchema = z.object({
-  modality: z.string().min(1, 'Selecione uma modalidade'),
+  sport: z.string().min(1, 'Selecione uma modalidade'),
   equipment: z.array(z.string()).min(1, 'Selecione pelo menos um equipamento'),
   shareCourt: z.boolean()
 })
@@ -39,43 +39,43 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      modality: '',
+      sport: '',
       equipment: [],
       shareCourt: false
     }
   })
   const [open, setOpen] = useState(false)
-  const [selectedModality, setSelectedModality] = useState('')
+  const [selectedSport, setSelectedSport] = useState('')
   const [selectedEquipments, setSelectedEquipments] = useState<string[]>([])
   const [courtNumber, setCourtNumber] = useState<number>(() => {
-  if (isField) {
-    return options[0] === 'Beach' ? 6 : 0
-  }
+    if (isField) {
+      return options[0] === 'Beach' ? 6 : 0
+    }
 
-  return Number(options[0].split(' ')[1])
-})
+    return Number(options[0].split(' ')[1])
+  })
   const selectedDate = new Date(timestamp)
   const { createBookingMutation } = useBookingsQuery()
   const { user } = useUser()
   const FREE_ACTIVITY_SPORTS = [
-  ModalityName.PING_PONG,
-  ModalityName.CORRIDA,
-  ModalityName.NATACAO
-]
+    SportName.PING_PONG,
+    SportName.CORRIDA,
+    SportName.NATACAO
+  ]
 
   const onSubmit = async () => {
     const formValues = getValues()
     const isFreeActivity = FREE_ACTIVITY_SPORTS.includes(
-    formValues.modality as ModalityName
-  )
+      formValues.sport as SportName
+    )
 
-  const finalCourtNumber = isFreeActivity ? 5 : Number(courtNumber)
+    const finalCourtNumber = isFreeActivity ? 5 : Number(courtNumber)
 
     const bookingData = {
       start_date: timestamp,
       end_date: timestamp + 3600000,
       court_number: finalCourtNumber,
-      modality: formValues.modality,
+      sport: formValues.sport,
       type: BookingType.COMMON,
       materials: formValues.equipment
     }
@@ -85,7 +85,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   const handleClose = () => {
     onClose()
   }
-  const modalityToEquipament: Record<string, string[]> = {
+  const sportToEquipament: Record<string, string[]> = {
     Football: ['Bola de futebol'],
     Rugby: ['Bola de rugby'],
     'Beach Tennis': ['Raquete e Bola'],
@@ -98,7 +98,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     Natação: ['Sem equipamento (Natação)'],
     'Ping Pong': ['Raquete e bola de Ping Pong']
   }
-  const equipmentToModality: Record<string, string> = {
+  const equipmentToSport: Record<string, string> = {
     'Bola de futebol': 'Football',
     'Bola de rugby': 'Rugby',
     'Raquete e Bola': 'Beach Tennis',
@@ -113,16 +113,16 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     'Raquete e bola de Ping Pong': 'Ping Pong'
   }
 
-  const handleModalitySelect = (modality: string) => {
-    setSelectedModality(modality)
-    setValue('modality', modality)
+  const handleSportSelect = (sport: string) => {
+    setSelectedSport(sport)
+    setValue('sport', sport)
 
-    const defaultEquipment = modalityToEquipament[modality]?.[0]
-      ? [modalityToEquipament[modality][0]]
+    const defaultEquipment = sportToEquipament[sport]?.[0]
+      ? [sportToEquipament[sport][0]]
       : []
     setSelectedEquipments(defaultEquipment)
     if (isField) {
-      if (modality === 'Beach Tennis') {
+      if (sport === 'Beach Tennis') {
         setCourtNumber(6)
       } else {
         setCourtNumber(0)
@@ -131,13 +131,6 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     setValue('equipment', defaultEquipment)
   }
 
-  // const sports = () => {
-  //   if (courtNumber == 0) {
-  //     return modalities.filter((mod) => mod == 'Rugby' || mod == 'Football')
-  //   } else {
-  //     return modalities.filter((mod) => mod == 'Beach Tennis')
-  //   }
-  // }
   const sports = () => {
     if (isField) {
       if (options.length === 1 && options[0] === 'Beach') {
@@ -149,11 +142,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
       return ['Football', 'Rugby', 'Beach Tennis']
     }
     if (options.includes('Atividades Livres')) {
-      return [
-        ModalityName.PING_PONG,
-        ModalityName.CORRIDA,
-        ModalityName.NATACAO
-      ]
+      return [SportName.PING_PONG, SportName.CORRIDA, SportName.NATACAO]
     }
     return ['Tennis', 'Basketball', 'Volleyball', 'Handball', 'Futsal']
   }
@@ -245,7 +234,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
           <label className="flex-grow text-center font-poppins text-lg text-white">
             <select
               value={courtNumber}
-  onChange={(e) => setCourtNumber(Number(e.target.value))}
+              onChange={(e) => setCourtNumber(Number(e.target.value))}
               className={`${isField ? 'hidden' : ''} inline-flex items-start justify-start rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2`}
             >
               {options.map((option) => (
@@ -297,25 +286,25 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
         </div>
         <div className="flex items-center justify-between">
           <div className="flex flex-wrap gap-2 py-1">
-            {sports().map((modality) => (
+            {sports().map((sport) => (
               <button
-                key={modality}
+                key={sport}
                 type="button"
-                onClick={() => handleModalitySelect(modality)}
+                onClick={() => handleSportSelect(sport)}
                 className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-2 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 ${
-                  selectedModality === modality
+                  selectedSport === sport
                     ? 'border-yellow bg-yellow/10 text-yellow-secondary hover:bg-yellow/10'
                     : 'text-slate-700'
                 }`}
               >
-                {modality}
+                {sport}
               </button>
             ))}
-            {errors.modality && (
-              <p className="text-red-500">{errors.modality.message}</p>
+            {errors.sport && (
+              <p className="text-red-500">{errors.sport.message}</p>
             )}
           </div>
-          {selectedModality == 'Volleyball' && (
+          {selectedSport == 'Volleyball' && (
             <div className="flex w-[45%] items-start justify-start">
               {/* <input type="checkbox" className="h-10 w-10" /> */}
               <p className="text-md w-full text-center font-poppins font-medium text-red-600 md:text-sm">
@@ -342,13 +331,13 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
                 onClick={() => {
                   setSelectedEquipments([equipment])
                   setValue('equipment', [equipment])
-                  const modality = equipmentToModality[equipment]
-                  if (modality) {
-                    setSelectedModality(modality)
-                    setValue('modality', modality)
+                  const sport = equipmentToSport[equipment]
+                  if (sport) {
+                    setSelectedSport(sport)
+                    setValue('sport', sport)
                   }
                   if (isField) {
-                    setCourtNumber(modality === 'Beach Tennis' ? 6 : 0)
+                    setCourtNumber(sport === 'Beach Tennis' ? 6 : 0)
                   }
                 }}
                 className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-2 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 ${
