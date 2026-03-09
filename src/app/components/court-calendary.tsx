@@ -6,17 +6,18 @@ import { View } from './view'
 import { ReservationDetails } from './reservation-details'
 import { cn } from '../utils/cn'
 import { useUserQuery } from '../hooks/use-user'
-import { useBookingsQuery } from '../hooks/use-booking'
+import { useBookingsQuery, useBookings } from '../hooks/use-booking'
 import { useIsAuthenticated, useMsal } from '@azure/msal-react'
-import { ModalityName } from '@/utils/enums/modality'
+import { SportName } from '@/utils/enums/sport'
 import { FiLoader } from 'react-icons/fi'
 import { toast } from 'react-toastify'
+//import { any } from 'zod'
 
 export interface Reservation {
   id: number
   court: string
   courtNumber: number
-  modality: string
+  sport: string
   time: number
   duration: number
   materials: string[]
@@ -25,9 +26,10 @@ export interface Reservation {
 
 interface CourtProps {
   isField: boolean
+  isQuadra5?: boolean
 }
 
-export function Court({ isField }: CourtProps) {
+export function Court({ isField, isQuadra5 }: CourtProps) {
   const [isMyBookingsModalOpen, setIsMyBookingsModalOpen] = useState(false)
   const [isMyBookingsModalVisible, setIsMyBookingsModalVisible] =
     useState(false)
@@ -69,14 +71,21 @@ export function Court({ isField }: CourtProps) {
 
   const today = new Date()
 
-  const modalities = isField
-    ? [ModalityName.Football, ModalityName.Rugby, ModalityName['Beach Tennis']]
+  const sports = isField
+    ? [
+        SportName.FOOTBALL,
+        SportName.RUGBY,
+        SportName.BEACH_TENNIS
+        //SportName.CORRIDA,
+        //SportName.NATACAO,
+        //SportName.PING_PONG
+      ]
     : [
-        ModalityName.Tennis,
-        ModalityName.Basketball,
-        ModalityName.Volleyball,
-        ModalityName.Handball,
-        ModalityName.Futsal
+        SportName.TENNIS,
+        SportName.BASKETBALL,
+        SportName.VOLLEYBALL,
+        SportName.HANDBOLL,
+        SportName.FUTSAL
       ]
   const equipments = [
     'Bola e Raquete de tênis',
@@ -214,6 +223,7 @@ export function Court({ isField }: CourtProps) {
           return sameTimeReservations.size > 1
             ? 'absolute w-20 h-20 left-[45%]'
             : 'absolute w-20 h-20 left-[4%]'
+
         default:
           return ''
       }
@@ -245,9 +255,13 @@ export function Court({ isField }: CourtProps) {
 
   const reservasConvertidas = reservas
     .filter((reserva) =>
-      isField
-        ? reserva.court_number === 0 || reserva.court_number === 6
-        : reserva.court_number !== 0 && reserva.court_number !== 6
+      isQuadra5
+        ? reserva.court_number === 5
+        : isField
+          ? [0, 6].includes(reserva.court_number)
+          : reserva.court_number !== 0 &&
+            reserva.court_number !== 6 &&
+            reserva.court_number !== 5
     )
     .map((reserva) => {
       const date = new Date(Number(reserva.start_date))
@@ -273,12 +287,6 @@ export function Court({ isField }: CourtProps) {
         date.setFullYear(today.getFullYear() + 1)
         date.setMonth(0)
       }
-    } else if (day > today.getDate() && weekday < today.getDay() - 1) {
-      date.setMonth(today.getMonth() - 1)
-      if (today.getMonth() === 0) {
-        date.setFullYear(today.getFullYear() - 1)
-        date.setMonth(11) // Dezembro
-      }
     } else {
       date.setMonth(today.getMonth())
       date.setFullYear(today.getFullYear())
@@ -292,13 +300,38 @@ export function Court({ isField }: CourtProps) {
 
     return date.getTime() < today.getTime()
   }
+  const { getMyBookingsQuery } = useBookingsQuery()
+
+  const { myBookings, setMyBookings } = useBookings()
+
+  //const fetchBookings = async () => {
+  //  const bookings = await getMyBookingsQuery.refetch()
+  //  setMyBookings(bookings.data?.bookings || [])
+  // }
+  useEffect(() => {
+    setMyBookings(getMyBookingsQuery.data?.bookings || [])
+  }, [getMyBookingsQuery.data, setMyBookings])
 
   const cannotReserve = (day: number, hour: number, minute: number) => {
-    const userId = localStorage.getItem('user_id')
+    if (!myBookings || myBookings.length === 0) return false
 
-    const userReservations = reservasConvertidas.filter(
-      (reserva) => reserva.user_id === userId && reserva.day === day
-    )
+    // Pega os IDs das reservas do usuário para o dia específico
+    // Primeiro converte myBookings para o mesmo formato de reservasConvertidas
+    const userReservations = myBookings
+      .map((booking) => {
+        const date = new Date(Number(booking.start_date))
+        return {
+          ...booking,
+          day: date.getDate(),
+          hour: date.getHours(),
+          minute: date.getMinutes(),
+          start_date: Number(booking.start_date),
+          end_date: Number(booking.end_date)
+        }
+      })
+      .filter((reserva) => reserva.day === day)
+
+    if (userReservations.length === 0) return false
 
     const tryingDate = new Date()
     tryingDate.setDate(day)
@@ -355,7 +388,6 @@ export function Court({ isField }: CourtProps) {
     const timestamp = clickedTime.getTime()
     const oneHourLater = timestamp + 60 * 60 * 1000
 
-    console.log(`Clicked time: ${clickedTime.toLocaleString()}`)
     if (timestamp < today.getTime()) {
       return
     }
@@ -370,7 +402,7 @@ export function Court({ isField }: CourtProps) {
         occupiedCourts.add(reserva.court_number)
       }
     })
-    const allCourts = isField ? [0, 6] : [1, 2, 3]
+    const allCourts = isQuadra5 ? [5] : isField ? [0, 6] : [1, 2, 3]
     const availableCourts = allCourts.filter((court) => {
       const reservasDaQuadra = reservasConvertidas.filter(
         (reserva) => reserva.court_number === court && reserva.day === day
@@ -431,7 +463,7 @@ export function Court({ isField }: CourtProps) {
         <div className="flex h-full w-full flex-col bg-black/50 md:flex-row">
           <div className="bottom-0 left-0 p-5 font-poppins text-white md:absolute">
             <p className="text-3xl font-semibold">
-              {isField ? 'Campo' : 'Quadras'}
+              {isQuadra5 ? 'Atividades Livres' : isField ? 'Campo' : 'Quadras'}
             </p>
             <p className="text-2xl font-normal">
               {today
@@ -475,7 +507,6 @@ export function Court({ isField }: CourtProps) {
         {[...Array(isField ? 18 : 25)].map((_, index) => {
           const hour = 8 + Math.floor((index + 1) / 2)
           const minute = (index + 1) % 2
-          const isHourSeparator = minute === 0
           return (
             <div key={index} className="flex min-w-[100vw] sm:min-w-0">
               <div className="sticky left-0 z-20 flex min-h-16 min-w-16 max-w-16 items-start border-r border-gray-400 bg-white px-4 font-poppins">{`${hour}:${minute === 0 ? '00' : '30'}`}</div>
@@ -511,10 +542,6 @@ export function Court({ isField }: CourtProps) {
                                 )
                     }
                     className={`relative flex min-w-[120px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 sm:min-w-[90px] ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? 'bg-gray-300' : cannotReserve(thisWeek()[dayIndex], hour, minute) ? 'bg-gray-300' : isLastHalfHour(hour, minute) ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
-                    style={{
-                      borderBottomStyle: isHourSeparator ? 'dashed' : 'solid',
-                      borderRightStyle: 'solid'
-                    }}
                   >
                     {reservasConvertidas.map((reserva) => {
                       if (
@@ -541,15 +568,16 @@ export function Court({ isField }: CourtProps) {
                               )
                             )}
                             style={{
-                              height: `${1 * 50 * 2}px`
+                              // altura dinâmica do bloco: 50px por meia hora (slot base)
+                              height: `${((reserva.end_date - reserva.start_date) / (1000 * 60 * 30)) * 50}px`
                             }}
                           >
                             <CalendaryCard
                               court={reserva.court_number}
                               location={`Quadra ${reserva.court_number}`}
-                              modality={
-                                ModalityName[
-                                  reserva.sport as keyof typeof ModalityName
+                              sport={
+                                SportName[
+                                  reserva.sport as keyof typeof SportName
                                 ]
                               }
                               equipments={equipments}
@@ -560,7 +588,7 @@ export function Court({ isField }: CourtProps) {
                                   id: Number(reserva.booking_id) ?? 0,
                                   court: `Quadra ${reserva.court_number}`,
                                   courtNumber: reserva.court_number,
-                                  modality: reserva.sport,
+                                  sport: reserva.sport,
                                   time: reserva.start_date,
                                   duration:
                                     (reserva.end_date - reserva.start_date) /
@@ -580,6 +608,42 @@ export function Court({ isField }: CourtProps) {
             </div>
           )
         })}
+        {/* <div className="mt-16 border-t-4 border-blue-primary pt-6">
+          <h2 className="mb-4 text-2xl font-semibold text-gray-700">
+            Atividades Livres
+          </h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {bookings
+              .filter((reserva) => extraCourts.includes(reserva.court_number))
+              .map((reserva) => (
+                <CalendaryCard
+                  key={reserva.booking_id}
+                  court={reserva.court_number}
+                  location={`Atividade Livres ${reserva.court_number}`}
+                  sport={
+                    SportName[reserva.sport as keyof typeof SportName]
+                  }
+                  equipments={equipments}
+                  time={reserva.start_date}
+                  isChecked={[true, false]}
+                  openModal={() =>
+                    handleSelectingBooking({
+                      id: Number(reserva.booking_id) ?? 0,
+                      court: `Quadra Especial ${reserva.court_number}`,
+                      courtNumber: reserva.court_number,
+                      sport: reserva.sport,
+                      time: reserva.start_date,
+                      duration:
+                        (reserva.end_date - reserva.start_date) /
+                        (1000 * 60 * 60),
+                      materials: reserva.materials,
+                      userId: reserva.user_id ?? ''
+                    })
+                  }
+                />
+              ))}
+          </div>
+        </div> */}
         {isReservationModalOpen && selectedTime && (
           <div
             className={`duration-250 fixed inset-0 z-[100] flex items-center justify-center bg-black/50 transition-all ${bookingModalVisible ? 'translate-y-0 opacity-100' : 'translate-y-96 opacity-0'} backdrop-blur-sm`}
@@ -590,21 +654,26 @@ export function Court({ isField }: CourtProps) {
               onClose={handleCloseModal}
               timestamp={selectedTime}
               // se for field, soh vai ter football e rugby
-              modalities={modalities}
+              sports={sports}
               isField={isField}
               equipments={
                 isField
                   ? [
                       'Bola de futebol',
                       'Bola de rugby',
-                      'Raquete de beach e Bola',
-                      'Tamboréu e Bola'
+                      'Raquete de beach e Bola'
                     ]
                   : equipments
               }
-              options={availableCourts.map((court) =>
-                isField ? (court === 6 ? `Beach` : `Campo`) : `Quadra ${court}`
-              )}
+              options={
+                isQuadra5
+                  ? ['Atividades Livres']
+                  : isField
+                    ? availableCourts.map((court) =>
+                        court === 6 ? 'Beach' : 'Campo'
+                      )
+                    : availableCourts.map((court) => `Quadra ${court}`)
+              }
             />
           </div>
         )}
@@ -623,11 +692,7 @@ export function Court({ isField }: CourtProps) {
           >
             <ReservationDetails
               location={selectedBooking.court}
-              modality={
-                ModalityName[
-                  selectedBooking.modality as keyof typeof ModalityName
-                ]
-              }
+              sport={selectedBooking.sport}
               equipments={selectedBooking.materials}
               time={selectedBooking.time}
               isChecked={[true, false]}

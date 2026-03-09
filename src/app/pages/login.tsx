@@ -1,38 +1,59 @@
 import logobranca from '../assets/logobranca.png'
 import baixados from '../assets/baixados.jpg'
 import { Button } from '../components/button'
+
 import { useIsAuthenticated, useMsal } from '@azure/msal-react'
 import { useNavigate } from 'react-router-dom'
 import { loginRequest } from '../auth/auth-config'
+import { useUser } from '../hooks/use-user'
+import { useEffect, useState } from 'react'
+import { UserService } from '@/services/user-service'
 
 export function Login() {
   const auth = useIsAuthenticated()
   const { instance } = useMsal()
   const navigate = useNavigate()
+  const [token, setToken] = useState<string | null>(null)
+  const { user, setUser } = useUser()
 
-  // SOLUÇÃO TEMPORÁRIA
-  // Por algum motivo, o redirect te leva de volta para a pagina de login
-  // e não para a página inicial. Então, se o usuário já estiver logado,
-  // redirecionamos ele para a página inicial.
-  // Isso deve ser corrigido no futuro.
+  useEffect(() => {
+    const doLoginFlow = async () => {
+      if (auth) {
+        const accounts = instance.getAllAccounts()
+        if (accounts.length > 0) {
+          const accessToken = (
+            await instance.acquireTokenSilent({
+              ...loginRequest,
+              account: accounts[0]
+            })
+          ).accessToken
+          setToken(accessToken)
+        } else {
+          console.warn('[LOGIN] Nenhuma conta encontrada no MSAL.')
+        }
+      } else {
+        console.warn('[LOGIN] Usuário não autenticado (auth=false)')
+      }
+    }
+    doLoginFlow()
+  }, [auth])
 
-  const fetchAccessToken = async () => {
-    const accounts = instance.getAllAccounts()
-    const accessToken = (
-      await instance.acquireTokenSilent({
-        ...loginRequest,
-        account: accounts[0]
-      })
-    ).accessToken
-    localStorage.setItem('accessToken', accessToken)
-    return accessToken
-  }
-
-  if (auth) {
-    fetchAccessToken()
-    navigate('/')
-    return
-  }
+  useEffect(() => {
+    if (token) {
+      const fetchUser = async () => {
+        const data = await UserService.getUser(token)
+        localStorage.setItem('accessToken', token)
+        localStorage.setItem('user_id', data.userId)
+        setUser(data)
+        if (data && data.role === 'ADMIN') {
+          navigate('/admin-home')
+        } else {
+          navigate('/')
+        }
+      }
+      fetchUser()
+    }
+  }, [user, token])
 
   const handleLogin = () => {
     instance.loginPopup({ scopes: ['User.Read'] }).catch((error) => {

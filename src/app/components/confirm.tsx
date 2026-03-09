@@ -23,7 +23,7 @@ export function Confirm({ onClose, onConfirm, isLoading }: ConfirmProps) {
             onClose()
             e.preventDefault()
           }}
-          className="flex h-10 flex-1 w-1/2 items-center justify-center rounded-bl bg-red-600 text-white"
+          className="flex h-10 w-1/2 flex-1 items-center justify-center rounded-bl bg-red-600 text-white"
         >
           <IoClose className="text-3xl" />
         </button>
@@ -34,7 +34,7 @@ export function Confirm({ onClose, onConfirm, isLoading }: ConfirmProps) {
               e.preventDefault()
             }
           }}
-          className="flex h-10 flex-1 w-1/2 items-center justify-center rounded-br bg-green-700 text-white"
+          className="flex h-10 w-1/2 flex-1 items-center justify-center rounded-br bg-green-700 text-white"
         >
           {isLoading ? (
             <FiLoader className="animate-spin" />

@@ -1,26 +1,34 @@
 import { useEffect } from 'react'
+import { useBookingsQuery } from '../hooks/use-booking'
 import { IoClose } from 'react-icons/io5'
 import { useUser } from '../hooks/use-user'
+import { Button } from './button'
+import { FiLoader } from 'react-icons/fi'
+import { toast } from 'react-toastify'
 
 type ReservationDetailsProps = {
   location: string
-  modality: string
+  sport: string
   equipments: string[]
   time: number
   isChecked: boolean[]
   onClose: () => void
   bookingUserId?: string | number
+  bookingId?: string
+  //reload: () => void
 }
 
 export const ReservationDetails = ({
   equipments,
   location,
-  modality,
+  sport,
   time,
+  bookingId,
   //isChecked,
   onClose,
   bookingUserId
 }: ReservationDetailsProps) => {
+  const { deleteBookingMutation, getBookingsOfTheWeek } = useBookingsQuery()
   const date = new Date(time)
   const { user } = useUser()
   const formattedDate = date.toLocaleDateString('pt-BR', {
@@ -31,6 +39,8 @@ export const ReservationDetails = ({
     hour: '2-digit',
     minute: '2-digit'
   }) // Format time as HH:MM
+
+  //const isPassed = startDate < today
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -45,6 +55,35 @@ export const ReservationDetails = ({
       document.removeEventListener('keydown', handleEscape)
     }
   }, [onClose])
+
+  const handleCancel = async () => {
+    if (bookingId) {
+      try {
+        await deleteBookingMutation.mutateAsync(bookingId)
+        getBookingsOfTheWeek.refetch()
+        onClose()
+        // If you have a refetch function, call it here. Otherwise, remove this block.
+        // setTimeout(() => {
+        //   getBookingsOfTheWeek.refetch()
+        // }, 800)
+      } catch (err) {
+        toast.error('Erro ao cancelar reserva!')
+        console.error(err)
+      }
+    } else {
+      toast.error('ID da reserva não encontrado!')
+    }
+  }
+
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center rounded-xl bg-white p-8">
+        <p className="font-poppins text-xl text-red-500">
+          Usuário não encontrado. Por favor, faça login novamente.
+        </p>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -69,12 +108,14 @@ export const ReservationDetails = ({
           </div>
 
           <div className="flex w-full flex-col justify-start gap-10 font-poppins text-xl font-medium text-white lg:flex-row">
-            <h1 className="inline-flex h-16 w-36 items-center justify-center text-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4">
+            <h1 className="inline-flex h-16 items-center justify-center text-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4">
               {location.split(' ')[1] === '0'
                 ? 'Campo'
                 : location.split(' ')[1] === '6'
                   ? 'Beach'
-                  : location}
+                  : location.split(' ')[1] === '5'
+                    ? 'Atividades Livres'
+                    : location}
             </h1>
             <h1 className="inline-flex h-16 w-60 items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4">
               Horário: {formattedTime} -{' '}
@@ -97,33 +138,49 @@ export const ReservationDetails = ({
                   'inline-flex items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4 font-poppins text-lg font-medium text-white md:text-xl'
                 }
               >
-                {modality}
+                {sport}
               </h1>
             </div>
           </div>
 
-          <div className="flex flex-col">
-            <div className="flex justify-start">
-              <p className="text-left font-poppins text-2xl font-bold">
-                Equipamentos:
-              </p>
-            </div>
-            <div className="flex items-center">
-              <div className="flex flex-wrap gap-2 pt-3">
-                {equipments?.map((equipment) => (
-                  <h1
-                    key={equipment}
-                    className={
-                      'inline-flex items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2 px-8 py-4 text-center font-poppins text-lg font-medium text-white md:text-xl'
-                    }
-                  >
-                    {equipment}
-                  </h1>
-                ))}
+          <div className="flex flex-row items-end justify-between">
+            <div className="flex flex-col">
+              <div className="flex justify-start">
+                <p className="text-left font-poppins text-2xl font-bold">
+                  Equipamentos:
+                </p>
+              </div>
+              <div className="flex items-center">
+                <div className="flex flex-wrap gap-2 pt-3">
+                  {equipments?.map((equipment) => (
+                    <h1
+                      key={equipment}
+                      className={
+                        'inline-flex items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2 px-8 py-4 text-center font-poppins text-lg font-medium text-white md:text-xl'
+                      }
+                    >
+                      {equipment}
+                    </h1>
+                  ))}
+                </div>
               </div>
             </div>
+            {user?.role === 'ADMIN' && (
+              <div className="ml-4 flex items-center">
+                <Button
+                  className="inline-flex h-16 items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-4 py-4 text-center font-poppins text-lg font-medium text-white hover:border-red-600 hover:bg-red-500 md:text-xl"
+                  onClick={handleCancel}
+                  disabled={deleteBookingMutation.isPending}
+                >
+                  {deleteBookingMutation.isPending ? (
+                    <FiLoader className="animate-spin" />
+                  ) : (
+                    'Cancelar'
+                  )}
+                </Button>
+              </div>
+            )}
           </div>
-
           {/* <div className="mt-3 flex flex-row items-center gap-2">
             <div
               className={`size-8 rounded border border-slate-400 p-1 md:w-8 ${isChecked?.[0] ? 'bg-yellow' : 'bg-white'}`}

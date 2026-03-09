@@ -8,20 +8,22 @@ import { z } from 'zod'
 import { IoClose } from 'react-icons/io5'
 import { useBookingsQuery } from '../hooks/use-booking'
 import { useUser } from '../hooks/use-user'
-import { ModalityName } from '@/utils/enums/modality'
+import { SportName } from '@/utils/enums/sport'
+import { BookingType } from '@/utils/enums/booking-type'
 
 type FormProps = {
-  modalities: string[]
+  sports: string[]
   equipments: string[]
   options: string[]
   onClose: () => void
   isOpen: boolean
   timestamp: number
   isField: boolean
+  isSpecialCourt?: boolean
 }
 
 const formSchema = z.object({
-  modality: z.string().min(1, 'Selecione uma modalidade'),
+  sport: z.string().min(1, 'Selecione uma modalidade'),
   equipment: z.array(z.string()).min(1, 'Selecione pelo menos um equipamento'),
   shareCourt: z.boolean()
 })
@@ -32,32 +34,50 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   const {
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
+    getValues
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      modality: '',
+      sport: '',
       equipment: [],
       shareCourt: false
     }
   })
   const [open, setOpen] = useState(false)
-  const [selectedModality, setSelectedModality] = useState('')
+  const [selectedSport, setSelectedSport] = useState('')
   const [selectedEquipments, setSelectedEquipments] = useState<string[]>([])
-  const [courtNumber, setCourtNumber] = useState(
-    isField ? (options[0] == 'Beach' ? 6 : 0) : options[0].split(' ')[1]
-  )
+  const [courtNumber, setCourtNumber] = useState<number>(() => {
+    if (isField) {
+      return options[0] === 'Beach' ? 6 : 0
+    }
+
+    return Number(options[0].split(' ')[1])
+  })
   const selectedDate = new Date(timestamp)
   const { createBookingMutation } = useBookingsQuery()
   const { user } = useUser()
+  const FREE_ACTIVITY_SPORTS = [
+    SportName.PING_PONG,
+    SportName.CORRIDA,
+    SportName.NATACAO
+  ]
 
   const onSubmit = async () => {
+    const formValues = getValues()
+    const isFreeActivity = FREE_ACTIVITY_SPORTS.includes(
+      formValues.sport as SportName
+    )
+
+    const finalCourtNumber = isFreeActivity ? 5 : Number(courtNumber)
+
     const bookingData = {
       start_date: timestamp,
       end_date: timestamp + 3600000,
-      court_number: Number(courtNumber),
-      sport: selectedModality,
-      materials: selectedEquipments
+      court_number: finalCourtNumber,
+      sport: formValues.sport,
+      type: BookingType.COMMON,
+      materials: formValues.equipment
     }
     await createBookingMutation.mutateAsync(bookingData)
     onClose()
@@ -65,38 +85,44 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   const handleClose = () => {
     onClose()
   }
-  const modalityToEquipament: Record<string, string[]> = {
+  const sportToEquipament: Record<string, string[]> = {
     Football: ['Bola de futebol'],
     Rugby: ['Bola de rugby'],
-    'Beach Tennis': ['Raquete e Bola', 'Tamboréu e Bola'],
-    Tennis: ['Bola e Raquete de tênis'],
+    'Beach Tennis': ['Raquete e Bola'],
+    Tennis: ['Bola e Raquete de tênis', 'Tamboréu e Bola'],
     Basketball: ['Bola de basquete'],
     Volleyball: ['Bola de vôlei'],
     Handball: ['Bola de handebol'],
-    Futsal: ['Bola de futsal']
+    Futsal: ['Bola de futsal'],
+    Corrida: ['Sem equipamento (Corrida)'],
+    Natação: ['Sem equipamento (Natação)'],
+    'Ping Pong': ['Raquete e bola de Ping Pong']
   }
-  const equipmentToModality: Record<string, string> = {
+  const equipmentToSport: Record<string, string> = {
     'Bola de futebol': 'Football',
     'Bola de rugby': 'Rugby',
     'Raquete e Bola': 'Beach Tennis',
-    'Tamboréu e Bola': 'Beach Tennis',
+    'Tamboréu e Bola': 'Tennis',
     'Bola e Raquete de tênis': 'Tennis',
     'Bola de basquete': 'Basketball',
     'Bola de vôlei': 'Volleyball',
     'Bola de handebol': 'Handball',
-    'Bola de futsal': 'Futsal'
+    'Bola de futsal': 'Futsal',
+    'Sem equipamento (Corrida)': 'Corrida',
+    'Sem equipamento (Natação)': 'Natação',
+    'Raquete e bola de Ping Pong': 'Ping Pong'
   }
 
-  const handleModalitySelect = (modality: string) => {
-    setSelectedModality(modality)
-    setValue('modality', modality)
+  const handleSportSelect = (sport: string) => {
+    setSelectedSport(sport)
+    setValue('sport', sport)
 
-    const defaultEquipment = modalityToEquipament[modality]?.[0]
-      ? [modalityToEquipament[modality][0]]
+    const defaultEquipment = sportToEquipament[sport]?.[0]
+      ? [sportToEquipament[sport][0]]
       : []
     setSelectedEquipments(defaultEquipment)
     if (isField) {
-      if (modality === 'Beach Tennis') {
+      if (sport === 'Beach Tennis') {
         setCourtNumber(6)
       } else {
         setCourtNumber(0)
@@ -105,13 +131,6 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     setValue('equipment', defaultEquipment)
   }
 
-  // const sports = () => {
-  //   if (courtNumber == 0) {
-  //     return modalities.filter((mod) => mod == 'Rugby' || mod == 'Football')
-  //   } else {
-  //     return modalities.filter((mod) => mod == 'Beach Tennis')
-  //   }
-  // }
   const sports = () => {
     if (isField) {
       if (options.length === 1 && options[0] === 'Beach') {
@@ -122,25 +141,31 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
       }
       return ['Football', 'Rugby', 'Beach Tennis']
     }
+    if (options.includes('Atividades Livres')) {
+      return [SportName.PING_PONG, SportName.CORRIDA, SportName.NATACAO]
+    }
     return ['Tennis', 'Basketball', 'Volleyball', 'Handball', 'Futsal']
   }
   const equipamento = () => {
     if (isField) {
       if (options.length === 1 && options[0] === 'Beach') {
-        return ['Raquete e Bola', 'Tamboréu e Bola']
+        return ['Raquete e Bola']
       }
       if (options.length === 1 && options[0] === 'Campo') {
         return ['Bola de futebol', 'Bola de rugby']
       }
+      return ['Bola de futebol', 'Bola de rugby', 'Raquete e Bola']
+    }
+    if (options.includes('Atividades Livres')) {
       return [
-        'Bola de futebol',
-        'Bola de rugby',
-        'Raquete e Bola',
-        'Tamboréu e Bola'
+        'Raquete e bola de Ping Pong',
+        'Sem equipamento (Corrida)',
+        'Sem equipamento (Natação)'
       ]
     }
     return [
       'Bola e Raquete de tênis',
+      'Tamboréu e Bola',
       'Bola de basquete',
       'Bola de vôlei',
       'Bola de handebol',
@@ -164,6 +189,16 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
 
   const formatDate = (date: number) => date.toString().padStart(2, '0')
 
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center rounded-xl bg-white p-8">
+        <p className="font-poppins text-xl text-red-500">
+          Usuário não encontrado. Por favor, faça login novamente.
+        </p>
+      </div>
+    )
+  }
+
   return (
     <form
       onSubmit={(e) => {
@@ -179,7 +214,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
             <p className="w-1/2 font-poppins text-xl font-bold md:text-3xl">
               {user.name}
             </p>
-            <p className="mr-4 flex w-1/2 justify-end font-poppins text-2xl font-bold sm:justify-end md:text-3xl">
+            <p className="mr-16 flex w-1/2 justify-end font-poppins text-2xl font-bold sm:justify-end md:text-3xl">
               {user.ra}
             </p>
           </div>
@@ -198,10 +233,8 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
         <div className="flex w-32 items-center justify-between rounded">
           <label className="flex-grow text-center font-poppins text-lg text-white">
             <select
-              defaultValue={courtNumber}
-              onChange={(e) => {
-                setCourtNumber(e.target.value)
-              }}
+              value={courtNumber}
+              onChange={(e) => setCourtNumber(Number(e.target.value))}
               className={`${isField ? 'hidden' : ''} inline-flex items-start justify-start rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2`}
             >
               {options.map((option) => (
@@ -227,9 +260,9 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
           </label>
         </div>
         <div className="flex flex-col items-start justify-start gap-1 md:flex-row">
-          <label className="flex items-center justify-center gap-1 font-poppins text-xl">
+          <label className="flex items-center justify-center font-poppins text-xl">
             <span></span>
-            <p>Horário</p>
+            <p className="px-20">Horário</p>
             <div className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2 text-white">
               {formatDate(selectedDate.getHours())}:
               {formatDate(selectedDate.getMinutes())}
@@ -253,25 +286,25 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
         </div>
         <div className="flex items-center justify-between">
           <div className="flex flex-wrap gap-2 py-1">
-            {sports().map((modality) => (
+            {sports().map((sport) => (
               <button
-                key={modality}
+                key={sport}
                 type="button"
-                onClick={() => handleModalitySelect(modality)}
+                onClick={() => handleSportSelect(sport)}
                 className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-2 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 ${
-                  selectedModality === modality
+                  selectedSport === sport
                     ? 'border-yellow bg-yellow/10 text-yellow-secondary hover:bg-yellow/10'
                     : 'text-slate-700'
                 }`}
               >
-                {ModalityName[modality as keyof typeof ModalityName]}
+                {sport}
               </button>
             ))}
-            {errors.modality && (
-              <p className="text-red-500">{errors.modality.message}</p>
+            {errors.sport && (
+              <p className="text-red-500">{errors.sport.message}</p>
             )}
           </div>
-          {selectedModality == 'Volleyball' && (
+          {selectedSport == 'Volleyball' && (
             <div className="flex w-[45%] items-start justify-start">
               {/* <input type="checkbox" className="h-10 w-10" /> */}
               <p className="text-md w-full text-center font-poppins font-medium text-red-600 md:text-sm">
@@ -298,13 +331,13 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
                 onClick={() => {
                   setSelectedEquipments([equipment])
                   setValue('equipment', [equipment])
-                  const modality = equipmentToModality[equipment]
-                  if (modality) {
-                    setSelectedModality(modality)
-                    setValue('modality', modality)
+                  const sport = equipmentToSport[equipment]
+                  if (sport) {
+                    setSelectedSport(sport)
+                    setValue('sport', sport)
                   }
                   if (isField) {
-                    setCourtNumber(modality === 'Beach Tennis' ? 6 : 0)
+                    setCourtNumber(sport === 'Beach Tennis' ? 6 : 0)
                   }
                 }}
                 className={`inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 p-2 font-poppins text-lg font-medium hover:bg-black/5 active:border-b-2 ${

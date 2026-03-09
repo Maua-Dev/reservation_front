@@ -2,11 +2,16 @@ import { FiLoader } from 'react-icons/fi'
 import { useBookingsQuery } from '../hooks/use-booking'
 import { Button } from './button'
 import { toast } from 'react-toastify'
-import { FaFutbol, FaRegFutbol, FaVolleyballBall } from 'react-icons/fa'
-import { MdSportsRugby } from 'react-icons/md'
-import { FaBasketball } from 'react-icons/fa6'
-import { TbBeach, TbPlayHandball } from 'react-icons/tb'
-import { GiTennisRacket } from 'react-icons/gi'
+// import {
+//   FaFutbol,
+//   FaRegFutbol,
+//   FaSwimmer,
+//   FaVolleyballBall
+// } from 'react-icons/fa'
+// import { MdDirectionsRun, MdSportsRugby } from 'react-icons/md'
+// import { FaBasketball } from 'react-icons/fa6'
+// import { TbBeach, TbPlayHandball } from 'react-icons/tb'
+// import { GiPingPongBat, GiTennisRacket } from 'react-icons/gi'
 import futebol from '../assets//futebol.jpg'
 import volei from '../assets/Volei.jpg'
 import futsal from '../assets/futsal.jpg'
@@ -15,6 +20,9 @@ import tenis from '../assets/tenisbola1.jpg'
 import basquete from '../assets/basquete.jpg'
 import handebol from '../assets/handball1.jpg'
 import beachTenis from '../assets/beach.jpg'
+import corrida from '../assets/corrida.jpg'
+import natacao from '../assets/natacao.jpg'
+import pingPong from '../assets/tenisbola1.jpg'
 
 interface ReservationCardProps {
   startDate: number
@@ -44,44 +52,71 @@ export function ReservationCard({
     }
   }
 
-  const sportIcons: Record<string, JSX.Element> = {
-    Futebol: <FaFutbol />,
-    Vôlei: <FaVolleyballBall />,
-    Futsal: <FaRegFutbol />,
-    Rugby: <MdSportsRugby />,
-    Tênis: <GiTennisRacket />,
-    Basquete: <FaBasketball />,
-    Handebol: <TbPlayHandball />,
-    'Beach Tênis': <TbBeach />
-  }
+  // const sportIcons: Record<string, JSX.Element> = {
+  //   FOOTBALL: <FaFutbol />,
+  //   VOLLEYBALL: <FaVolleyballBall />,
+  //   FUTSAL: <FaRegFutbol />,
+  //   RUGBY: <MdSportsRugby />,
+  //   TENNIS: <GiTennisRacket />,
+  //   BASKETBALL: <FaBasketball />,
+  //   HANDBALL: <TbPlayHandball />,
+  //   'BEACH TENNIS': <TbBeach />,
+  //   NATACAO: <FaSwimmer />,
+  //   CORRIDA: <MdDirectionsRun />,
+  //   'PING PONG': <GiPingPongBat />
+  // }
   const sportImages: Record<string, string> = {
-    Futebol: futebol,
-    Vôlei: volei,
-    Futsal: futsal,
-    Rugby: rugby,
-    Tênis: tenis,
-    Basquete: basquete,
-    Handebol: handebol,
-    'Beach Tênis': beachTenis
+    FOOTBALL: futebol,
+    VOLLEYBALL: volei,
+    FUTSAL: futsal,
+    RUGBY: rugby,
+    TENNIS: tenis,
+    BASKETBALL: basquete,
+    HANDBALL: handebol,
+    'BEACH TENNIS': beachTenis,
+    NATACAO: natacao,
+    CORRIDA: corrida,
+    'PING PONG': pingPong
   }
   const sportColors: Record<string, string> = {
-    Futebol: '#32CD32',
-    Vôlei: '#0000FF',
-    Futsal: '#3b82f6',
-    Rugby: '#a16207',
-    Tênis: '#228B22',
-    Basquete: '#FF8C00',
-    Handebol: '#ef4444',
-    'Beach Tênis': '#14b8a6'
+    FOOTBALL: '#32CD32',
+    VOLLEYBALL: '#0000FF',
+    FUTSAL: '#3b82f6',
+    RUGBY: '#a16207',
+    TENNIS: '#228B22',
+    BASKETBALL: '#FF8C00',
+    HANDBALL: '#ef4444',
+    'BEACH TENNIS': '#14b8a6',
+    NATACAO: '#3b82f6',
+    CORRIDA: '#228B22',
+    'PING PONG': '#ef4444'
   }
+
+  const getSportImage = () => {
+    if (!sport || !sportImages[sport]) return ''
+    return `url(${sportImages[sport]})`
+  }
+
+  // E verifique se as importações funcionam:
+  console.log('Imported images:', {
+    futebol,
+    volei,
+    futsal,
+    rugby,
+    tenis,
+    basquete,
+    handebol,
+    beachTenis,
+    natacao,
+    corrida,
+    pingPong
+  })
+
   return (
     <div
       className="relative flex h-36 min-h-36 w-full flex-row items-start overflow-hidden rounded-lg p-4 md:h-44 md:min-h-44"
       style={{
-        backgroundImage:
-          sport && sportImages[sport]
-            ? `url(${sportImages[sport]})`
-            : undefined,
+        backgroundImage: getSportImage(),
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}
@@ -89,7 +124,7 @@ export function ReservationCard({
       <div
         className="pointer-events-none absolute inset-0 rounded-lg"
         style={{
-          backgroundColor: sport ? sportColors[sport] || '#6b7280' : '#6b7280',
+          backgroundColor: sport ? sportColors[sport] || '#009000' : '#009000',
           opacity: 0.4
         }}
       />
@@ -115,11 +150,11 @@ export function ReservationCard({
         <p className="text-xs font-normal text-white sm:text-base md:text-lg">
           Quadra: {court}
         </p>
-        <p className="flex flex-row justify-between gap-3 text-xs font-normal text-white sm:text-base md:text-lg">
+        {/* <p className="flex flex-row justify-between gap-3 text-xs font-normal text-white sm:text-base md:text-lg">
           <span className="flex items-center gap-2">
             Esporte: {sport} {sport && sportIcons[sport]}
           </span>
-        </p>
+        </p> */}
       </div>
       <div className="relative z-10 ml-auto flex h-full justify-end gap-4">
         <Button
