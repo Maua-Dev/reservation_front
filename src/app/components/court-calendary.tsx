@@ -6,17 +6,18 @@ import { View } from './view'
 import { ReservationDetails } from './reservation-details'
 import { cn } from '../utils/cn'
 import { useUserQuery } from '../hooks/use-user'
-import { useBookingsQuery } from '../hooks/use-booking'
+import { useBookingsQuery, useBookings } from '../hooks/use-booking'
 import { useIsAuthenticated, useMsal } from '@azure/msal-react'
-import { ModalityName } from '@/utils/enums/modality'
+import { SportName } from '@/utils/enums/sport'
 import { FiLoader } from 'react-icons/fi'
 import { toast } from 'react-toastify'
+//import { any } from 'zod'
 
 export interface Reservation {
   id: number
   court: string
   courtNumber: number
-  modality: string
+  sport: string
   time: number
   duration: number
   materials: string[]
@@ -69,28 +70,22 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
   }
 
   const today = new Date()
-  // const modalities = isField
-  //   ? Object.keys(ModalityName).filter(
-  //       (mod) => mod === 'Football' || mod === 'Rugby' || mod === 'Beach Tennis'
-  //     )
-  //   : Object.keys(ModalityName).filter(
-  //       (mod) => mod !== 'Football' && mod !== 'Rugby' && mod !== 'Beach Tennis'
-  //     )
-  const modalities = isField
+
+  const sports = isField
     ? [
-        ModalityName.FOOTBALL,
-        ModalityName.RUGBY,
-        ModalityName.BEACH_TENNIS
-        //ModalityName.CORRIDA,
-        //ModalityName.NATACAO,
-        //ModalityName.PING_PONG
+        SportName.FOOTBALL,
+        SportName.RUGBY,
+        SportName.BEACH_TENNIS
+        //SportName.CORRIDA,
+        //SportName.NATACAO,
+        //SportName.PING_PONG
       ]
     : [
-        ModalityName.TENNIS,
-        ModalityName.BASKETBALL,
-        ModalityName.VOLLEYBALL,
-        ModalityName.HANDBOLL,
-        ModalityName.FUTSAL
+        SportName.TENNIS,
+        SportName.BASKETBALL,
+        SportName.VOLLEYBALL,
+        SportName.HANDBOLL,
+        SportName.FUTSAL
       ]
   const equipments = [
     'Bola e Raquete de tênis',
@@ -305,13 +300,38 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
 
     return date.getTime() < today.getTime()
   }
+  const { getMyBookingsQuery } = useBookingsQuery()
+
+  const { myBookings, setMyBookings } = useBookings()
+
+  //const fetchBookings = async () => {
+  //  const bookings = await getMyBookingsQuery.refetch()
+  //  setMyBookings(bookings.data?.bookings || [])
+  // }
+  useEffect(() => {
+    setMyBookings(getMyBookingsQuery.data?.bookings || [])
+  }, [getMyBookingsQuery.data, setMyBookings])
 
   const cannotReserve = (day: number, hour: number, minute: number) => {
-    const userId = localStorage.getItem('user_id')
+    if (!myBookings || myBookings.length === 0) return false
 
-    const userReservations = reservasConvertidas.filter(
-      (reserva) => reserva.user_id === userId && reserva.day === day
-    )
+    // Pega os IDs das reservas do usuário para o dia específico
+    // Primeiro converte myBookings para o mesmo formato de reservasConvertidas
+    const userReservations = myBookings
+      .map((booking) => {
+        const date = new Date(Number(booking.start_date))
+        return {
+          ...booking,
+          day: date.getDate(),
+          hour: date.getHours(),
+          minute: date.getMinutes(),
+          start_date: Number(booking.start_date),
+          end_date: Number(booking.end_date)
+        }
+      })
+      .filter((reserva) => reserva.day === day)
+
+    if (userReservations.length === 0) return false
 
     const tryingDate = new Date()
     tryingDate.setDate(day)
@@ -555,9 +575,9 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                             <CalendaryCard
                               court={reserva.court_number}
                               location={`Quadra ${reserva.court_number}`}
-                              modality={
-                                ModalityName[
-                                  reserva.sport as keyof typeof ModalityName
+                              sport={
+                                SportName[
+                                  reserva.sport as keyof typeof SportName
                                 ]
                               }
                               equipments={equipments}
@@ -568,7 +588,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                                   id: Number(reserva.booking_id) ?? 0,
                                   court: `Quadra ${reserva.court_number}`,
                                   courtNumber: reserva.court_number,
-                                  modality: reserva.sport,
+                                  sport: reserva.sport,
                                   time: reserva.start_date,
                                   duration:
                                     (reserva.end_date - reserva.start_date) /
@@ -600,8 +620,8 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                   key={reserva.booking_id}
                   court={reserva.court_number}
                   location={`Atividade Livres ${reserva.court_number}`}
-                  modality={
-                    ModalityName[reserva.sport as keyof typeof ModalityName]
+                  sport={
+                    SportName[reserva.sport as keyof typeof SportName]
                   }
                   equipments={equipments}
                   time={reserva.start_date}
@@ -611,7 +631,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                       id: Number(reserva.booking_id) ?? 0,
                       court: `Quadra Especial ${reserva.court_number}`,
                       courtNumber: reserva.court_number,
-                      modality: reserva.sport,
+                      sport: reserva.sport,
                       time: reserva.start_date,
                       duration:
                         (reserva.end_date - reserva.start_date) /
@@ -634,7 +654,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
               onClose={handleCloseModal}
               timestamp={selectedTime}
               // se for field, soh vai ter football e rugby
-              modalities={modalities}
+              sports={sports}
               isField={isField}
               equipments={
                 isField
@@ -672,7 +692,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
           >
             <ReservationDetails
               location={selectedBooking.court}
-              modality={selectedBooking.modality}
+              sport={selectedBooking.sport}
               equipments={selectedBooking.materials}
               time={selectedBooking.time}
               isChecked={[true, false]}

@@ -91,22 +91,7 @@ export default function RulesWarnings() {
           <div>
             <p className="font-poppins font-bold text-blue-500">Regras</p>
           </div>
-          {user?.role === 'ADMIN' && (
-            <div className="flex w-full flex-col items-end pb-3 pr-8">
-              <Button
-                className="flex h-5 w-1/12 items-center justify-center bg-blue-primary p-3 font-poppins text-base text-white"
-                onClick={() => {
-                  setShowEdit(false)
-                  setShowEditModal(true)
-                }}
-              >
-                Editar
-              </Button>
-              {showEditModal && (
-                <EditModal onClose={() => setShowEditModal(false)} />
-              )}
-            </div>
-          )}
+          
 
           <div className="flex h-[60vh] w-full flex-col justify-between">
             <RulesWarningCard

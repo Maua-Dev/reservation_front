@@ -8,7 +8,7 @@ import ReserveOptionsModal from '@/app/components/admin/reserveOptionsModal'
 //import { IoMdDownload } from 'react-icons/io'
 import { Booking, useBookings, useBookingsQuery } from '@/app/hooks/use-booking'
 import { CalendaryCard } from '@/app/components/calendary-card'
-import { ModalityName } from '@/utils/enums/modality'
+import { SportName } from '@/utils/enums/sport'
 import { useMsal } from '@azure/msal-react'
 import { FiLoader } from 'react-icons/fi'
 import { ReservationDetails } from '@/app/components/reservation-details'
@@ -22,7 +22,7 @@ export interface Reservation {
   id: string
   court: string
   courtNumber: number
-  modality: string
+  sport: string
   time: number
   duration: number
   materials: string[]
@@ -305,7 +305,7 @@ export default function AdminReserve() {
       const leftPercent = overlapIndex * (widthPercent + gapPercent)
       style = {
         left: `${leftPercent}%`,
-        width: `${widthPercent}%`,
+        width: `${widthPercent}%`
       }
     }
     return {
@@ -449,7 +449,7 @@ export default function AdminReserve() {
                                         id: reserva.booking_id || '',
                                         court: `Quadra ${reserva.court_number}`,
                                         courtNumber: reserva.court_number,
-                                        modality: reserva.sport,
+                                        sport: reserva.sport,
                                         time: reserva.start_date,
                                         duration:
                                           (reserva.end_date -
@@ -464,22 +464,22 @@ export default function AdminReserve() {
                                     style={{
                                       ...offset.style,
                                       height: `${Math.max(
-                                      130,
-                                      ((reserva.end_date -
-                                        reserva.start_date) /
-                                        (1000 * 60 * 30)) *
-                                        130
+                                        130,
+                                        ((reserva.end_date -
+                                          reserva.start_date) /
+                                          (1000 * 60 * 30)) *
+                                          130
                                       )}px`,
                                       paddingBottom: '10px'
                                     }}
-                                    >
+                                  >
                                     <CalendaryCard
                                       court={reserva.court_number}
                                       location={`Quadra ${reserva.court_number}`}
-                                      modality={
-                                      ModalityName[
-                                        reserva.sport as keyof typeof ModalityName
-                                      ]
+                                      sport={
+                                        SportName[
+                                          reserva.sport as keyof typeof SportName
+                                        ]
                                       }
                                       time={reserva.start_date}
                                       isChecked={[true, false]}
@@ -509,9 +509,12 @@ export default function AdminReserve() {
               >
                 <ReservationDetails
                   location={selectedBooking.court}
-                  modality={
-                    ModalityName[
-                      selectedBooking.modality.toUpperCase().split(' ').join('_') as keyof typeof ModalityName
+                  sport={
+                    SportName[
+                      selectedBooking.sport
+                        .toUpperCase()
+                        .split(' ')
+                        .join('_') as keyof typeof SportName
                     ]
                   }
                   equipments={selectedBooking.materials}

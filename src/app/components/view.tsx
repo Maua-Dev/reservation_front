@@ -5,7 +5,7 @@ import { useUser } from '../hooks/use-user'
 import { Button } from './button'
 import { useBookings, useBookingsQuery } from '../hooks/use-booking'
 import { FiLoader } from 'react-icons/fi'
-import { ModalityName } from '@/utils/enums/modality'
+import { SportName } from '@/utils/enums/sport'
 
 interface ViewProps {
   onClose: () => void
@@ -127,9 +127,7 @@ export function View({ onClose }: ViewProps) {
                     court={booking.court_number.toString()}
                     bookingId={booking.booking_id}
                     reload={reloadBooking}
-                    sport={
-                      ModalityName[booking.sport as keyof typeof ModalityName]
-                    }
+                    sport={SportName[booking.sport as keyof typeof SportName]}
                   />
                 ))
               ))}

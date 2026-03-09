@@ -1,4 +1,4 @@
-export enum ModalityName {
+export enum SportName {
   TENNIS = 'Tênis',
   FOOTBALL = 'Futebol',
   BASKETBALL = 'Basquetebol',
@@ -7,7 +7,7 @@ export enum ModalityName {
   FUTSAL = 'Futsal',
   RUGBY = 'Rugby',
   BEACH_TENNIS = 'Tênis de Praia',
-  PING_PONG = 'Tênis de Mesa',
+  PING_PONG = 'Ping Pong',
   NATACAO = 'Natação',
   CORRIDA = 'Corrida',
   NA = 'NA'

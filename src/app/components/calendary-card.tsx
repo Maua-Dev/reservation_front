@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 interface CalendaryCardProps {
   court: number
   location: string
-  modality: string
+  sport: string
   equipments: string[]
   time: number
   isChecked: boolean[]
@@ -13,7 +13,7 @@ interface CalendaryCardProps {
 
 export function CalendaryCard({
   court,
-  modality,
+  sport,
   openModal
   // equipments,
   // time,
@@ -65,10 +65,8 @@ export function CalendaryCard({
   const showShort = width < 60 && width >= 40
   const hideAllText = width < 10
 
-  const shortModality =
-    modality && modality.length > 9
-      ? `${modality.slice(0, 8)}…`
-      : modality || ''
+  const shortSport =
+    sport && sport.length > 9 ? `${sport.slice(0, 8)}…` : sport || ''
 
   return (
     <div
@@ -78,7 +76,7 @@ export function CalendaryCard({
         'group z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 px-1 text-center shadow-md duration-300 hover:z-[999] hover:-translate-y-1 hover:cursor-pointer',
         courtColors[court]
       )}
-      title={`${courtLabel.full} - ${modality}`}
+      title={`${courtLabel.full} - ${sport}`}
     >
       {!hideAllText && (
         <>
@@ -86,7 +84,7 @@ export function CalendaryCard({
             {showShort ? courtLabel.short : courtLabel.full}
           </span>
           <p className="mt-1 w-full truncate text-xs font-semibold sm:text-sm">
-            {showShort ? shortModality : modality}
+            {showShort ? shortSport : sport}
           </p>
         </>
       )}
