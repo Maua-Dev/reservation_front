@@ -14,7 +14,7 @@ export const BookingsService = {
     const end_date = await localStorage.getItem('end_date')
     try {
       const response = await bookingsApi.get<MyBookingsResponse>(
-        '/get-bookings',
+        'get-bookings',
         {
           params: {
             user_id: userId,
@@ -40,7 +40,7 @@ export const BookingsService = {
     const end_date = await localStorage.getItem('end_date')
     try {
       const response = await bookingsApi.get<MyBookingsResponse>(
-        '/get-bookings',
+        'get-bookings',
         {
           params: { start_date: start_date, end_date: end_date }
         }
@@ -62,7 +62,7 @@ export const BookingsService = {
     try {
       const accessToken = await localStorage.getItem('accessToken')
       const response = await bookingsApi.post<Booking>(
-        '/create-booking',
+        'create-booking',
         { ...booking },
         {
           headers: { Authorization: `Bearer ${accessToken}` }
@@ -76,7 +76,7 @@ export const BookingsService = {
 
   deleteBooking: async (bookingId: string): Promise<void> => {
     try {
-      const response = await bookingsApi.delete(`/delete-booking`, {
+      const response = await bookingsApi.delete('delete-booking', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         },
