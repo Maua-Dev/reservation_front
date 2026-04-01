@@ -3,7 +3,7 @@ import { alertsApi } from '@/infrastructure/http/api'
 export const AlertsService = {
   getAlerts: async () => {
     try {
-      const response = await alertsApi.get('/get-all-alerts')
+      const response = await alertsApi.get('get-all-alerts')
       return response
     } catch (error) {
       console.error('Error fetching alerts:', error)
@@ -13,7 +13,7 @@ export const AlertsService = {
   createAlert: async (alert: CreateAlert) => {
     try {
       const accessToken = localStorage.getItem('accessToken') || ''
-      const response = await alertsApi.post('/create-alert', alert, {
+      const response = await alertsApi.post('create-alert', alert, {
         headers: { Authorization: `Bearer ${accessToken}` }
       })
       return response.data
@@ -26,7 +26,7 @@ export const AlertsService = {
   deleteAlert: async (alert_id: string) => {
     try {
       const accessToken = localStorage.getItem('accessToken') || ''
-      await alertsApi.delete(`/delete-alert`, {
+      await alertsApi.delete('delete-alert', {
         params: { alert_id },
         headers: { Authorization: `Bearer ${accessToken}` }
       })

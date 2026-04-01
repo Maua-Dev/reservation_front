@@ -14,7 +14,7 @@ class GetUserGateway implements GetUser {
   async load(id: number): Promise<HttpResponse<User>> {
     return await this.httpClient.request({
       method: 'get',
-      url: `/${id}`
+      url: `${id}`
     })
   }
 }
