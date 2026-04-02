@@ -14,7 +14,7 @@ class GetUserListGateway implements GetUserList {
   async load(): Promise<HttpResponse<User[]>> {
     return await this.httpClient.request({
       method: 'get',
-      url: '/users'
+      url: 'users'
     })
   }
 }

@@ -84,6 +84,63 @@ jobs:
           npm install
           npm install -g aws-cdk
 
+      - name: Fetch config from SSM
+        run: |
+          STAGE="${{ github.ref_name }}"
+
+          VITE_USER_URL=$(aws ssm get-parameter \
+            --name "/reservationmssuser/$STAGE/api/url" \
+            --query "Parameter.Value" --output text) || true
+
+          VITE_RESERVATION_URL=$(aws ssm get-parameter \
+            --name "/reservationapi/$STAGE/api/url" \
+            --query "Parameter.Value" --output text) || true
+
+          VITE_ALERT_URL=$(aws ssm get-parameter \
+            --name "/reservationmssalert/$STAGE/api/url" \
+            --query "Parameter.Value" --output text) || true
+
+          if [ -n "$VITE_USER_URL" ]; then
+            echo "::add-mask::$VITE_USER_URL"
+          fi
+
+          if [ -n "$VITE_RESERVATION_URL" ]; then
+            echo "::add-mask::$VITE_RESERVATION_URL"
+          fi
+
+          if [ -n "$VITE_ALERT_URL" ]; then
+            echo "::add-mask::$VITE_ALERT_URL"
+          fi
+
+          echo "VITE_USER_URL=$VITE_USER_URL" >> $GITHUB_ENV
+          echo "VITE_RESERVATION_URL=$VITE_RESERVATION_URL" >> $GITHUB_ENV
+          echo "VITE_ALERT_URL=$VITE_ALERT_URL" >> $GITHUB_ENV
+      
+      - name: Validate variables from ssm
+        shell: /usr/bin/bash -e {0}
+        run: |
+          missing=()
+      
+          check_var() {
+            local key=$1
+            local value=$2
+            if [ -z "$value" ]; then
+              missing+=("$key")
+            fi
+          }
+      
+          check_var "VITE_USER_URL" "$VITE_USER_URL"
+          check_var "VITE_RESERVATION_URL" "$VITE_RESERVATION_URL"
+          check_var "VITE_ALERT_URL" "$VITE_ALERT_URL"
+
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "❌ Missing environment variables:"
+            printf ' - %s\n' "${missing[@]}"
+            exit 1
+          fi
+      
+          echo "✅ All environment variables from ssm are set"
+
       - name: Build and Export
         run: |
           npm run build
@@ -91,9 +148,9 @@ jobs:
           VITE_STAGE: ${{ env.VITE_STAGE}}
           VITE_AUTH_CLIENT_ID: ${{ vars.VITE_AUTH_CLIENT_ID }}
           VITE_AUTH_TENANT_ID: ${{ vars.VITE_AUTH_TENANT_ID }}
-          VITE_USER_URL: ${{ vars.VITE_USER_URL }}
-          VITE_RESERVATION_URL: ${{ vars.VITE_RESERVATION_URL }}
-          VITE_ALERT_URL: ${{ vars.VITE_ALERT_URL }}
+          VITE_USER_URL: ${{ env.VITE_USER_URL }}
+          VITE_RESERVATION_URL: ${{ env.VITE_RESERVATION_URL }}
+          VITE_ALERT_URL: ${{ env.VITE_ALERT_URL }}
 
       - name: Setup envs
         run: |
@@ -102,8 +159,9 @@ jobs:
           echo STACK_NAME=${{ env.STACK_NAME }} >> $GITHUB_ENV
           echo GITHUB_REF_NAME=${{ env.STAGE }} >> $GITHUB_ENV
           echo AWS_BUCKET_ASSETS=${{ vars.AWS_BUCKET_ASSETS }} >> $GITHUB_ENV
-          echo VITE_USER_URL=${{vars.VITE_USER_URL }} >> $GITHUB_ENV
-          echo VITE_ALERT_URL=${{ vars.VITE_ALERT_URL }} >> $GITHUB_ENV
+          echo VITE_USER_URL=${{env.VITE_USER_URL }} >> $GITHUB_ENV
+          echo VITE_ALERT_URL=${{ env.VITE_ALERT_URL }} >> $GITHUB_ENV
+          echo VITE_RESERVATION_URL=${{ env.VITE_RESERVATION_URL }} >> $GITHUB_ENV
 
       - name: Deploy with CDK
         env:
