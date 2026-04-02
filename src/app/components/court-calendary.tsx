@@ -112,51 +112,47 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
 
   const startOfTheWeek = () => {
     const now = new Date()
-    const dayOfWeek = now.getDay()
-    const sunday = now.getDate() - dayOfWeek
     const startOfWeek = new Date(now)
-    if (sunday < 1) {
-      startOfWeek.setMonth(now.getMonth() - 1)
-      startOfWeek.setDate(sunday + 31)
-      startOfWeek.setHours(0, 0, 0, 0)
-    } else {
-      startOfWeek.setDate(sunday)
-      startOfWeek.setHours(0, 0, 0, 0)
-    }
+    startOfWeek.setDate(now.getDate() - now.getDay())
+    startOfWeek.setHours(0, 0, 0, 0)
     return startOfWeek.getTime()
   }
 
   const endOfTheWeek = () => {
     const now = new Date()
-    const dayOfWeek = now.getDay()
-    const nextSunday = now.getDate() + (7 - dayOfWeek)
     const endOfTheWeek = new Date(now)
-    if (nextSunday > 31) {
-      endOfTheWeek.setMonth(now.getMonth() + 1)
-      endOfTheWeek.setDate(nextSunday - 31)
-      endOfTheWeek.setHours(0, 0, 0, 0)
-    } else {
-      endOfTheWeek.setDate(nextSunday)
-      endOfTheWeek.setHours(0, 0, 0, 0)
-    }
+    endOfTheWeek.setDate(now.getDate() + (7 - now.getDay()))
+    endOfTheWeek.setHours(0, 0, 0, 0)
     return endOfTheWeek.getTime()
   }
 
   const thisWeek = () => {
-    const week = []
+    const week: Date[] = []
     for (let i = 1; i <= 6; i++) {
       const day = new Date(today)
       day.setDate(today.getDate() - today.getDay() + i)
-      week.push(day.getDate())
+      day.setHours(0, 0, 0, 0)
+      week.push(day)
     }
     return week
   }
 
-  const specialWidth = (timestamp: number, endTime: number, day: number) => {
+  const getDateKey = (date: Date) => {
+    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+  }
+
+  const isOutsideCurrentMonth = (date: Date) => {
+    return (
+      date.getMonth() !== today.getMonth() ||
+      date.getFullYear() !== today.getFullYear()
+    )
+  }
+
+  const specialWidth = (timestamp: number, endTime: number, dayKey: string) => {
     const sameTimeReservations = new Set()
 
     reservasConvertidas
-      .filter((reserva) => Number(reserva.day) === day)
+      .filter((reserva) => reserva.dayKey === dayKey)
       .forEach((reserva) => {
         if (
           (timestamp < reserva.end_date && timestamp >= reserva.start_date) ||
@@ -197,12 +193,12 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
     courtNumber: number,
     timestamp: number,
     endTime: number,
-    day: number
+    dayKey: string
   ) => {
     const sameTimeReservations = new Set()
 
     reservasConvertidas
-      .filter((reserva) => Number(reserva.day) === day)
+      .filter((reserva) => reserva.dayKey === dayKey)
       .forEach((reserva) => {
         if (
           (timestamp < reserva.end_date && timestamp >= reserva.start_date) ||
@@ -268,31 +264,14 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
       return {
         ...reserva,
         day: date.getDate(),
+        dayKey: getDateKey(date),
         hour: date.getHours(),
         minute: date.getMinutes()
       }
     })
 
-  const isPassed = (
-    day: number,
-    weekday: number,
-    hour: number,
-    minute: number
-  ) => {
-    const date = new Date()
-    if (day < today.getDate() && weekday > today.getDay() - 1) {
-      // esse -1 é por conta do Date(), ele começar com o index 0 no domingo, no nosso caso, é a segunda
-      date.setMonth(today.getMonth() + 1)
-      if (today.getMonth() === 11) {
-        date.setFullYear(today.getFullYear() + 1)
-        date.setMonth(0)
-      }
-    } else {
-      date.setMonth(today.getMonth())
-      date.setFullYear(today.getFullYear())
-    }
-
-    date.setDate(day)
+  const isPassed = (dayDate: Date, hour: number, minute: number) => {
+    const date = new Date(dayDate)
     date.setHours(hour)
     date.setMinutes(minute === 0 ? 0 : 30)
     date.setSeconds(0)
@@ -312,8 +291,9 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
     setMyBookings(getMyBookingsQuery.data?.bookings || [])
   }, [getMyBookingsQuery.data, setMyBookings])
 
-  const cannotReserve = (day: number, hour: number, minute: number) => {
+  const cannotReserve = (dayDate: Date, hour: number, minute: number) => {
     if (!myBookings || myBookings.length === 0) return false
+    const dayKey = getDateKey(dayDate)
 
     // Pega os IDs das reservas do usuário para o dia específico
     // Primeiro converte myBookings para o mesmo formato de reservasConvertidas
@@ -323,31 +303,33 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
         return {
           ...booking,
           day: date.getDate(),
+          dayKey: getDateKey(date),
           hour: date.getHours(),
           minute: date.getMinutes(),
-          start_date: Number(booking.start_date),
-          end_date: Number(booking.end_date)
+          startDate: Number(booking.start_date),
+          endDate: Number(booking.end_date)
         }
       })
-      .filter((reserva) => reserva.day === day)
+      .filter((reserva) => reserva.dayKey === dayKey)
 
     if (userReservations.length === 0) return false
 
-    const tryingDate = new Date()
-    tryingDate.setDate(day)
+    const tryingDate = new Date(dayDate)
     tryingDate.setHours(hour)
     tryingDate.setMinutes(minute === 0 ? 0 : 30)
+    tryingDate.setSeconds(0)
+    tryingDate.setMilliseconds(0)
 
     const timestamp = tryingDate.getTime()
 
     return userReservations.some((reserva) => {
       // Verifica se o horário desejado está dentro da janela de 1 hora antes ou depois
       return (
-        (timestamp >= reserva.start_date - 90 * 60 * 1000 &&
-          timestamp < reserva.start_date) || // 1h antes
-        (timestamp >= reserva.end_date &&
-          timestamp < reserva.end_date + 60 * 60 * 1000) || // 1h depois
-        (timestamp >= reserva.start_date && timestamp < reserva.end_date) // Dentro do horário reservado
+        (timestamp >= reserva.startDate - 90 * 60 * 1000 &&
+          timestamp < reserva.startDate) || // 1h antes
+        (timestamp >= reserva.endDate &&
+          timestamp < reserva.endDate + 60 * 60 * 1000) || // 1h depois
+        (timestamp >= reserva.startDate && timestamp < reserva.endDate) // Dentro do horário reservado
       )
     })
   }
@@ -360,26 +342,9 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
     }
   }
 
-  function handleClickedTime(
-    hour: number,
-    minute: number,
-    day: number,
-    weekday: number
-  ) {
-    const clickedTime = new Date()
-    if (day < today.getDate() && weekday > today.getDay() - 1) {
-      // esse -1 é por conta do Date(), ele começar com o index 0 no domingo, no nosso caso, é a segunda
-      clickedTime.setMonth(today.getMonth() + 1)
-      if (today.getMonth() === 11) {
-        clickedTime.setFullYear(today.getFullYear() + 1)
-        clickedTime.setMonth(0) // Janeiro
-      }
-    } else {
-      clickedTime.setMonth(today.getMonth())
-      clickedTime.setFullYear(today.getFullYear())
-    }
-
-    clickedTime.setDate(day)
+  function handleClickedTime(hour: number, minute: number, dayDate: Date) {
+    const dayKey = getDateKey(dayDate)
+    const clickedTime = new Date(dayDate)
     clickedTime.setHours(hour)
     clickedTime.setMinutes(minute === 0 ? 0 : 30)
     clickedTime.setSeconds(0)
@@ -395,7 +360,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
     const occupiedCourts = new Set<number>()
     reservasConvertidas.forEach((reserva) => {
       if (
-        reserva.day === day &&
+        reserva.dayKey === dayKey &&
         timestamp < reserva.end_date &&
         timestamp >= reserva.start_date
       ) {
@@ -405,7 +370,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
     const allCourts = isQuadra5 ? [5] : isField ? [0, 6] : [1, 2, 3]
     const availableCourts = allCourts.filter((court) => {
       const reservasDaQuadra = reservasConvertidas.filter(
-        (reserva) => reserva.court_number === court && reserva.day === day
+        (reserva) => reserva.court_number === court && reserva.dayKey === dayKey
       )
       const hasConflict = reservasDaQuadra.some(
         (reserva) =>
@@ -450,6 +415,8 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
     }, 200)
   }
 
+  const weekDays = thisWeek()
+
   return (
     <div className="relative w-full">
       {getBookingsOfTheWeek?.isLoading && (
@@ -473,7 +440,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                 today
                   .toLocaleDateString('pt-BR', { month: 'long' })
                   .slice(1)}{' '}
-              {thisWeek()[0]}-{thisWeek()[5]}
+              {weekDays[0].getDate()}-{weekDays[5].getDate()}
             </p>
           </div>
           <div className="bottom-0 right-0 p-2 md:absolute md:p-8">
@@ -491,12 +458,12 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
             Hora
           </div>
           <div className="flex flex-1 text-center text-lg text-white">
-            {thisWeek().map((date, index) => (
+            {weekDays.map((date, index) => (
               <div
                 key={index}
                 className="flex min-w-[120px] flex-1 flex-col items-center justify-center bg-blue-primary p-1 text-xl font-normal sm:min-w-[90px]"
               >
-                <div>{date}</div>
+                <div>{date.getDate()}</div>
                 <div>
                   {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][index]}
                 </div>{' '}
@@ -511,95 +478,105 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
             <div key={index} className="flex min-w-[100vw] sm:min-w-0">
               <div className="sticky left-0 z-20 flex min-h-16 min-w-16 max-w-16 items-start border-r border-gray-400 bg-white px-4 font-poppins">{`${hour}:${minute === 0 ? '00' : '30'}`}</div>
               <div className="flex flex-1">
-                {[...Array(6)].map((_, dayIndex) => (
-                  <div
-                    key={dayIndex}
-                    title={
-                      isPassed(thisWeek()[dayIndex], dayIndex, hour, minute)
-                        ? 'Esse horário já passou'
-                        : cannotReserve(thisWeek()[dayIndex], hour, minute)
-                          ? 'Você não pode reservar dentro de uma hora de outra reserva sua'
-                          : ''
-                    }
-                    onClick={() =>
-                      !isAuth
-                        ? toast.error('Você precisa estar logado para reservar')
-                        : isPassed(thisWeek()[dayIndex], dayIndex, hour, minute)
-                          ? toast.info('Esse horário já passou')
-                          : cannotReserve(thisWeek()[dayIndex], hour, minute)
-                            ? toast.info(
-                                'Você não pode reservar dentro de uma hora de outra reserva sua'
-                              )
-                            : isLastHalfHour(hour, minute)
-                              ? toast.info(
-                                  'Esse horário não está disponível para reserva'
-                                )
-                              : handleClickedTime(
-                                  hour,
-                                  minute,
-                                  thisWeek()[dayIndex],
-                                  dayIndex
-                                )
-                    }
-                    className={`relative flex min-w-[120px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 sm:min-w-[90px] ${isPassed(thisWeek()[dayIndex], dayIndex, hour, minute) ? 'bg-gray-300' : cannotReserve(thisWeek()[dayIndex], hour, minute) ? 'bg-gray-300' : isLastHalfHour(hour, minute) ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
-                  >
-                    {reservasConvertidas.map((reserva) => {
-                      if (
-                        reserva.hour === hour &&
-                        reserva.minute === (minute == 1 ? 30 : 0) &&
-                        reserva.day === thisWeek()[dayIndex]
-                      ) {
-                        return (
-                          <div
-                            key={reserva.booking_id}
-                            onClick={(e) => e.stopPropagation()}
-                            className={cn(
-                              'absolute flex',
-                              specialWidth(
-                                Number(reserva.start_date),
-                                Number(reserva.end_date),
-                                thisWeek()[dayIndex]
-                              ),
-                              deslocation(
-                                reserva.court_number,
-                                Number(reserva.start_date),
-                                Number(reserva.end_date),
-                                thisWeek()[dayIndex]
-                              )
-                            )}
-                            style={{
-                              // altura dinâmica do bloco: 50px por meia hora (slot base)
-                              height: `${((reserva.end_date - reserva.start_date) / (1000 * 60 * 30)) * 50}px`
-                            }}
-                          >
-                            <CalendaryCard
-                              court={reserva.court_number}
-                              location={`Quadra ${reserva.court_number}`}
-                              sport={sportToDisplay(reserva.sport)}
-                              equipments={equipments}
-                              time={reserva.start_date}
-                              isChecked={[true, false]}
-                              openModal={() =>
-                                handleSelectingBooking({
-                                  id: Number(reserva.booking_id) ?? 0,
-                                  court: `Quadra ${reserva.court_number}`,
-                                  courtNumber: reserva.court_number,
-                                  sport: reserva.sport,
-                                  time: reserva.start_date,
-                                  duration:
-                                    (reserva.end_date - reserva.start_date) /
-                                    (1000 * 60 * 60),
-                                  materials: reserva.materials,
-                                  userId: reserva.user_id ?? ''
-                                })
-                              }
-                            />
-                          </div>
-                        )
+                {weekDays.map((weekDay, dayIndex) => {
+                  const weekDayKey = getDateKey(weekDay)
+                  const isOutsideMonth = isOutsideCurrentMonth(weekDay)
+                  const passedTime = isPassed(weekDay, hour, minute)
+                  const reserveBlocked = cannotReserve(weekDay, hour, minute)
+
+                  return (
+                    <div
+                      key={dayIndex}
+                      title={
+                        isOutsideMonth
+                          ? 'Dias fora do mês atual não estão disponíveis'
+                          : passedTime
+                            ? 'Esse horário já passou'
+                            : reserveBlocked
+                              ? 'Você não pode reservar dentro de uma hora de outra reserva sua'
+                              : ''
                       }
-                    })}
-                  </div>
-                ))}
+                      onClick={() =>
+                        !isAuth
+                          ? toast.error(
+                              'Você precisa estar logado para reservar'
+                            )
+                          : isOutsideMonth
+                            ? toast.info(
+                                'Dias fora do mês atual não estão disponíveis'
+                              )
+                            : passedTime
+                              ? toast.info('Esse horário já passou')
+                              : reserveBlocked
+                                ? toast.info(
+                                    'Você não pode reservar dentro de uma hora de outra reserva sua'
+                                  )
+                                : isLastHalfHour(hour, minute)
+                                  ? toast.info(
+                                      'Esse horário não está disponível para reserva'
+                                    )
+                                  : handleClickedTime(hour, minute, weekDay)
+                      }
+                      className={`relative flex min-w-[120px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 sm:min-w-[90px] ${isOutsideMonth || passedTime || reserveBlocked || isLastHalfHour(hour, minute) ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
+                    >
+                      {reservasConvertidas.map((reserva) => {
+                        if (
+                          reserva.hour === hour &&
+                          reserva.minute === (minute == 1 ? 30 : 0) &&
+                          reserva.dayKey === weekDayKey
+                        ) {
+                          return (
+                            <div
+                              key={reserva.booking_id}
+                              onClick={(e) => e.stopPropagation()}
+                              className={cn(
+                                'absolute flex',
+                                specialWidth(
+                                  Number(reserva.start_date),
+                                  Number(reserva.end_date),
+                                  weekDayKey
+                                ),
+                                deslocation(
+                                  reserva.court_number,
+                                  Number(reserva.start_date),
+                                  Number(reserva.end_date),
+                                  weekDayKey
+                                )
+                              )}
+                              style={{
+                                // altura dinâmica do bloco: 50px por meia hora (slot base)
+                                height: `${((reserva.end_date - reserva.start_date) / (1000 * 60 * 30)) * 50}px`
+                              }}
+                            >
+                              <CalendaryCard
+                                court={reserva.court_number}
+                                location={`Quadra ${reserva.court_number}`}
+                                sport={sportToDisplay(reserva.sport)}
+                                equipments={equipments}
+                                time={reserva.start_date}
+                                isChecked={[true, false]}
+                                openModal={() =>
+                                  handleSelectingBooking({
+                                    id: Number(reserva.booking_id) ?? 0,
+                                    court: `Quadra ${reserva.court_number}`,
+                                    courtNumber: reserva.court_number,
+                                    sport: reserva.sport,
+                                    time: reserva.start_date,
+                                    duration:
+                                      (reserva.end_date - reserva.start_date) /
+                                      (1000 * 60 * 60),
+                                    materials: reserva.materials,
+                                    userId: reserva.user_id ?? ''
+                                  })
+                                }
+                              />
+                            </div>
+                          )
+                        }
+                      })}
+                    </div>
+                  )
+                })}
               </div>
             </div>
           )
