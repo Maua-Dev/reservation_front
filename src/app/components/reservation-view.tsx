@@ -81,42 +81,23 @@ export function ReservationCard({
     CORRIDA: corrida,
     'PING PONG': pingPong
   }
-  const sportColors: Record<string, string> = {
-    FOOTBALL: '#32CD32',
-    VOLLEYBALL: '#0000FF',
-    FUTSAL: '#3b82f6',
-    RUGBY: '#a16207',
-    TENNIS: '#228B22',
-    BASKETBALL: '#FF8C00',
-    HANDBALL: '#ef4444',
-    'BEACH TENNIS': '#14b8a6',
-    NATACAO: '#3b82f6',
-    Natação: '#3b82f6',
-    Natacao: '#3b82f6',
-    natacao: '#3b82f6',
-    CORRIDA: '#228B22',
-    'PING PONG': '#ef4444'
+  const normalizeSportKey = (value?: string) => {
+    return value
+      ? value
+          .trim()
+          .toUpperCase()
+          .normalize('NFD')
+          .replace(/\p{Diacritic}/gu, '')
+      : ''
   }
 
   const getSportImage = () => {
-    if (!sport || !sportImages[sport]) return ''
-    return `url(${sportImages[sport]})`
+    const normalizedSport = normalizeSportKey(sport)
+    if (!normalizedSport || !sportImages[normalizedSport]) return ''
+    return `url(${sportImages[normalizedSport]})`
   }
 
-  // E verifique se as importações funcionam:
-  console.log('Imported images:', {
-    futebol,
-    volei,
-    futsal,
-    rugby,
-    tenis,
-    basquete,
-    handebol,
-    beachTenis,
-    natacao,
-    corrida,
-    pingPong
-  })
+  const normalizedSport = normalizeSportKey(sport)
 
   return (
     <div
@@ -124,14 +105,15 @@ export function ReservationCard({
       style={{
         backgroundImage: getSportImage(),
         backgroundSize: 'cover',
-        backgroundPosition: 'center'
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
       }}
     >
       <div
         className="pointer-events-none absolute inset-0 rounded-lg"
         style={{
-          backgroundColor: sport ? sportColors[sport] || '#009000' : '#009000',
-          opacity: 0.4
+          background:
+            'linear-gradient(90deg, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.28) 55%, rgba(0, 0, 0, 0.1) 100%)'
         }}
       />
       <div className="relative z-10 flex flex-col gap-1">
@@ -158,7 +140,7 @@ export function ReservationCard({
         </p>
         <p className="flex flex-row justify-between gap-3 text-xs font-normal text-white sm:text-base md:text-lg">
           <span className="flex items-center gap-2">
-            Esporte: {sport} {sport && sportIcons[sport]}
+            Esporte: {sport} {normalizedSport && sportIcons[normalizedSport]}
           </span>
         </p>
       </div>
