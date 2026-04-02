@@ -206,20 +206,20 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
         e.preventDefault()
       }}
       onClick={(e) => e.stopPropagation()}
-      className="am:overflow-y-hidden relative flex max-h-[90vh] w-[94%] max-w-2xl cursor-default flex-col gap-3 overflow-x-hidden overflow-y-visible rounded-xl bg-white px-4 py-6 tracking-wide text-slate-700 shadow-lg sm:w-[90%] md:overflow-y-hidden"
+      className="am:overflow-y-hidden relative flex max-h-[90vh] w-[94%] max-w-2xl cursor-default flex-col gap-3 overflow-x-hidden overflow-y-visible rounded-xl bg-white px-4 py-6 tracking-wide text-slate-700 shadow-lg sm:w-[90%] md:w-[70%] md:max-w-[70vw] md:overflow-y-hidden"
     >
       <div className="flex w-full flex-col justify-between border-b-2 border-slate-700">
-        <div className="flex w-full items-start justify-between gap-2">
-          <div className="min-w-0 flex-1">
-            <p className="break-words font-poppins text-3xl font-bold leading-tight md:text-3xl">
+        <div className="flex w-full justify-between">
+          <div className="min-w-0 flex-1 md:flex md:w-full md:flex-row md:justify-between">
+            <p className="break-words font-poppins text-3xl font-bold leading-tight md:w-1/2 md:text-3xl md:leading-normal">
               {user.name}
             </p>
-            <p className="mt-1 break-words font-poppins text-4xl font-bold leading-tight md:text-3xl">
+            <p className="mt-1 break-words font-poppins text-4xl font-bold leading-tight md:mt-0 md:flex md:w-1/2 md:justify-end md:pr-16 md:text-3xl md:leading-normal">
               {user.ra}
             </p>
           </div>
           <IoClose
-            className="h-8 w-8 shrink-0 cursor-pointer md:h-10 md:w-10"
+            className="h-8 w-8 shrink-0 cursor-pointer md:absolute md:left-[94%] md:top-2 md:h-10 md:w-16"
             onClick={handleClose}
           ></IoClose>
         </div>
@@ -229,8 +229,8 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
         </p>
       </div>
 
-      <div className="flex w-full flex-col justify-start gap-3 font-medium">
-        <div className="flex w-fit items-center justify-between rounded">
+      <div className="flex w-full flex-col justify-start gap-3 font-medium md:flex-row md:gap-2">
+        <div className="flex w-fit items-center justify-between rounded md:w-32">
           <label className="flex-grow text-center font-poppins text-lg text-white">
             <select
               value={courtNumber}
@@ -259,17 +259,22 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
             </div>
           </label>
         </div>
-        <div className="flex w-full flex-wrap items-center gap-2">
-          <p className="mr-1 font-poppins text-xl">Horário</p>
-          <div className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2 text-white">
-            {formatDate(selectedDate.getHours())}:
-            {formatDate(selectedDate.getMinutes())}
-          </div>
-          <p className="font-poppins text-xl">Até</p>
-          <label className="inline-flex items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-2 font-poppins text-xl text-white">
-            {formatDate(selectedDate.getHours() + 1)}:
-            {formatDate(selectedDate.getMinutes())}
+        <div className="flex flex-col items-start justify-start gap-1 md:flex-row">
+          <label className="flex items-center justify-center font-poppins text-xl">
+            <span className="hidden md:inline"></span>
+            <p className="mr-2 md:px-20">Horário</p>
+            <div className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-3 py-2 font-poppins text-xl leading-none text-white">
+              {formatDate(selectedDate.getHours())}:
+              {formatDate(selectedDate.getMinutes())}
+            </div>
           </label>
+          <div className="flex items-center gap-2">
+            <p className="font-poppins text-xl">Até</p>
+            <label className="inline-flex min-h-11 items-center justify-center rounded-xl border border-b-4 border-yellow-secondary bg-yellow px-3 py-2 font-poppins text-xl leading-none text-white">
+              {formatDate(selectedDate.getHours() + 1)}:
+              {formatDate(selectedDate.getMinutes())}
+            </label>
+          </div>
         </div>
       </div>
 
