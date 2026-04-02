@@ -1,5 +1,6 @@
 import { Booking } from '@/app/hooks/use-booking'
 import { bookingsApi } from '@/infrastructure/http/api'
+import { bookingSportToApi } from '@/utils/booking-sport-api'
 import { AxiosError } from 'axios'
 
 export interface MyBookingsResponse {
@@ -63,7 +64,7 @@ export const BookingsService = {
       const accessToken = await localStorage.getItem('accessToken')
       const response = await bookingsApi.post<Booking>(
         'create-booking',
-        { ...booking },
+        { ...booking, sport: bookingSportToApi(booking.sport) },
         {
           headers: { Authorization: `Bearer ${accessToken}` }
         }

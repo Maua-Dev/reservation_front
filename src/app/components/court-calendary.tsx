@@ -8,7 +8,7 @@ import { cn } from '../utils/cn'
 import { useUserQuery } from '../hooks/use-user'
 import { useBookingsQuery, useBookings } from '../hooks/use-booking'
 import { useIsAuthenticated, useMsal } from '@azure/msal-react'
-import { SportName } from '@/utils/enums/sport'
+import { SportName, sportToDisplay } from '@/utils/enums/sport'
 import { FiLoader } from 'react-icons/fi'
 import { toast } from 'react-toastify'
 //import { any } from 'zod'
@@ -575,11 +575,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                             <CalendaryCard
                               court={reserva.court_number}
                               location={`Quadra ${reserva.court_number}`}
-                              sport={
-                                SportName[
-                                  reserva.sport as keyof typeof SportName
-                                ]
-                              }
+                              sport={sportToDisplay(reserva.sport)}
                               equipments={equipments}
                               time={reserva.start_date}
                               isChecked={[true, false]}
@@ -620,9 +616,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                   key={reserva.booking_id}
                   court={reserva.court_number}
                   location={`Atividade Livres ${reserva.court_number}`}
-                  sport={
-                    SportName[reserva.sport as keyof typeof SportName]
-                  }
+                  sport={sportToDisplay(reserva.sport)}
                   equipments={equipments}
                   time={reserva.start_date}
                   isChecked={[true, false]}
@@ -692,7 +686,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
           >
             <ReservationDetails
               location={selectedBooking.court}
-              sport={selectedBooking.sport}
+              sport={sportToDisplay(selectedBooking.sport)}
               equipments={selectedBooking.materials}
               time={selectedBooking.time}
               isChecked={[true, false]}

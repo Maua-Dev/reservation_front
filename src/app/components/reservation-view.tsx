@@ -75,6 +75,9 @@ export function ReservationCard({
     HANDBALL: handebol,
     'BEACH TENNIS': beachTenis,
     NATACAO: natacao,
+    Natação: natacao,
+    Natacao: natacao,
+    natacao,
     CORRIDA: corrida,
     'PING PONG': pingPong
   }
@@ -88,6 +91,9 @@ export function ReservationCard({
     HANDBALL: '#ef4444',
     'BEACH TENNIS': '#14b8a6',
     NATACAO: '#3b82f6',
+    Natação: '#3b82f6',
+    Natacao: '#3b82f6',
+    natacao: '#3b82f6',
     CORRIDA: '#228B22',
     'PING PONG': '#ef4444'
   }
