@@ -163,14 +163,16 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
       })
 
     if (isField) {
-      return sameTimeReservations.size > 1 ? 'xl:w-[50%]' : 'xl:w-[86%]'
+      return sameTimeReservations.size > 1
+        ? 'w-[50%] xl:w-[50%]'
+        : 'w-[86%] xl:w-[86%]'
     }
 
     return sameTimeReservations.size > 1
       ? sameTimeReservations.size > 2
-        ? 'xl:w-2/5'
-        : 'xl:w-[45%]'
-      : 'xl:w-[86%]'
+        ? 'w-2/5 xl:w-2/5'
+        : 'w-[45%] xl:w-[45%]'
+      : 'w-[86%] xl:w-[86%]'
   }
 
   function handleOpeMyBookings() {
