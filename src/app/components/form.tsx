@@ -214,7 +214,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
             <p className="break-words font-poppins text-3xl font-bold leading-tight md:w-1/2 md:text-3xl md:leading-normal">
               {user.name}
             </p>
-            <p className="mt-1 break-words font-poppins text-4xl font-bold leading-tight md:mt-0 md:flex md:w-1/2 md:justify-end md:pr-16 md:text-3xl md:leading-normal">
+            <p className="mt-1 break-words font-poppins text-3xl font-bold leading-tight md:mt-0 md:flex md:w-1/2 md:justify-end md:pr-16 md:text-3xl md:leading-normal">
               {user.ra}
             </p>
           </div>

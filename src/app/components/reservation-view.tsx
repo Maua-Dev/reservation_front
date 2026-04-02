@@ -2,16 +2,16 @@ import { FiLoader } from 'react-icons/fi'
 import { useBookingsQuery } from '../hooks/use-booking'
 import { Button } from './button'
 import { toast } from 'react-toastify'
-// import {
-//   FaFutbol,
-//   FaRegFutbol,
-//   FaSwimmer,
-//   FaVolleyballBall
-// } from 'react-icons/fa'
-// import { MdDirectionsRun, MdSportsRugby } from 'react-icons/md'
-// import { FaBasketball } from 'react-icons/fa6'
-// import { TbBeach, TbPlayHandball } from 'react-icons/tb'
-// import { GiPingPongBat, GiTennisRacket } from 'react-icons/gi'
+import {
+  FaFutbol,
+  FaRegFutbol,
+  FaSwimmer,
+  FaVolleyballBall
+} from 'react-icons/fa'
+import { MdDirectionsRun, MdSportsRugby } from 'react-icons/md'
+import { FaBasketball } from 'react-icons/fa6'
+import { TbBeach, TbPlayHandball } from 'react-icons/tb'
+import { GiPingPongBat, GiTennisRacket } from 'react-icons/gi'
 import futebol from '../assets//futebol.jpg'
 import volei from '../assets/Volei.jpg'
 import futsal from '../assets/futsal.jpg'
@@ -52,19 +52,19 @@ export function ReservationCard({
     }
   }
 
-  // const sportIcons: Record<string, JSX.Element> = {
-  //   FOOTBALL: <FaFutbol />,
-  //   VOLLEYBALL: <FaVolleyballBall />,
-  //   FUTSAL: <FaRegFutbol />,
-  //   RUGBY: <MdSportsRugby />,
-  //   TENNIS: <GiTennisRacket />,
-  //   BASKETBALL: <FaBasketball />,
-  //   HANDBALL: <TbPlayHandball />,
-  //   'BEACH TENNIS': <TbBeach />,
-  //   NATACAO: <FaSwimmer />,
-  //   CORRIDA: <MdDirectionsRun />,
-  //   'PING PONG': <GiPingPongBat />
-  // }
+  const sportIcons: Record<string, JSX.Element> = {
+    FOOTBALL: <FaFutbol />,
+    VOLLEYBALL: <FaVolleyballBall />,
+    FUTSAL: <FaRegFutbol />,
+    RUGBY: <MdSportsRugby />,
+    TENNIS: <GiTennisRacket />,
+    BASKETBALL: <FaBasketball />,
+    HANDBALL: <TbPlayHandball />,
+    'BEACH TENNIS': <TbBeach />,
+    NATACAO: <FaSwimmer />,
+    CORRIDA: <MdDirectionsRun />,
+    'PING PONG': <GiPingPongBat />
+  }
   const sportImages: Record<string, string> = {
     FOOTBALL: futebol,
     VOLLEYBALL: volei,
@@ -156,11 +156,11 @@ export function ReservationCard({
         <p className="text-xs font-normal text-white sm:text-base md:text-lg">
           Quadra: {court}
         </p>
-        {/* <p className="flex flex-row justify-between gap-3 text-xs font-normal text-white sm:text-base md:text-lg">
+        <p className="flex flex-row justify-between gap-3 text-xs font-normal text-white sm:text-base md:text-lg">
           <span className="flex items-center gap-2">
             Esporte: {sport} {sport && sportIcons[sport]}
           </span>
-        </p> */}
+        </p>
       </div>
       <div className="relative z-10 ml-auto flex h-full justify-end gap-4">
         <Button
