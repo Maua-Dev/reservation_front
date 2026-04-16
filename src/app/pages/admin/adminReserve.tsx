@@ -8,7 +8,7 @@ import ReserveOptionsModal from '@/app/components/admin/reserveOptionsModal'
 //import { IoMdDownload } from 'react-icons/io'
 import { Booking, useBookings, useBookingsQuery } from '@/app/hooks/use-booking'
 import { CalendaryCard } from '@/app/components/calendary-card'
-import { SportName } from '@/utils/enums/sport'
+import { sportToDisplay } from '@/utils/enums/sport'
 import { useMsal } from '@azure/msal-react'
 import { FiLoader } from 'react-icons/fi'
 import { ReservationDetails } from '@/app/components/reservation-details'
@@ -476,11 +476,7 @@ export default function AdminReserve() {
                                     <CalendaryCard
                                       court={reserva.court_number}
                                       location={`Quadra ${reserva.court_number}`}
-                                      sport={
-                                        SportName[
-                                          reserva.sport as keyof typeof SportName
-                                        ]
-                                      }
+                                      sport={sportToDisplay(reserva.sport)}
                                       time={reserva.start_date}
                                       isChecked={[true, false]}
                                       equipments={[]}
@@ -509,14 +505,7 @@ export default function AdminReserve() {
               >
                 <ReservationDetails
                   location={selectedBooking.court}
-                  sport={
-                    SportName[
-                      selectedBooking.sport
-                        .toUpperCase()
-                        .split(' ')
-                        .join('_') as keyof typeof SportName
-                    ]
-                  }
+                  sport={sportToDisplay(selectedBooking.sport)}
                   equipments={selectedBooking.materials}
                   time={selectedBooking.time}
                   isChecked={[true, false]}
