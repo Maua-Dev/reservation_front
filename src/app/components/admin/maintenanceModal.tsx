@@ -52,7 +52,7 @@ export default function MaintenanceModal({
       2: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA'],
       3: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA'],
       4: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA'],
-      5: ['Ping Pong', 'Natacao', 'Corrida', 'NA']
+      5: ['Ping Pong', 'Natação', 'Corrida', 'NA']
     }),
     []
   )
@@ -99,7 +99,7 @@ export default function MaintenanceModal({
       Futsal: ['Bola de futsal'],
       'Ping Pong': ['Raquete e Bolinha'],
       Corrida: [],
-      Natacao: [],
+      Natação: [],
       NA: []
     }),
     []
