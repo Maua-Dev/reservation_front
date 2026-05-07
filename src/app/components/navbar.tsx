@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button } from './button'
-import fullLogo from '../assets/logo-completa.svg'
+import imt from '../assets/imt-icon (2).svg'
 import shortLogo from '../assets/logo-simplista.svg'
 import { IoMenu } from 'react-icons/io5'
 import { FaHome } from 'react-icons/fa'
@@ -68,10 +68,23 @@ export function Navbar() {
               }}
             >
               <img
-                src={window.innerWidth < 768 ? shortLogo : fullLogo}
-                alt="Logo do Mauá Reservation"
-                className="w-14 sm:w-20 md:w-24"
+                src={shortLogo}
+                alt="Logo do Mauá"
+                className="w-14 sm:w-20 md:hidden"
               />
+              <div className="hidden items-center gap-2 md:flex">
+                <img
+                  src={imt}
+                  alt="Logo da Mauá"
+                  className="mt-1 h-10 w-auto object-contain sm:h-12 md:h-14"
+                />
+                <div className="mt-1 h-11 border-l border-gray-800" />
+                <img
+                  src={shortLogo}
+                  alt="Logo do Reservation"
+                  className="h-10 w-auto object-contain sm:h-12 md:h-14"
+                />
+              </div>
             </a>
 
             <div className="hidden gap-16 text-xl font-medium text-blue-primary md:flex lg:text-2xl">
@@ -130,10 +143,23 @@ export function Navbar() {
               }}
             >
               <img
-                src={window.innerWidth < 768 ? shortLogo : fullLogo}
-                alt="Logo do Mauá Reservation"
-                className="w-14 sm:w-20 md:w-24"
+                src={shortLogo}
+                alt="Logo do Mauá"
+                className="w-14 sm:w-20 md:hidden"
               />
+              <div className="hidden items-center gap-1 md:flex">
+                <img
+                  src={imt}
+                  alt="Logo da Mauá"
+                  className="mt-1 h-10 w-auto object-contain sm:h-12 md:h-14"
+                />
+                <div className="mt-1 h-11 border-l-2 border-yellow" />
+                <img
+                  src={shortLogo}
+                  alt="Logo do Reservation"
+                  className="h-10 w-auto object-contain sm:h-12 md:h-14"
+                />
+              </div>
             </a>
 
             <div className="hidden gap-16 text-xl font-medium text-blue-primary md:flex lg:text-2xl">
