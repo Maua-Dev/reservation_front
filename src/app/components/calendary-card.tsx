@@ -23,7 +23,7 @@ export function CalendaryCard({
     [key: number]: string
   } = {
     // BEACH AS COURT 6 MUST BE A TEMPORARY FIX
-    6: 'border-[#CBBD93] text-black z-[7]',
+    6: 'border-[#F09320] text-black z-[7]',
     0: 'border-[#008000] text-[#008000] z-[1]',
     1: 'border-[#0080f5] text-[#0080f5] z-[2]',
     2: 'border-[#9414F5] text-[#9414F5] z-[3]',
