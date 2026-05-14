@@ -67,16 +67,24 @@ export function Navbar() {
                 }
               }}
             >
-              <img
-                src={shortLogo}
-                alt="Logo do Mauá"
-                className="w-14 sm:w-20 md:hidden"
-              />
+              <div className="flex items-center gap-2 md:hidden">
+                <img
+                  src={imt}
+                  alt="Logo da Mauá"
+                  className="mt-1 h-10 w-auto object-contain sm:h-12"
+                />
+                <div className="mt-1 h-11 border-l border-yellow-secondary" />
+                <img
+                  src={shortLogo}
+                  alt="Logo do Reservation"
+                  className="h-10 w-auto object-contain sm:h-12"
+                />
+              </div>
               <div className="hidden items-center gap-2 md:flex">
                 <img
                   src={imt}
                   alt="Logo da Mauá"
-                  className="mt-1 h-10 w-auto object-contain sm:h-12 md:h-14"
+                  className="mt-1 h-10 w-auto object-contain sm:h-12 md:h-10"
                 />
                 <div className="mt-1 h-11 border-l border-gray-800" />
                 <img
@@ -142,16 +150,24 @@ export function Navbar() {
                 }
               }}
             >
-              <img
-                src={shortLogo}
-                alt="Logo do Mauá"
-                className="w-14 sm:w-20 md:hidden"
-              />
+              <div className="flex items-center gap-2 md:hidden">
+                <img
+                  src={imt}
+                  alt="Logo da Mauá"
+                  className="mt-1 h-10 w-auto object-contain sm:h-12"
+                />
+                <div className="mt-1 h-11 border-l border-yellow-secondary" />
+                <img
+                  src={shortLogo}
+                  alt="Logo do Reservation"
+                  className="h-10 w-auto object-contain sm:h-12"
+                />
+              </div>
               <div className="hidden items-center gap-1 md:flex">
                 <img
                   src={imt}
                   alt="Logo da Mauá"
-                  className="mt-1 h-10 w-auto object-contain sm:h-12 md:h-14"
+                  className="mt-1 h-10 w-auto object-contain sm:h-12 md:h-10"
                 />
                 <div className="mt-1 h-11 border-l-2 border-yellow" />
                 <img
