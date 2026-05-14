@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button } from './button'
-import imt from '../assets/imt-icon (2).svg'
+import imt from '../assets/imt-logo (2).svg'
 import shortLogo from '../assets/logo-simplista.svg'
 import { IoMenu } from 'react-icons/io5'
 import { FaHome } from 'react-icons/fa'
