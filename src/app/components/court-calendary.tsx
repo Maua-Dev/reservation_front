@@ -562,6 +562,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                                 equipments={equipments}
                                 time={reserva.start_date}
                                 isChecked={[true, false]}
+                                bookingType={reserva.type}
                                 openModal={() =>
                                   handleSelectingBooking({
                                     id: Number(reserva.booking_id) ?? 0,

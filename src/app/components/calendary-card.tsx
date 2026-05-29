@@ -1,5 +1,6 @@
 import { cn } from '../utils/cn'
 import { useEffect, useRef, useState } from 'react'
+import { BookingType } from '@/utils/enums/booking-type'
 
 interface CalendaryCardProps {
   court: number
@@ -9,12 +10,14 @@ interface CalendaryCardProps {
   time: number
   isChecked: boolean[]
   openModal: () => void
+  bookingType?: BookingType
 }
 
 export function CalendaryCard({
   court,
   sport,
-  openModal
+  openModal,
+  bookingType
   // equipments,
   // time,
   // isChecked
@@ -47,6 +50,8 @@ export function CalendaryCard({
     short: `Q${court}`
   }
 
+  const isMaintenance = bookingType === BookingType.MAINTENCE
+
   const containerRef = useRef<HTMLDivElement | null>(null)
   const [width, setWidth] = useState<number>(0)
 
@@ -73,8 +78,11 @@ export function CalendaryCard({
       ref={containerRef}
       onClick={openModal}
       className={cn(
-        'group z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 bg-blue-100 px-1 text-center shadow-md duration-300 hover:z-[999] hover:-translate-y-1 hover:cursor-pointer',
-        courtColors[court]
+        'group z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 px-1 text-center shadow-md duration-300 hover:z-[999] hover:-translate-y-1 hover:cursor-pointer',
+        courtColors[court],
+        isMaintenance
+          ? 'border-dashed border-zinc-500 bg-zinc-100 text-zinc-700'
+          : 'bg-blue-100'
       )}
       title={`${courtLabel.full} - ${sport}`}
     >

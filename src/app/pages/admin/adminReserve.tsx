@@ -508,6 +508,7 @@ export default function AdminReserve() {
                                       time={reserva.start_date}
                                       isChecked={[true, false]}
                                       equipments={[]}
+                                      bookingType={reserva.type}
                                       openModal={function (): void {
                                         throw new Error(
                                           'Function not implemented.'
