@@ -1,7 +1,7 @@
 import { useMsal } from '@azure/msal-react'
 import imgCampo from '../assets/imagem-campo.png'
 import imgQuadra from '../assets/imagem-quadra.png'
-import imgAtividadeLivres from '../assets/imagem-beachtenis.png'
+// import imgAtividadeLivres from '../assets/imagem-beachtenis.png'
 import { loginRequest } from '../auth/auth-config'
 import { ReservationCard } from './reservation-card'
 
