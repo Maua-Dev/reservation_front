@@ -13,15 +13,20 @@ export enum SportName {
   ATIVIDADES_ACADEMICAS = 'Atividades Academicas',
   FUNCIONAL = 'Funcional',
   JUDO = 'Judo',
-  NA = 'NA'
+  NA = 'Sem Esporte'
 }
 
 export function sportToDisplay(sport: string): string {
   if (sport in SportName) {
     return SportName[sport as keyof typeof SportName]
   }
-  if (sport.toLowerCase() === 'natacao') {
+
+  const lower = sport.toLowerCase()
+  if (lower === 'natacao') {
     return SportName.NATACAO
+  }
+  if (sport === 'NA' || lower === 'na' || lower === 'sem esporte') {
+    return SportName.NA
   }
   return sport
 }

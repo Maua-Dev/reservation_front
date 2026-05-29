@@ -16,7 +16,8 @@ import { ReservationDetails } from '@/app/components/reservation-details'
 import { LuCalendar } from 'react-icons/lu'
 //import SelectDateModal from '@/app/components/select-date-modal'
 import SelectDateModalAdmin from '@/app/components/calendar-admin'
-//import { Button } from '@/app/components/button'
+import { Button } from '@/app/components/button'
+import { View } from '@/app/components/view'
 
 export interface Reservation {
   id: string
@@ -38,7 +39,7 @@ export default function AdminReserve() {
   // const [currentMonth, setCurrentMonth] = useState<number>(
   //   new Date().getMonth()
   // )
-  const { allBookings, setAllBookings } = useBookings()
+  const { allBookings, setAllBookings, setMyBookings } = useBookings()
   const [selectedBooking, setSelectedBooking] = useState<
     Reservation | undefined
   >(undefined)
@@ -51,6 +52,9 @@ export default function AdminReserve() {
 
   // Constante para reniderização do Mini CAlendário
   const [showCalendar, setShowCalendar] = useState(false)
+  const [isMyBookingsModalOpen, setIsMyBookingsModalOpen] = useState(false)
+  const [isMyBookingsModalVisible, setIsMyBookingsModalVisible] =
+    useState(false)
 
   const handleDateSelect = async (date: Date) => {
     setLoading(true)
@@ -83,7 +87,11 @@ export default function AdminReserve() {
     setLoading(false)
   }
 
-  const { getBookingsOfTheWeek } = useBookingsQuery()
+  const { getBookingsOfTheWeek, getMyBookingsQuery } = useBookingsQuery()
+
+  useEffect(() => {
+    setMyBookings(getMyBookingsQuery.data?.bookings || [])
+  }, [getMyBookingsQuery.data, setMyBookings])
 
   // // Função chamada quando o mês é alterado no calendário
   // const handleMonthChange = (month: number, year: number) => {
@@ -124,19 +132,6 @@ export default function AdminReserve() {
 
   const { instance } = useMsal()
 
-  const fetchAccessToken = async () => {
-    const accounts = instance.getAllAccounts()
-    if (accounts.length === 0) return
-    const accessToken = (
-      await instance.acquireTokenSilent({
-        scopes: ['User.Read'],
-        account: accounts[0]
-      })
-    ).accessToken
-    localStorage.setItem('accessToken', accessToken)
-    return accessToken
-  }
-
   useEffect(() => {
     if (getBookingsOfTheWeek.data) {
       setAllBookings(getBookingsOfTheWeek.data.bookings)
@@ -144,10 +139,26 @@ export default function AdminReserve() {
   }, [getBookingsOfTheWeek.data, setAllBookings])
 
   useEffect(() => {
-    fetchAccessToken()
-    localStorage.setItem('end_date', endOfTheWeek().toString())
-    localStorage.setItem('start_date', startOfTheWeek().toString())
-  }, [])
+    ;(async () => {
+      try {
+        const accounts = instance.getAllAccounts()
+        if (accounts.length > 0) {
+          const accessToken = (
+            await instance.acquireTokenSilent({
+              scopes: ['User.Read'],
+              account: accounts[0]
+            })
+          ).accessToken
+          localStorage.setItem('accessToken', accessToken)
+        }
+      } catch (e) {
+        // ignore token fetch errors
+      }
+
+      localStorage.setItem('end_date', endOfTheWeek().toString())
+      localStorage.setItem('start_date', startOfTheWeek().toString())
+    })()
+  }, [instance])
 
   // A FUNÇÃO TA ERRADA EU ACHO CORRIGIR DPS
   function handleClickedTime(hour: number, minute: number, day: number) {
@@ -360,14 +371,31 @@ export default function AdminReserve() {
                   selectedDate={selectedDate}
                   onDateSelect={handleDateSelect}
                 />
-                <button
-                  id="calendar_btn"
-                  onClick={() => setShowCalendar(!showCalendar)}
-                  className="absolute mb-[10px] mr-5 flex h-[50px] w-[160px] items-center justify-center justify-items-center gap-3 rounded-lg bg-blue-primary p-3 text-white"
-                >
-                  <LuCalendar className="h-[30px] w-[30px]" />
-                  Calendário
-                </button>
+                <div className="absolute mb-[10px] mr-5 flex gap-3">
+                  <Button
+                    onClick={() => {
+                      if (isMyBookingsModalOpen) return
+                      try {
+                        getMyBookingsQuery.refetch()
+                      } catch (e) {
+                        // ignore
+                      }
+                      setIsMyBookingsModalOpen(true)
+                      setTimeout(() => setIsMyBookingsModalVisible(true), 100)
+                    }}
+                    className="flex h-[50px] w-[160px] items-center justify-center bg-blue-primary p-3 text-white"
+                  >
+                    Minhas Reservas
+                  </Button>
+                  <button
+                    id="calendar_btn"
+                    onClick={() => setShowCalendar(!showCalendar)}
+                    className="flex h-[50px] w-[160px] items-center justify-center justify-items-center gap-3 rounded-lg bg-blue-primary p-3 text-white"
+                  >
+                    <LuCalendar className="h-[30px] w-[30px]" />
+                    Calendário
+                  </button>
+                </div>
                 {/* </div> */}
               </div>
             </div>
@@ -512,6 +540,24 @@ export default function AdminReserve() {
                   onClose={() => handleDiselectingBooking()}
                   bookingUserId={selectedBooking.userId}
                   bookingId={selectedBooking.id}
+                />
+              </div>
+            )}
+            {isMyBookingsModalOpen && isMyBookingsModalVisible && (
+              <div
+                className={`fixed inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm`}
+                onClick={() => {
+                  setIsMyBookingsModalVisible(false)
+                  setTimeout(() => {
+                    setIsMyBookingsModalOpen(false)
+                  }, 200)
+                }}
+              >
+                <View
+                  onClose={() => {
+                    setIsMyBookingsModalVisible(false)
+                    setTimeout(() => setIsMyBookingsModalOpen(false), 200)
+                  }}
                 />
               </div>
             )}

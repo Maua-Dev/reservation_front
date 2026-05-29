@@ -46,12 +46,62 @@ export default function MaintenanceModal({
 
   const allowedSportsByCourt: Record<number, string[]> = useMemo(
     () => ({
-      0: ['Football', 'Rugby', 'NA', 'Atividades Academicas', 'Funcional'],
-      6: ['Beach Tennis', 'NA'],
-      1: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA','Tenis de Mesa', 'Atvidades Academicas','Funcional', 'Judo' ],
-      2: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA','Tenis de Mesa', 'Atvidades Academicas','Funcional', 'Judo' ],
-      3: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA','Tenis de Mesa', 'Atvidades Academicas','Funcional', 'Judo' ],
-      4: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA','Tenis de Mesa', 'Atvidades Academicas','Funcional', 'Judo' ],
+      0: [
+        'Football',
+        'Rugby',
+        SportName.NA,
+        'Atividades Academicas ou Eventos',
+        'Funcional'
+      ],
+      6: ['Beach Tennis', SportName.NA],
+      1: [
+        'Volleyball',
+        'Basketball',
+        'Futsal',
+        'Handball',
+        'Tennis',
+        SportName.NA,
+        'Tenis de Mesa',
+        'Atividades Academicas ou Eventos',
+        'Funcional',
+        'Judo'
+      ],
+      2: [
+        'Volleyball',
+        'Basketball',
+        'Futsal',
+        'Handball',
+        'Tennis',
+        SportName.NA,
+        'Tenis de Mesa',
+        'Atividades Academicas ou Eventos',
+        'Funcional',
+        'Judo'
+      ],
+      3: [
+        'Volleyball',
+        'Basketball',
+        'Futsal',
+        'Handball',
+        'Tennis',
+        SportName.NA,
+        'Tenis de Mesa',
+        'Atividades Academicas ou Eventos',
+        'Funcional',
+        'Judo'
+      ],
+      4: [
+        'Volleyball',
+        'Basketball',
+        'Futsal',
+        'Handball',
+        'Tennis',
+        SportName.NA,
+        'Tenis de Mesa',
+        'Atividades Academicas ou Eventos',
+        'Funcional',
+        'Judo'
+      ],
       5: ['Natação']
     }),
     []
@@ -100,10 +150,10 @@ export default function MaintenanceModal({
       'Tenis de Mesa': ['Raquete e Bolinha'],
       Corrida: [],
       Natação: [],
-      NA: [],
+      [SportName.NA]: [],
       'Atividades Academicas': [],
-      'Funcional': [],
-      'Judo':[]
+      Funcional: [],
+      Judo: []
     }),
     []
   )
