@@ -287,7 +287,6 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
 
   function handleOpeMyBookings() {
     if (isMyBookingsModalOpen) return
-    // ensure latest data
     try {
       getMyBookingsQuery.refetch()
     } catch (e) {

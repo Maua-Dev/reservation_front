@@ -383,7 +383,7 @@ export default function AdminReserve() {
                       setIsMyBookingsModalOpen(true)
                       setTimeout(() => setIsMyBookingsModalVisible(true), 100)
                     }}
-                    className="flex h-[50px] w-[160px] items-center justify-center bg-blue-primary p-3 text-white"
+                    className="flex h-[60px] w-[160px] items-center justify-center bg-blue-primary p-3 text-white"
                   >
                     Minhas Reservas
                   </Button>
