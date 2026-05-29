@@ -1,7 +1,7 @@
 import { useMsal } from '@azure/msal-react'
 import imgCampo from '../assets/imagem-campo.png'
 import imgQuadra from '../assets/imagem-quadra.png'
-import imgAtividadeLivres from '../assets/imagem-beachtenis.png'
+// import imgAtividadeLivres from '../assets/imagem-beachtenis.png'
 import { loginRequest } from '../auth/auth-config'
 import { ReservationCard } from './reservation-card'
 
@@ -19,14 +19,14 @@ const reservations = [
     description:
       'Ambiente coberto, pertencente ao CEAF, onde usuários podem praticar esportes e realizar campeonatos',
     calendar: '/court-reserve'
-  },
-  {
-    image: imgAtividadeLivres,
-    title: 'Atividades Livres',
-    description:
-      'Ambientes abertos, pertencentes ao CEAF, onde usuários podem praticar esportes',
-    calendar: '/activity'
   }
+  // {
+  //   image: imgAtividadeLivres,
+  //   title: 'Atividades Livres',
+  //   description:
+  //     'Ambientes abertos, pertencentes ao CEAF, onde usuários podem praticar esportes',
+  //   calendar: '/activity'
+  // }
 ]
 
 export function Reservations() {

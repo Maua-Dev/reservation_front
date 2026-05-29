@@ -175,14 +175,6 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
       : 'w-[86%] xl:w-[86%]'
   }
 
-  function handleOpeMyBookings() {
-    if (isMyBookingsModalOpen) return
-    setIsMyBookingsModalOpen(true)
-    setTimeout(() => {
-      setIsMyBookingsModalVisible(true)
-    }, 100)
-  }
-
   const handleCloseMyBookings = () => {
     setIsMyBookingsModalVisible(false)
     setTimeout(() => {
@@ -292,6 +284,19 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
   useEffect(() => {
     setMyBookings(getMyBookingsQuery.data?.bookings || [])
   }, [getMyBookingsQuery.data, setMyBookings])
+
+  function handleOpeMyBookings() {
+    if (isMyBookingsModalOpen) return
+    try {
+      getMyBookingsQuery.refetch()
+    } catch (e) {
+      // ignore
+    }
+    setIsMyBookingsModalOpen(true)
+    setTimeout(() => {
+      setIsMyBookingsModalVisible(true)
+    }, 100)
+  }
 
   const cannotReserve = (dayDate: Date, hour: number, minute: number) => {
     if (!myBookings || myBookings.length === 0) return false
@@ -446,7 +451,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
             </p>
           </div>
           <div className="bottom-0 right-0 p-2 md:absolute md:p-8">
-            {isAuth && (
+            {(isAuth || data?.role === 'ADMIN') && (
               <Button onClick={handleOpeMyBookings} className="h-12 w-52 p-1">
                 Minhas Reservas
               </Button>
@@ -557,6 +562,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                                 equipments={equipments}
                                 time={reserva.start_date}
                                 isChecked={[true, false]}
+                                bookingType={reserva.type}
                                 openModal={() =>
                                   handleSelectingBooking({
                                     id: Number(reserva.booking_id) ?? 0,
