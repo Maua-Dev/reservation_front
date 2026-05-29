@@ -19,14 +19,14 @@ const reservations = [
     description:
       'Ambiente coberto, pertencente ao CEAF, onde usuários podem praticar esportes e realizar campeonatos',
     calendar: '/court-reserve'
-  },
-  {
-    image: imgAtividadeLivres,
-    title: 'Atividades Livres',
-    description:
-      'Ambientes abertos, pertencentes ao CEAF, onde usuários podem praticar esportes',
-    calendar: '/activity'
   }
+  // {
+  //   image: imgAtividadeLivres,
+  //   title: 'Atividades Livres',
+  //   description:
+  //     'Ambientes abertos, pertencentes ao CEAF, onde usuários podem praticar esportes',
+  //   calendar: '/activity'
+  // }
 ]
 
 export function Reservations() {

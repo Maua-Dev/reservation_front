@@ -46,13 +46,13 @@ export default function MaintenanceModal({
 
   const allowedSportsByCourt: Record<number, string[]> = useMemo(
     () => ({
-      0: ['Football', 'Rugby', 'NA'],
+      0: ['Football', 'Rugby', 'NA', 'Atividades Academicas', 'Funcional'],
       6: ['Beach Tennis', 'NA'],
-      1: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA'],
-      2: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA'],
-      3: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA'],
-      4: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA'],
-      5: ['Ping Pong', 'Natação', 'Corrida', 'NA']
+      1: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA','Tenis de Mesa', 'Atvidades Academicas','Funcional', 'Judo' ],
+      2: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA','Tenis de Mesa', 'Atvidades Academicas','Funcional', 'Judo' ],
+      3: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA','Tenis de Mesa', 'Atvidades Academicas','Funcional', 'Judo' ],
+      4: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', 'NA','Tenis de Mesa', 'Atvidades Academicas','Funcional', 'Judo' ],
+      5: ['Natação']
     }),
     []
   )
@@ -97,10 +97,13 @@ export default function MaintenanceModal({
       Volleyball: ['Bola de vôlei'],
       Handball: ['Bola de handebol'],
       Futsal: ['Bola de futsal'],
-      'Ping Pong': ['Raquete e Bolinha'],
+      'Tenis de Mesa': ['Raquete e Bolinha'],
       Corrida: [],
       Natação: [],
-      NA: []
+      NA: [],
+      'Atividades Academicas': [],
+      'Funcional': [],
+      'Judo':[]
     }),
     []
   )
@@ -185,7 +188,7 @@ export default function MaintenanceModal({
       { value: 2, label: 'Quadra 2' },
       { value: 3, label: 'Quadra 3' },
       { value: 4, label: 'Quadra 4' },
-      { value: 5, label: 'Atividades Livres' }
+      { value: 5, label: 'Natação' }
     ],
     []
   )

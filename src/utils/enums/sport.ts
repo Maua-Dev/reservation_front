@@ -7,9 +7,12 @@ export enum SportName {
   FUTSAL = 'Futsal',
   RUGBY = 'Rugby',
   BEACH_TENNIS = 'Tênis de Praia',
-  PING_PONG = 'Ping Pong',
+  TENIS_MESA = 'Tenis de Mesa',
   NATACAO = 'Natação',
   CORRIDA = 'Corrida',
+  ATIVIDADES_ACADEMICAS = 'Atividades Academicas',
+  FUNCIONAL = 'Funcional',
+  JUDO = 'Judo',
   NA = 'NA'
 }
 
