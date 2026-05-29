@@ -81,7 +81,7 @@ export function CalendaryCard({
         'group z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 px-1 text-center shadow-md duration-300 hover:z-[999] hover:-translate-y-1 hover:cursor-pointer',
         courtColors[court],
         isMaintenance
-          ? 'border-dashed border-zinc-500 bg-zinc-100 text-zinc-700'
+          ? 'border-zinc-700 bg-zinc-300 text-zinc-900 ring-1 ring-zinc-500'
           : 'bg-blue-100'
       )}
       title={`${courtLabel.full} - ${sport}`}
