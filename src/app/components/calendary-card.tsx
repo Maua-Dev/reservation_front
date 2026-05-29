@@ -26,7 +26,7 @@ export function CalendaryCard({
     [key: number]: string
   } = {
     // BEACH AS COURT 6 MUST BE A TEMPORARY FIX
-    6: 'border-[#F09320] text-black z-[7]',
+    6: 'border-[#F09320] text-[#F09320] z-[7]',
     0: 'border-[#008000] text-[#008000] z-[1]',
     1: 'border-[#0080f5] text-[#0080f5] z-[2]',
     2: 'border-[#9414F5] text-[#9414F5] z-[3]',
@@ -81,7 +81,7 @@ export function CalendaryCard({
         'group z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 px-1 text-center shadow-md duration-300 hover:z-[999] hover:-translate-y-1 hover:cursor-pointer',
         courtColors[court],
         isMaintenance
-          ? 'border-emerald-900 bg-blue-100 text-zinc-900 ring-1 ring-zinc-500'
+          ? 'border-emerald-900 bg-blue-100 text-emerald-900 ring-1 ring-zinc-500'
           : 'bg-blue-100'
       )}
       title={`${courtLabel.full} - ${sport}`}
