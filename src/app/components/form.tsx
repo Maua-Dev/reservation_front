@@ -8,7 +8,6 @@ import { z } from 'zod'
 import { IoClose } from 'react-icons/io5'
 import { useBookingsQuery } from '../hooks/use-booking'
 import { useUser } from '../hooks/use-user'
-import { SportName } from '@/utils/enums/sport'
 import { BookingType } from '@/utils/enums/booking-type'
 
 type FormProps = {
@@ -57,19 +56,19 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
   const selectedDate = new Date(timestamp)
   const { createBookingMutation } = useBookingsQuery()
   const { user } = useUser()
-  const FREE_ACTIVITY_SPORTS = [
-    SportName.PING_PONG,
-    SportName.CORRIDA,
-    SportName.NATACAO
-  ]
+  // const FREE_ACTIVITY_SPORTS = [
+  //   SportName.PING_PONG,
+  //   SportName.CORRIDA,
+  //   SportName.NATACAO
+  // ]
 
   const onSubmit = async () => {
     const formValues = getValues()
-    const isFreeActivity = FREE_ACTIVITY_SPORTS.includes(
-      formValues.sport as SportName
-    )
+    // const isFreeActivity = FREE_ACTIVITY_SPORTS.includes(
+    //   formValues.sport as SportName
+    // )
 
-    const finalCourtNumber = isFreeActivity ? 5 : Number(courtNumber)
+    const finalCourtNumber = Number(courtNumber)
 
     const bookingData = {
       start_date: timestamp,
@@ -93,10 +92,9 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     Basketball: ['Bola de basquete'],
     Volleyball: ['Bola de vôlei'],
     Handball: ['Bola de handebol'],
-    Futsal: ['Bola de futsal'],
-    Corrida: ['Sem equipamento (Corrida)'],
-    Natação: ['Sem equipamento (Natação)'],
-    'Ping Pong': ['Raquete e bola de Ping Pong']
+    Futsal: ['Bola de futsal']
+    // Corrida and Natação are admin-only and omitted here
+    // 'Ping Pong': ['Raquete e bola de Ping Pong']
   }
   const equipmentToSport: Record<string, string> = {
     'Bola de futebol': 'Football',
@@ -107,10 +105,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     'Bola de basquete': 'Basketball',
     'Bola de vôlei': 'Volleyball',
     'Bola de handebol': 'Handball',
-    'Bola de futsal': 'Futsal',
-    'Sem equipamento (Corrida)': 'Corrida',
-    'Sem equipamento (Natação)': 'Natação',
-    'Raquete e bola de Ping Pong': 'Ping Pong'
+    'Bola de futsal': 'Futsal'
   }
 
   const handleSportSelect = (sport: string) => {
@@ -141,9 +136,9 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
       }
       return ['Football', 'Rugby', 'Beach Tennis']
     }
-    if (options.includes('Atividades Livres')) {
-      return [SportName.PING_PONG, SportName.CORRIDA, SportName.NATACAO]
-    }
+    // if (options.includes('Atividades Livres')) {
+    //   return [SportName.PING_PONG, SportName.CORRIDA, SportName.NATACAO]
+    // }
     return ['Tennis', 'Basketball', 'Volleyball', 'Handball', 'Futsal']
   }
   const equipamento = () => {
@@ -156,13 +151,11 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
       }
       return ['Bola de futebol', 'Bola de rugby', 'Raquete e Bola']
     }
-    if (options.includes('Atividades Livres')) {
-      return [
-        'Raquete e bola de Ping Pong',
-        'Sem equipamento (Corrida)',
-        'Sem equipamento (Natação)'
-      ]
-    }
+    // if (options.includes('Atividades Livres')) {
+    //   return [
+    //     'Raquete e bola de Ping Pong'
+    //   ]
+    // }
     return [
       'Bola e Raquete de tênis',
       'Tamboréu e Bola',
