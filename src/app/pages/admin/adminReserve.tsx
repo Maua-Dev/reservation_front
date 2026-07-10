@@ -421,7 +421,7 @@ export default function AdminReserve() {
               </div>
 
               <div className="flex flex-col overflow-x-auto overflow-y-hidden">
-                {[...Array(28)].map((_, index) => {
+                {[...Array(29)].map((_, index) => {
                   const hour = 8 + Math.floor(index / 2)
                   const minute = index % 2
                   const isHourSeparator = minute === 0

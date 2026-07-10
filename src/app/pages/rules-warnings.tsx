@@ -91,7 +91,6 @@ export default function RulesWarnings() {
           <div>
             <p className="font-poppins font-bold text-blue-500">Regras</p>
           </div>
-          
 
           <div className="flex h-[60vh] w-full flex-col justify-between">
             <RulesWarningCard

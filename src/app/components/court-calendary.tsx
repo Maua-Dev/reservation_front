@@ -345,7 +345,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
     if (isField) {
       return hour === 17 && minute === 0
     } else {
-      return hour === 20 && minute === 1
+      return (hour >= 20 && minute === 1) || hour >= 21
     }
   }
 
@@ -478,7 +478,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
             ))}
           </div>
         </div>
-        {[...Array(isField ? 18 : 25)].map((_, index) => {
+        {[...Array(isField ? 18 : 28)].map((_, index) => {
           const hour = 8 + Math.floor((index + 1) / 2)
           const minute = (index + 1) % 2
           return (
