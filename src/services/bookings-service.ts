@@ -21,6 +21,9 @@ export const BookingsService = {
             user_id: userId,
             start_date: start_date,
             end_date: end_date
+          },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
           }
         }
       )
@@ -36,6 +39,33 @@ export const BookingsService = {
       throw new Error('Failed to fetch bookings')
     }
   },
+
+  getBookingsOfTheWeekAdmin: async (): Promise<MyBookingsResponse> => {
+    const start_date = await localStorage.getItem('start_date')
+    const end_date = await localStorage.getItem('end_date')
+    try {
+      const response = await bookingsApi.get<MyBookingsResponse>(
+        'get-bookings',
+        {
+          params: { start_date: start_date, end_date: end_date },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        }
+      )
+      return response.data
+    } catch (error) {
+      const axiosError = error as AxiosError
+      if (axiosError.response?.status === 404) {
+        return {
+          bookings: [],
+          message: 'No bookings found'
+        }
+      }
+      throw new Error('Failed to fetch bookings')
+    }
+  },
+
   getBookingsOfTheWeek: async (): Promise<MyBookingsResponse> => {
     const start_date = await localStorage.getItem('start_date')
     const end_date = await localStorage.getItem('end_date')
@@ -43,7 +73,10 @@ export const BookingsService = {
       const response = await bookingsApi.get<MyBookingsResponse>(
         'get-bookings',
         {
-          params: { start_date: start_date, end_date: end_date }
+          params: { start_date: start_date, end_date: end_date },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+          }
         }
       )
       return response.data

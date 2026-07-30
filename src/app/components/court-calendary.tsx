@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { Button } from './button'
 import { CalendaryCard } from './calendary-card'
 import { useEffect, useState } from 'react'
@@ -14,7 +15,7 @@ import { toast } from 'react-toastify'
 //import { any } from 'zod'
 
 export interface Reservation {
-  id: number
+  bookingId: string
   court: string
   courtNumber: number
   sport: string
@@ -410,6 +411,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
 
   function handleSelectingBooking(booking: Reservation) {
     setSelectedBooking(booking)
+    console.log(booking)
     setTimeout(() => {
       setSelectedBookingVisible(true)
     }, 100)
@@ -565,7 +567,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                                 bookingType={reserva.type}
                                 openModal={() =>
                                   handleSelectingBooking({
-                                    id: Number(reserva.booking_id) ?? 0,
+                                    bookingId: reserva.booking_id ?? '',
                                     court: `Quadra ${reserva.court_number}`,
                                     courtNumber: reserva.court_number,
                                     sport: reserva.sport,
@@ -673,6 +675,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
               location={selectedBooking.court}
               sport={sportToDisplay(selectedBooking.sport)}
               equipments={selectedBooking.materials}
+              bookingId={selectedBooking.bookingId}
               time={selectedBooking.time}
               isChecked={[true, false]}
               onClose={() => handleDiselectingBooking()}

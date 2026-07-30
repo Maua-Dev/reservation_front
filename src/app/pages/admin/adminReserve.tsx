@@ -17,7 +17,7 @@ import { LuCalendar } from 'react-icons/lu'
 //import SelectDateModal from '@/app/components/select-date-modal'
 import SelectDateModalAdmin from '@/app/components/calendar-admin'
 import { Button } from '@/app/components/button'
-import { View } from '@/app/components/view'
+import { MyBookingsAdmin } from '@/app/components/my-bookings-admin'
 
 export interface Reservation {
   id: string
@@ -29,6 +29,8 @@ export interface Reservation {
   materials: string[]
   userId: string
   bookingId?: string
+  ownerName?: string
+  ownerRa?: string
 }
 
 export default function AdminReserve() {
@@ -484,7 +486,9 @@ export default function AdminReserve() {
                                             reserva.start_date) /
                                           (1000 * 60), // duração em minutos
                                         materials: reserva.materials || [],
-                                        userId: reserva.user_id || ''
+                                        userId: reserva.user_id || '',
+                                        ownerName: reserva.owner_name,
+                                        ownerRa: reserva.owner_network_id
                                       })
                                       setSelectedBookingVisible(true)
                                     }}
@@ -541,6 +545,8 @@ export default function AdminReserve() {
                   onClose={() => handleDiselectingBooking()}
                   bookingUserId={selectedBooking.userId}
                   bookingId={selectedBooking.id}
+                  name={selectedBooking.ownerName}
+                  ra={selectedBooking.ownerRa}
                 />
               </div>
             )}
@@ -554,7 +560,7 @@ export default function AdminReserve() {
                   }, 200)
                 }}
               >
-                <View
+                <MyBookingsAdmin
                   onClose={() => {
                     setIsMyBookingsModalVisible(false)
                     setTimeout(() => setIsMyBookingsModalOpen(false), 200)

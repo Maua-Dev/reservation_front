@@ -17,6 +17,8 @@ export interface Booking {
   booking_id?: string
   materials: string[]
   type?: BookingType
+  owner_name?: string
+  owner_network_id?: string
 }
 
 export const queryClient = new QueryClient()
@@ -29,6 +31,21 @@ export const useBookingsQuery = () => {
       if (!userId) throw new Error('User ID not found')
       try {
         return await BookingsService.getMyBookings() //Criar uma função para o meu try
+      } catch (error) {
+        toast.error('Erro ao buscar reservas!: ' + error)
+        throw new Error('Failed to fetch bookings')
+      }
+    },
+    retry: 2,
+    staleTime: 1000 * 60 * 5 // 5 minutos
+  })
+
+  const getBookingsOfTheWeekAdmin = useQuery({
+    queryKey: ['bookingsOfTheWeekAdmin'],
+    queryFn: async () => {
+      try {
+        const data = await BookingsService.getBookingsOfTheWeekAdmin()
+        return data
       } catch (error) {
         toast.error('Erro ao buscar reservas!: ' + error)
         throw new Error('Failed to fetch bookings')
@@ -89,6 +106,7 @@ export const useBookingsQuery = () => {
   })
 
   return {
+    getBookingsOfTheWeekAdmin,
     getMyBookingsQuery,
     createBookingMutation,
     getBookingsOfTheWeek,
