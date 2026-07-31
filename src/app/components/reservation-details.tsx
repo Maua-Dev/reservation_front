@@ -89,13 +89,6 @@ export const ReservationDetails = ({
     )
   }
 
-  const normalize = (value?: string) =>
-    value
-      ?.trim()
-      .toUpperCase()
-      .normalize('NFD')
-      .replace(/\p{Diacritic}/gu, '')
-
   // Verificamos se a reserva atual consta na lista de reservas do próprio usuário ou bate com o RA/Nome dele
   const userBookings = getMyBookingsQuery.data?.bookings || []
 
