@@ -462,15 +462,15 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
         </div>
       </div>
       <div className="max-w-[100vw] max-sm:overflow-x-scroll">
-        <div className="sticky top-0 z-50 mb-12 flex w-full bg-red-300 font-poppins text-base font-semibold text-gray-600 sm:top-[88px] sm:max-w-[100vw]">
-          <div className="sticky left-0 min-w-16 max-w-16 bg-blue-primary px-2 py-4 text-xl text-white">
+        <div className="sticky top-0 z-[80] mb-12 flex w-full bg-red-300 font-poppins text-base font-semibold text-gray-600 sm:top-[88px] sm:max-w-[100vw]">
+          <div className="sticky left-0 z-[80] min-w-16 max-w-16 bg-blue-primary px-2 py-4 text-xl text-white">
             Hora
           </div>
           <div className="flex flex-1 text-center text-lg text-white">
             {weekDays.map((date, index) => (
               <div
                 key={index}
-                className="flex min-w-[120px] flex-1 flex-col items-center justify-center bg-blue-primary p-1 text-xl font-normal sm:min-w-[90px]"
+                className="z-[80] flex min-w-[120px] flex-1 flex-col items-center justify-center bg-blue-primary p-1 text-xl font-normal sm:min-w-[90px]"
               >
                 <div>{date.getDate()}</div>
                 <div>
