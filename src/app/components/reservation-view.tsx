@@ -154,7 +154,7 @@ export function ReservationCard({
           })}
         </p>
         <p className="text-xs font-normal text-white sm:text-base md:text-lg">
-          Quadra: {court}
+          Local: {court}
         </p>
         <p className="flex flex-row justify-between gap-3 text-xs font-normal text-white sm:text-base md:text-lg">
           <span className="flex items-center gap-2">

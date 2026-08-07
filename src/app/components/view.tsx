@@ -6,6 +6,7 @@ import { Button } from './button'
 import { useBookings, useBookingsQuery } from '../hooks/use-booking'
 import { FiLoader } from 'react-icons/fi'
 import { sportToDisplay } from '@/utils/enums/sport'
+import { courtName } from '../utils/courts'
 
 interface ViewProps {
   onClose: () => void
@@ -22,7 +23,7 @@ export function View({ onClose }: ViewProps) {
 
   const sortedBookings = myBookings
     .slice()
-    .sort((a, b) => b.start_date - a.start_date)
+    .sort((a, b) => a.start_date - b.start_date)
 
   const normalize = (value?: string) =>
     value
@@ -142,7 +143,7 @@ export function View({ onClose }: ViewProps) {
             </div>
             <hr className="border-t-4 border-black" />
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex max-h-[70vh] flex-col gap-4 overflow-y-auto">
             {isAdmin && (
               <div className="flex flex-wrap gap-3 border-b border-black/20 pb-3">
                 <button
@@ -172,7 +173,7 @@ export function View({ onClose }: ViewProps) {
                     key={booking.booking_id}
                     startDate={booking.start_date}
                     endDate={booking.end_date}
-                    court={booking.court_number.toString()}
+                    court={courtName(booking.court_number)}
                     bookingId={booking.booking_id}
                     reload={reloadBooking}
                     sport={sportToDisplay(booking.sport)}

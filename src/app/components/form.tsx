@@ -54,7 +54,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     return Number(options[0].split(' ')[1])
   })
   const selectedDate = new Date(timestamp)
-  const { createBookingMutation } = useBookingsQuery()
+  const { createBookingMutation, getMyBookingsQuery } = useBookingsQuery()
   const { user } = useUser()
   // const FREE_ACTIVITY_SPORTS = [
   //   SportName.PING_PONG,
@@ -79,6 +79,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
       materials: formValues.equipment
     }
     await createBookingMutation.mutateAsync(bookingData)
+    await getMyBookingsQuery.refetch()
     onClose()
   }
   const handleClose = () => {

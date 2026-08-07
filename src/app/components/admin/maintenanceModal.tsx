@@ -21,20 +21,20 @@ export default function MaintenanceModal({
   onClose,
   isMaintainance,
   timestamp,
-  type,
+  type
 }: MaintenanceModalProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedCourt, setSelectedCourt] = useState<number>(1)
   const [selectedSport, setSelectedSport] = useState<string>(sports[0])
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([])
-  
+
   const [endHour, setEndHour] = useState<number>(
     new Date(timestamp || 0).getHours() + 1
   )
   const [endMinute, setEndMinute] = useState<number>(
     new Date(timestamp || 0).getMinutes()
   )
-  
+
   const hour = new Date(timestamp || 0).getHours()
   const minute = new Date(timestamp || 0).getMinutes()
   const date = new Date(timestamp || 0).toLocaleDateString('pt-BR', {
@@ -43,17 +43,71 @@ export default function MaintenanceModal({
     day: '2-digit'
   })
 
-  const { createBookingMutation, getBookingsOfTheWeek, deleteBookingMutation } =
-    useBookingsQuery()
+  const {
+    createBookingMutation,
+    getBookingsOfTheWeek,
+    getMyBookingsQuery,
+    deleteBookingMutation
+  } = useBookingsQuery()
 
   const allowedSportsByCourt: Record<number, string[]> = useMemo(
     () => ({
-      0: ['Football', 'Rugby', SportName.NA, 'Atividades Academicas ou Eventos', 'Funcional'],
+      0: [
+        'Football',
+        'Rugby',
+        SportName.NA,
+        'Atividades Academicas ou Eventos',
+        'Funcional'
+      ],
       6: ['Beach Tennis', SportName.NA],
-      1: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', SportName.NA, 'Tenis de Mesa', 'Atividades Academicas ou Eventos', 'Funcional', 'Judo'],
-      2: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', SportName.NA, 'Tenis de Mesa', 'Atividades Academicas ou Eventos', 'Funcional', 'Judo'],
-      3: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', SportName.NA, 'Tenis de Mesa', 'Atividades Academicas ou Eventos', 'Funcional', 'Judo'],
-      4: ['Volleyball', 'Basketball', 'Futsal', 'Handball', 'Tennis', SportName.NA, 'Tenis de Mesa', 'Atividades Academicas ou Eventos', 'Funcional', 'Judo'],
+      1: [
+        'Volleyball',
+        'Basketball',
+        'Futsal',
+        'Handball',
+        'Tennis',
+        SportName.NA,
+        'Tenis de Mesa',
+        'Atividades Academicas ou Eventos',
+        'Funcional',
+        'Judo'
+      ],
+      2: [
+        'Volleyball',
+        'Basketball',
+        'Futsal',
+        'Handball',
+        'Tennis',
+        SportName.NA,
+        'Tenis de Mesa',
+        'Atividades Academicas ou Eventos',
+        'Funcional',
+        'Judo'
+      ],
+      3: [
+        'Volleyball',
+        'Basketball',
+        'Futsal',
+        'Handball',
+        'Tennis',
+        SportName.NA,
+        'Tenis de Mesa',
+        'Atividades Academicas ou Eventos',
+        'Funcional',
+        'Judo'
+      ],
+      4: [
+        'Volleyball',
+        'Basketball',
+        'Futsal',
+        'Handball',
+        'Tennis',
+        SportName.NA,
+        'Tenis de Mesa',
+        'Atividades Academicas ou Eventos',
+        'Funcional',
+        'Judo'
+      ],
       5: ['Natação']
     }),
     []
@@ -131,15 +185,13 @@ export default function MaintenanceModal({
     computedEnd.setSeconds(0, 0)
 
     const endDateMs =
-      computedEnd.getTime() <= start
-        ? start + 3600000 
-        : computedEnd.getTime()
+      computedEnd.getTime() <= start ? start + 3600000 : computedEnd.getTime()
 
     if (weekData?.bookings) {
       // 1. Caso selecione a Quadra 4 (Completa) -> Cancela as sub-quadras 1, 2 e 3
       if (selectedCourt === 4) {
         const courtsToCancel = [1, 2, 3]
-        
+
         const overlappingSubCourts = weekData.bookings.filter(
           (b) =>
             courtsToCancel.includes(Number(b.court_number)) &&
@@ -181,7 +233,9 @@ export default function MaintenanceModal({
             Number(b.end_date) > start
         )
         if (overlappingSameCourt?.booking_id) {
-          await deleteBookingMutation.mutateAsync(overlappingSameCourt.booking_id)
+          await deleteBookingMutation.mutateAsync(
+            overlappingSameCourt.booking_id
+          )
         }
       }
     }
@@ -194,11 +248,12 @@ export default function MaintenanceModal({
       materials: selectedMaterials,
       type: type
     }
-    
+
     await createBookingMutation.mutateAsync(bookingdata)
 
     // Força a atualização do cache global antes de fechar a janela
     await getBookingsOfTheWeek.refetch()
+    await getMyBookingsQuery.refetch()
     handleClose()
   }
 
@@ -229,7 +284,7 @@ export default function MaintenanceModal({
     const raw = new Set<number>()
     overlapping.forEach((b) => raw.add(Number(b.court_number)))
     const toHide = new Set<number>(raw)
-    
+
     if (toHide.has(4)) {
       toHide.add(1)
       toHide.add(2)
@@ -260,8 +315,8 @@ export default function MaintenanceModal({
 
   // Bloqueia cliques se a API estiver carregando os dados da semana atualizados
   const isActionDisabled =
-    createBookingMutation.isPending || 
-    deleteBookingMutation.isPending || 
+    createBookingMutation.isPending ||
+    deleteBookingMutation.isPending ||
     weekIsLoading
 
   return (
@@ -284,13 +339,12 @@ export default function MaintenanceModal({
         >
           &times;
         </button>
-        
+
         {/* Adicionado o atributo disabled nativo na tag button para travar cliques paralelos */}
-        <button
-          onClick={handleBook}
-          disabled={isActionDisabled}
-        >
-          <div className={`absolute bottom-4 right-4 flex w-40 items-center justify-center rounded-md bg-blue-primary p-2 text-xl text-white hover:cursor-pointer hover:text-gray-200 ${isActionDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
+        <button onClick={handleBook} disabled={isActionDisabled}>
+          <div
+            className={`absolute bottom-4 right-4 flex w-40 items-center justify-center rounded-md bg-blue-primary p-2 text-xl text-white hover:cursor-pointer hover:text-gray-200 ${isActionDisabled ? 'cursor-not-allowed opacity-50' : ''}`}
+          >
             {isActionDisabled ? (
               <FiLoader className="h-6 w-6 animate-spin" />
             ) : isMaintainance && occupiedCourtsSet.has(selectedCourt) ? (

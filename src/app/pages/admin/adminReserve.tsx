@@ -38,6 +38,7 @@ export default function AdminReserve() {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   // const [currentMonth, setCurrentMonth] = useState<number>(
   //   new Date().getMonth()
   // )
@@ -288,43 +289,115 @@ export default function AdminReserve() {
   //     : 'xl:w-[86%] lg:w-4/5 md:w-3/4 w-4/5'
   // }
 
-  function getReservationOffset(
-    courtNumber: number,
-    timestamp: number,
-    endDate: number,
-    day: number,
-    allReservations: any[]
-  ) {
-    const sameTimeReservations = allReservations.filter((reserva) => {
-      return (
-        reserva.day === day &&
-        ((timestamp < reserva.end_date && timestamp >= reserva.start_date) ||
-          (endDate <= reserva.end_date && endDate > reserva.start_date))
-      )
-    })
+  const COURT_ORDER = [1, 2, 3, 4, 0, 5, 6]
 
-    let overlapIndex = 0
-    let style = { left: '0%', width: '100px' }
-    if (sameTimeReservations.length > 1) {
-      const sorted = [...sameTimeReservations].sort(
-        (a, b) => Number(a.court_number) - Number(b.court_number)
-      )
-      overlapIndex = sorted.findIndex(
-        (r) => Number(r.court_number) === courtNumber
-      )
-      const total = sameTimeReservations.length
-      const gapPercent = -20
-      const widthPercent = (85 - gapPercent * (total - 1)) / total
-      const leftPercent = overlapIndex * (widthPercent + gapPercent)
-      style = {
-        left: `${leftPercent}%`,
-        width: `${widthPercent}%`
-      }
+  const courtRank = (court: number) => {
+    const i = COURT_ORDER.indexOf(court)
+    return i === -1 ? COURT_ORDER.length + court : i
+  }
+
+  const bookingLayout = (() => {
+    const layout = new Map<object, { lane: number; total: number }>()
+
+    // agrupa por dia
+    const byDay = new Map<number, typeof reservasConvertidas>()
+    for (const reserva of reservasConvertidas) {
+      const list = byDay.get(reserva.day) ?? []
+      list.push(reserva)
+      byDay.set(reserva.day, list)
     }
+
+    for (const dayReservations of byDay.values()) {
+      const sorted = [...dayReservations].sort(
+        (a, b) =>
+          Number(a.start_date) - Number(b.start_date) ||
+          courtRank(Number(a.court_number)) - courtRank(Number(b.court_number))
+      )
+
+      // Um "cluster" é um bloco contíguo de reservas que se tocam no tempo.
+      // Todas as reservas do cluster compartilham o mesmo `total`, então as
+      // larguras batem entre elas (antes cada card calculava o seu e brigavam).
+      let cluster: typeof sorted = []
+      let clusterEnd = -Infinity
+
+      const flush = () => {
+        if (cluster.length === 0) return
+
+        // Uma coluna por quadra, na ordem de COURT_ORDER.
+        const courts = [
+          ...new Set(cluster.map((r) => Number(r.court_number)))
+        ].sort((a, b) => courtRank(a) - courtRank(b))
+
+        const laneOf = new Map<object, number>()
+        let nextLane = 0
+
+        for (const court of courts) {
+          const ofCourt = cluster
+            .filter((r) => Number(r.court_number) === court)
+            .sort((a, b) => Number(a.start_date) - Number(b.start_date))
+
+          // Sub-colunas só aparecem se a MESMA quadra tiver reservas
+          // simultâneas (ex.: Atividades Livres).
+          const subEnds: number[] = []
+          for (const r of ofCourt) {
+            const start = Number(r.start_date)
+            let sub = subEnds.findIndex((end) => end <= start)
+            if (sub === -1) {
+              sub = subEnds.length
+              subEnds.push(Number(r.end_date))
+            } else {
+              subEnds[sub] = Number(r.end_date)
+            }
+            laneOf.set(r, nextLane + sub)
+          }
+
+          nextLane += Math.max(1, subEnds.length)
+        }
+
+        const total = Math.max(1, nextLane)
+        for (const [reserva, lane] of laneOf) {
+          layout.set(reserva, { lane, total })
+        }
+
+        cluster = []
+        clusterEnd = -Infinity
+      }
+
+      for (const r of sorted) {
+        if (cluster.length > 0 && Number(r.start_date) >= clusterEnd) flush()
+        cluster.push(r)
+        clusterEnd = Math.max(clusterEnd, Number(r.end_date))
+      }
+      flush()
+    }
+
+    return layout
+  })()
+
+  function getReservationOffset(reserva: object) {
+    const { lane, total } = bookingLayout.get(reserva) ?? { lane: 0, total: 1 }
+
+    // Faixa à esquerda que fica sempre livre, para clicar na célula e reservar.
+    const GUTTER_LEFT = 4 // px
+    const GUTTER_RIGHT = 16 // px
+    // 1 = colunas encostadas; 1.6 = cada card 60% mais largo que a sua coluna.
+
+    const OVERLAP = 1.6
+
+    const width = Math.min(100, (100 / total) * OVERLAP)
+    const stride = total > 1 ? (100 - width) / (total - 1) : 0
+    const left = lane * stride
+
+    const usable = `(100% - ${GUTTER_LEFT + GUTTER_RIGHT}px)`
+
     return {
-      className: 'absolute transition-all',
-      style,
-      overlapIndex
+      className: 'absolute transition-all hover:!z-[60]',
+      style: {
+        left: `calc(${GUTTER_LEFT}px + ${usable} * ${left / 100})`,
+        width: `calc(${usable} * ${width / 100})`,
+        zIndex: 10 + lane
+      },
+      overlapIndex: lane
     }
   }
 
@@ -347,8 +420,16 @@ export default function AdminReserve() {
         }}
         timestamp={clickedTime}
       />
+      {(getBookingsOfTheWeek.isLoading || isLoading) && (
+        <div
+          className="fixed inset-0 z-[50] flex h-full w-full items-center justify-center bg-black/20 backdrop-blur-sm"
+          style={{ pointerEvents: 'none' }}
+        >
+          <FiLoader className="animate-spin" color="black" size={64} />
+        </div>
+      )}
       <div className="flex h-full w-full flex-col items-center justify-center">
-        <div className="relative z-[80] flex w-full flex-col font-poppins text-base font-semibold text-gray-600">
+        <div className="relative flex w-full flex-col font-poppins text-base font-semibold text-gray-600">
           {loading && (
             <div
               className="fixed inset-0 z-[999] flex h-full w-full items-center justify-center bg-black/20 backdrop-blur-sm"
@@ -375,7 +456,10 @@ export default function AdminReserve() {
                 />
                 <div className="absolute mb-[10px] mr-5 flex gap-3">
                   <Button
-                    onClick={() => {
+                    onClick={async () => {
+                      setIsLoading(true)
+                      await getBookingsOfTheWeek.refetch()
+                      setIsLoading(false)
                       if (isMyBookingsModalOpen) return
                       try {
                         getMyBookingsQuery.refetch()
@@ -462,13 +546,7 @@ export default function AdminReserve() {
                                 reserva.minute === (minute == 1 ? 30 : 0) &&
                                 reserva.day === thisWeek()[dayIndex]
                               ) {
-                                const offset = getReservationOffset(
-                                  Number(reserva.court_number),
-                                  Number(reserva.start_date),
-                                  Number(reserva.end_date),
-                                  Number(reserva.day),
-                                  reservasConvertidas
-                                )
+                                const offset = getReservationOffset(reserva)
 
                                 return (
                                   <div
@@ -552,7 +630,7 @@ export default function AdminReserve() {
             )}
             {isMyBookingsModalOpen && isMyBookingsModalVisible && (
               <div
-                className={`fixed inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm`}
+                className={`fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm`}
                 onClick={() => {
                   setIsMyBookingsModalVisible(false)
                   setTimeout(() => {
