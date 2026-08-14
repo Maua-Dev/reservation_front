@@ -54,7 +54,7 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
     return Number(options[0].split(' ')[1])
   })
   const selectedDate = new Date(timestamp)
-  const { createBookingMutation, getMyBookingsQuery } = useBookingsQuery()
+  const { createBookingMutation } = useBookingsQuery()
   const { user } = useUser()
   // const FREE_ACTIVITY_SPORTS = [
   //   SportName.PING_PONG,
@@ -78,8 +78,18 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
       type: BookingType.COMMON,
       materials: formValues.equipment
     }
-    await createBookingMutation.mutateAsync(bookingData)
-    await getMyBookingsQuery.refetch()
+    try {
+      await createBookingMutation.mutateAsync(bookingData)
+    } catch (error) {
+      // O toast do erro já vem do onError da mutation. Aqui só garantimos que
+      // o modal continua aberto pra tentar de novo, em vez de travar.
+      console.error('Erro ao criar reserva:', error)
+      return
+    }
+
+    // Fecha o confirm e o formulário. Sem isso o confirm ficava aberto por
+    // cima e só saía da tela clicando fora.
+    setOpen(false)
     onClose()
   }
   const handleClose = () => {
@@ -195,10 +205,10 @@ export const Form = ({ timestamp, options, isField, onClose }: FormProps) => {
 
   return (
     <form
-      onSubmit={(e) => {
-        setOpen(true)
-        e.preventDefault()
-      }}
+      // valida antes de abrir o confirm: se faltar modalidade/equipamento, o
+      // confirm abria e o botão de confirmar não fazia nada (a validação
+      // falhava lá dentro, em silêncio, atrás do modal)
+      onSubmit={handleSubmit(() => setOpen(true))}
       onClick={(e) => e.stopPropagation()}
       className="am:overflow-y-hidden relative flex max-h-[90vh] w-[94%] max-w-2xl cursor-default flex-col gap-3 overflow-x-hidden overflow-y-visible rounded-xl bg-white px-4 py-6 tracking-wide text-slate-700 shadow-lg sm:w-[90%] md:w-[70%] md:max-w-[70vw] md:overflow-y-hidden"
     >

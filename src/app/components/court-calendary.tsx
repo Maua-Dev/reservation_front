@@ -30,6 +30,35 @@ interface CourtProps {
   isQuadra5?: boolean
 }
 
+// Altura de cada slot de meia hora. É a mesma altura usada nas linhas da grade
+// e no cálculo da altura do card, senão o card não termina no horário certo.
+const SLOT_HEIGHT = 64
+// Respiro pra não colar o card na linha de cima/de baixo.
+const CARD_INSET = 2
+
+// A quadra 4 é a quadra inteira: ocupa fisicamente as quadras 1, 2 e 3. Reserva
+// na 4 bloqueia as três, e reserva em qualquer uma das três bloqueia a 4.
+const FULL_COURT = 4
+const SUB_COURTS = [1, 2, 3]
+
+const sharesSpaceWith = (court: number, otherCourt: number) => {
+  if (court === otherCourt) return true
+  if (court === FULL_COURT) return SUB_COURTS.includes(otherCourt)
+  if (otherCourt === FULL_COURT) return SUB_COURTS.includes(court)
+  return false
+}
+
+const BOOKING_DURATION = 60 * 60 * 1000
+
+const slotTimestamp = (dayDate: Date, hour: number, minute: number) => {
+  const date = new Date(dayDate)
+  date.setHours(hour)
+  date.setMinutes(minute === 0 ? 0 : 30)
+  date.setSeconds(0)
+  date.setMilliseconds(0)
+  return date.getTime()
+}
+
 export function Court({ isField, isQuadra5 }: CourtProps) {
   const [isMyBookingsModalOpen, setIsMyBookingsModalOpen] = useState(false)
   const [isMyBookingsModalVisible, setIsMyBookingsModalVisible] =
@@ -60,15 +89,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
 
   const { getBookingsOfTheWeek } = useBookingsQuery()
 
-  const bookings = getBookingsOfTheWeek?.data?.bookings || []
-  let reservas = bookings
-
-  const fetchBookingsOfTheWeek = async () => {
-    const result = await getBookingsOfTheWeek?.refetch()
-    if (result && 'data' in result && result.data?.bookings) {
-      reservas = result.data.bookings
-    }
-  }
+  const reservas = getBookingsOfTheWeek?.data?.bookings || []
 
   const today = new Date()
 
@@ -149,99 +170,11 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
     )
   }
 
-  const specialWidth = (timestamp: number, endTime: number, dayKey: string) => {
-    const sameTimeReservations = new Set()
-
-    reservasConvertidas
-      .filter((reserva) => reserva.dayKey === dayKey)
-      .forEach((reserva) => {
-        if (
-          (timestamp < reserva.end_date && timestamp >= reserva.start_date) ||
-          (endTime <= reserva.end_date && endTime > reserva.start_date)
-        ) {
-          sameTimeReservations.add(reserva.court_number)
-        }
-      })
-
-    if (isField) {
-      return sameTimeReservations.size > 1
-        ? 'w-[50%] xl:w-[50%]'
-        : 'w-[86%] xl:w-[86%]'
-    }
-
-    return sameTimeReservations.size > 1
-      ? sameTimeReservations.size > 2
-        ? 'w-2/5 xl:w-2/5'
-        : 'w-[45%] xl:w-[45%]'
-      : 'w-[86%] xl:w-[86%]'
-  }
-
   const handleCloseMyBookings = () => {
     setIsMyBookingsModalVisible(false)
     setTimeout(() => {
       setIsMyBookingsModalOpen(false)
-      fetchBookingsOfTheWeek()
     }, 200)
-  }
-
-  const deslocation = (
-    courtNumber: number,
-    timestamp: number,
-    endTime: number,
-    dayKey: string
-  ) => {
-    const sameTimeReservations = new Set()
-
-    reservasConvertidas
-      .filter((reserva) => reserva.dayKey === dayKey)
-      .forEach((reserva) => {
-        if (
-          (timestamp < reserva.end_date && timestamp >= reserva.start_date) ||
-          (endTime <= reserva.end_date && endTime > reserva.start_date)
-        ) {
-          sameTimeReservations.add(reserva.court_number)
-        }
-      })
-
-    if (isField) {
-      // Campo: court_number 0 (Campo) e 6 (Beach)
-      switch (courtNumber) {
-        case 0:
-          // Campo principal
-          return 'absolute w-20 h-20 left-[4%]'
-        case 6:
-          // Beach Tennis
-          return sameTimeReservations.size > 1
-            ? 'absolute w-20 h-20 left-[45%]'
-            : 'absolute w-20 h-20 left-[4%]'
-
-        default:
-          return ''
-      }
-    }
-
-    // Quadras normais
-    const isItOne = sameTimeReservations.has(1)
-    switch (courtNumber) {
-      case 1:
-        return 'max-[1776px]:absolute max-[1776px]:w-20 max-[1776px]:h-20 max-[1776px]:left-[4%]'
-      case 2:
-        return sameTimeReservations.size > 1
-          ? sameTimeReservations.size == 2
-            ? isItOne
-              ? 'absolute w-20 h-20 left-[46%]'
-              : 'absolute w-20 h-20 left-[4%]'
-            : 'absolute w-20 h-20 left-[25%]'
-          : 'absolute w-20 h-20 left-[4%]'
-      case 3:
-        return sameTimeReservations.size > 1
-          ? sameTimeReservations.size == 2
-            ? 'absolute w-20 h-20 left-[25%]'
-            : 'absolute w-20 h-20 left-[50%]'
-          : 'absolute w-20 h-20 left-[4%]'
-      default:
-        return ''
-    }
   }
 
   const reservasConvertidas = reservas
@@ -265,14 +198,163 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
       }
     })
 
-  const isPassed = (dayDate: Date, hour: number, minute: number) => {
-    const date = new Date(dayDate)
-    date.setHours(hour)
-    date.setMinutes(minute === 0 ? 0 : 30)
-    date.setSeconds(0)
-    date.setMilliseconds(0)
+  const COURT_ORDER = [1, 2, 3, 4, 0, 5, 6]
 
-    return date.getTime() < today.getTime()
+  const courtRank = (court: number) => {
+    const i = COURT_ORDER.indexOf(court)
+    return i === -1 ? COURT_ORDER.length + court : i
+  }
+
+  const bookingLayout = (() => {
+    const layout = new Map<object, { lane: number; total: number }>()
+
+    // agrupa por dia
+    const byDay = new Map<string, typeof reservasConvertidas>()
+    for (const reserva of reservasConvertidas) {
+      const list = byDay.get(reserva.dayKey) ?? []
+      list.push(reserva)
+      byDay.set(reserva.dayKey, list)
+    }
+
+    for (const dayReservations of byDay.values()) {
+      const sorted = [...dayReservations].sort(
+        (a, b) =>
+          Number(a.start_date) - Number(b.start_date) ||
+          courtRank(Number(a.court_number)) - courtRank(Number(b.court_number))
+      )
+
+      // Um "cluster" é um bloco contíguo de reservas que se tocam no tempo.
+      // Todas as reservas do cluster compartilham o mesmo `total`, então as
+      // larguras batem entre elas (antes cada card calculava o seu e brigavam).
+      let cluster: typeof sorted = []
+      let clusterEnd = -Infinity
+
+      const flush = () => {
+        if (cluster.length === 0) return
+
+        // Uma coluna por quadra, na ordem de COURT_ORDER.
+        const courts = [
+          ...new Set(cluster.map((r) => Number(r.court_number)))
+        ].sort((a, b) => courtRank(a) - courtRank(b))
+
+        const laneOf = new Map<object, number>()
+        let nextLane = 0
+
+        for (const court of courts) {
+          const ofCourt = cluster
+            .filter((r) => Number(r.court_number) === court)
+            .sort((a, b) => Number(a.start_date) - Number(b.start_date))
+
+          // Sub-colunas só aparecem se a MESMA quadra tiver reservas
+          // simultâneas (ex.: Atividades Livres).
+          const subEnds: number[] = []
+          for (const r of ofCourt) {
+            const start = Number(r.start_date)
+            let sub = subEnds.findIndex((end) => end <= start)
+            if (sub === -1) {
+              sub = subEnds.length
+              subEnds.push(Number(r.end_date))
+            } else {
+              subEnds[sub] = Number(r.end_date)
+            }
+            laneOf.set(r, nextLane + sub)
+          }
+
+          nextLane += Math.max(1, subEnds.length)
+        }
+
+        const total = Math.max(1, nextLane)
+        for (const [reserva, lane] of laneOf) {
+          layout.set(reserva, { lane, total })
+        }
+
+        cluster = []
+        clusterEnd = -Infinity
+      }
+
+      for (const r of sorted) {
+        if (cluster.length > 0 && Number(r.start_date) >= clusterEnd) flush()
+        cluster.push(r)
+        clusterEnd = Math.max(clusterEnd, Number(r.end_date))
+      }
+      flush()
+    }
+
+    return layout
+  })()
+
+  function getReservationOffset(reserva: object) {
+    const { lane, total } = bookingLayout.get(reserva) ?? { lane: 0, total: 1 }
+
+    // Faixa livre nas laterais, para ainda dar pra clicar na célula e reservar.
+    const GUTTER_LEFT = 4 // px
+    const GUTTER_RIGHT = 16 // px
+    // 1 = colunas encostadas; 1.6 = cada card 60% mais largo que a sua coluna.
+    const OVERLAP = 1.6
+
+    const width = Math.min(100, (100 / total) * OVERLAP)
+    const stride = total > 1 ? (100 - width) / (total - 1) : 0
+    const left = lane * stride
+
+    const usable = `(100% - ${GUTTER_LEFT + GUTTER_RIGHT}px)`
+
+    return {
+      className: 'absolute transition-all hover:!z-[15]',
+      style: {
+        left: `calc(${GUTTER_LEFT}px + ${usable} * ${left / 100})`,
+        width: `calc(${usable} * ${width / 100})`,
+        zIndex: 10 + lane
+      }
+    }
+  }
+
+  const isPassed = (dayDate: Date, hour: number, minute: number) => {
+    return slotTimestamp(dayDate, hour, minute) < today.getTime()
+  }
+
+  // Reservas que ocupam o espaço da quadra `court` entre start e end.
+  const overlappingBookings = (
+    court: number,
+    dayKey: string,
+    start: number,
+    end: number
+  ) =>
+    reservasConvertidas.filter(
+      (reserva) =>
+        reserva.dayKey === dayKey &&
+        sharesSpaceWith(court, Number(reserva.court_number)) &&
+        Number(reserva.start_date) < end &&
+        Number(reserva.end_date) > start
+    )
+
+  const bookableCourts = isQuadra5 ? [5] : isField ? [0, 6] : SUB_COURTS
+
+  const getAvailableCourts = (dayKey: string, start: number, end: number) =>
+    bookableCourts.filter(
+      (court) => overlappingBookings(court, dayKey, start, end).length === 0
+    )
+
+  // Motivo de o horário não estar disponível, ou null se dá pra reservar.
+  const unavailableReason = (dayDate: Date, hour: number, minute: number) => {
+    const start = slotTimestamp(dayDate, hour, minute)
+    const end = start + BOOKING_DURATION
+    const dayKey = getDateKey(dayDate)
+
+    if (getAvailableCourts(dayKey, start, end).length > 0) return null
+
+    const blockedByFullCourt = reservasConvertidas.some(
+      (reserva) =>
+        reserva.dayKey === dayKey &&
+        Number(reserva.court_number) === FULL_COURT &&
+        Number(reserva.start_date) < end &&
+        Number(reserva.end_date) > start
+    )
+
+    if (blockedByFullCourt) {
+      return 'A Quadra 4 ocupa as quadras 1, 2 e 3 — nenhuma delas pode ser reservada nesse horário'
+    }
+
+    return 'Esse horário já está todo reservado'
   }
   const { getMyBookingsQuery } = useBookingsQuery()
 
@@ -351,41 +433,18 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
   }
 
   function handleClickedTime(hour: number, minute: number, dayDate: Date) {
-    const dayKey = getDateKey(dayDate)
-    const clickedTime = new Date(dayDate)
-    clickedTime.setHours(hour)
-    clickedTime.setMinutes(minute === 0 ? 0 : 30)
-    clickedTime.setSeconds(0)
-    clickedTime.setMilliseconds(0)
-
-    const timestamp = clickedTime.getTime()
-    const oneHourLater = timestamp + 60 * 60 * 1000
+    const timestamp = slotTimestamp(dayDate, hour, minute)
 
     if (timestamp < today.getTime()) {
       return
     }
 
-    const occupiedCourts = new Set<number>()
-    reservasConvertidas.forEach((reserva) => {
-      if (
-        reserva.dayKey === dayKey &&
-        timestamp < reserva.end_date &&
-        timestamp >= reserva.start_date
-      ) {
-        occupiedCourts.add(reserva.court_number)
-      }
-    })
-    const allCourts = isQuadra5 ? [5] : isField ? [0, 6] : [1, 2, 3]
-    const availableCourts = allCourts.filter((court) => {
-      const reservasDaQuadra = reservasConvertidas.filter(
-        (reserva) => reserva.court_number === court && reserva.dayKey === dayKey
-      )
-      const hasConflict = reservasDaQuadra.some(
-        (reserva) =>
-          reserva.start_date < oneHourLater && reserva.end_date > timestamp
-      )
-      return !hasConflict
-    })
+    const availableCourts = getAvailableCourts(
+      getDateKey(dayDate),
+      timestamp,
+      timestamp + BOOKING_DURATION
+    )
+
     if (availableCourts.length === 0) {
       return
     }
@@ -405,7 +464,6 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
     setBookingModalVisible(false)
     setTimeout(() => {
       setIsReservationModalOpen(false)
-      fetchBookingsOfTheWeek()
     }, 200)
   }
 
@@ -429,7 +487,10 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
   return (
     <div className="relative w-full">
       {getBookingsOfTheWeek?.isLoading && (
-        <div className="absolute inset-0 z-[60] flex h-full w-full justify-center bg-white/20 pt-[30%] backdrop-blur-sm">
+        <div
+          className="fixed inset-0 z-[500] flex items-center justify-center bg-white/20 backdrop-blur-sm"
+          style={{ pointerEvents: 'none' }}
+        >
           <FiLoader className="animate-spin" color="black" size={64} />
         </div>
       )}
@@ -462,7 +523,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
         </div>
       </div>
       <div className="max-w-[100vw] max-sm:overflow-x-scroll">
-        <div className="sticky top-0 z-[80] mb-12 flex w-full bg-red-300 font-poppins text-base font-semibold text-gray-600 sm:top-[88px] sm:max-w-[100vw]">
+        <div className="sticky top-0 z-[40] mb-12 flex w-full bg-red-300 font-poppins text-base font-semibold text-gray-600 sm:top-[88px] sm:max-w-[100vw]">
           <div className="sticky left-0 z-[80] min-w-16 max-w-16 bg-blue-primary px-2 py-4 text-xl text-white">
             Hora
           </div>
@@ -480,18 +541,22 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
             ))}
           </div>
         </div>
-        {[...Array(isField ? 18 : 28)].map((_, index) => {
-          const hour = 8 + Math.floor((index + 1) / 2)
-          const minute = (index + 1) % 2
+        {[...Array(isField ? 19 : 29)].map((_, index) => {
+          const hour = 8 + Math.floor(index / 2)
+          const minute = index % 2
           return (
             <div key={index} className="flex min-w-[100vw] sm:min-w-0">
-              <div className="sticky left-0 z-20 flex min-h-16 min-w-16 max-w-16 items-start border-r border-gray-400 bg-white px-4 font-poppins">{`${hour}:${minute === 0 ? '00' : '30'}`}</div>
+              <div
+                style={{ height: `${SLOT_HEIGHT}px` }}
+                className="sticky left-0 z-20 flex min-w-16 max-w-16 items-start border-r border-gray-400 bg-white px-4 font-poppins"
+              >{`${hour}:${minute === 0 ? '00' : '30'}`}</div>
               <div className="flex flex-1">
                 {weekDays.map((weekDay, dayIndex) => {
                   const weekDayKey = getDateKey(weekDay)
                   const isOutsideMonth = isOutsideCurrentMonth(weekDay)
                   const passedTime = isPassed(weekDay, hour, minute)
                   const reserveBlocked = cannotReserve(weekDay, hour, minute)
+                  const takenReason = unavailableReason(weekDay, hour, minute)
 
                   return (
                     <div
@@ -503,7 +568,7 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                             ? 'Esse horário já passou'
                             : reserveBlocked
                               ? 'Você não pode reservar dentro de uma hora de outra reserva sua'
-                              : ''
+                              : (takenReason ?? '')
                       }
                       onClick={() =>
                         !isAuth
@@ -524,9 +589,12 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                                   ? toast.info(
                                       'Esse horário não está disponível para reserva'
                                     )
-                                  : handleClickedTime(hour, minute, weekDay)
+                                  : takenReason
+                                    ? toast.info(takenReason)
+                                    : handleClickedTime(hour, minute, weekDay)
                       }
-                      className={`relative flex min-w-[120px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 sm:min-w-[90px] ${isOutsideMonth || passedTime || reserveBlocked || isLastHalfHour(hour, minute) ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
+                      style={{ height: `${SLOT_HEIGHT}px` }}
+                      className={`relative flex min-w-[120px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 sm:min-w-[90px] ${isOutsideMonth || passedTime || reserveBlocked || isLastHalfHour(hour, minute) || takenReason ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
                     >
                       {reservasConvertidas.map((reserva) => {
                         if (
@@ -534,27 +602,22 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                           reserva.minute === (minute == 1 ? 30 : 0) &&
                           reserva.dayKey === weekDayKey
                         ) {
+                          const offset = getReservationOffset(reserva)
+                          const slots =
+                            (Number(reserva.end_date) -
+                              Number(reserva.start_date)) /
+                            (1000 * 60 * 30)
+
                           return (
                             <div
                               key={reserva.booking_id}
                               onClick={(e) => e.stopPropagation()}
-                              className={cn(
-                                'absolute flex',
-                                specialWidth(
-                                  Number(reserva.start_date),
-                                  Number(reserva.end_date),
-                                  weekDayKey
-                                ),
-                                deslocation(
-                                  reserva.court_number,
-                                  Number(reserva.start_date),
-                                  Number(reserva.end_date),
-                                  weekDayKey
-                                )
-                              )}
+                              className={cn('flex', offset.className)}
                               style={{
-                                // altura dinâmica do bloco: 50px por meia hora (slot base)
-                                height: `${((reserva.end_date - reserva.start_date) / (1000 * 60 * 30)) * 50}px`
+                                ...offset.style,
+                                // o card ocupa exatamente os slots que a reserva dura
+                                top: `${CARD_INSET}px`,
+                                height: `${Math.max(1, slots) * SLOT_HEIGHT - CARD_INSET * 2}px`
                               }}
                             >
                               <CalendaryCard

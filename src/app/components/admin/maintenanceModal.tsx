@@ -43,12 +43,8 @@ export default function MaintenanceModal({
     day: '2-digit'
   })
 
-  const {
-    createBookingMutation,
-    getBookingsOfTheWeek,
-    getMyBookingsQuery,
-    deleteBookingMutation
-  } = useBookingsQuery()
+  const { createBookingMutation, getBookingsOfTheWeek, deleteBookingMutation } =
+    useBookingsQuery()
 
   const allowedSportsByCourt: Record<number, string[]> = useMemo(
     () => ({
@@ -249,11 +245,14 @@ export default function MaintenanceModal({
       type: type
     }
 
-    await createBookingMutation.mutateAsync(bookingdata)
+    try {
+      await createBookingMutation.mutateAsync(bookingdata)
+    } catch (error) {
+      // toast de erro vem do onError da mutation; mantém o modal aberto
+      console.error('Erro ao criar reserva:', error)
+      return
+    }
 
-    // Força a atualização do cache global antes de fechar a janela
-    await getBookingsOfTheWeek.refetch()
-    await getMyBookingsQuery.refetch()
     handleClose()
   }
 
