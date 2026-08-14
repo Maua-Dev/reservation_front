@@ -4,7 +4,6 @@ import { CiCalendar } from 'react-icons/ci'
 import { FiTool } from 'react-icons/fi'
 import MaintenanceModal from './maintenanceModal'
 import { BookingType } from '@/utils/enums/booking-type'
-import { useBookingsQuery } from '@/app/hooks/use-booking'
 
 interface reserverOptionsModalProps {
   isOpen: boolean
@@ -21,7 +20,6 @@ export default function ReserveOptionsModal({
   const [modalOpen, setModalOpen] = useState(false)
   const [isMaintainance, setIsMaintainance] = useState(false)
   const [type, setType] = useState<BookingType | undefined>(undefined)
-  const { getMyBookingsQuery, getBookingsOfTheWeekAdmin } = useBookingsQuery()
 
   useEffect(() => {
     if (isOpen) {
@@ -46,8 +44,6 @@ export default function ReserveOptionsModal({
   }
 
   const handleClose = () => {
-    getBookingsOfTheWeekAdmin.refetch()
-    getMyBookingsQuery.refetch()
     setIsVisible(false)
     setTimeout(() => {
       setModalOpen(false)

@@ -31,8 +31,7 @@ export const ReservationDetails = ({
   name,
   ra
 }: ReservationDetailsProps) => {
-  const { deleteBookingMutation, getBookingsOfTheWeek, getMyBookingsQuery } =
-    useBookingsQuery()
+  const { deleteBookingMutation, getMyBookingsQuery } = useBookingsQuery()
   const date = new Date(time)
   const { user } = useUser()
   const formattedDate = date.toLocaleDateString('pt-BR', {
@@ -63,13 +62,10 @@ export const ReservationDetails = ({
   const handleCancel = async () => {
     if (bookingId) {
       try {
+        // o card sai da tela pelo cache que a mutation atualiza; um refetch
+        // aqui correria com o backend e podia trazer a reserva de volta
         await deleteBookingMutation.mutateAsync(bookingId)
-        getBookingsOfTheWeek.refetch()
         onClose()
-        // If you have a refetch function, call it here. Otherwise, remove this block.
-        // setTimeout(() => {
-        //   getBookingsOfTheWeek.refetch()
-        // }, 800)
       } catch (err) {
         toast.error('Erro ao cancelar reserva!')
         console.error(err)
