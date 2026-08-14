@@ -78,7 +78,7 @@ export function CalendaryCard({
       ref={containerRef}
       onClick={openModal}
       className={cn(
-        'group z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 px-1 text-center shadow-md duration-300 hover:z-[999] hover:-translate-y-1 hover:cursor-pointer',
+        'group z-10 flex h-full w-full flex-col items-center justify-evenly rounded-lg border-l-8 px-1 text-center shadow-md duration-300 hover:z-[60] hover:-translate-y-1 hover:cursor-pointer',
         courtColors[court],
         isMaintenance
           ? 'border-emerald-900 bg-blue-100 text-emerald-900 ring-1 ring-zinc-500'

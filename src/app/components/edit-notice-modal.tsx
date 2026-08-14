@@ -2,6 +2,7 @@ import { Button } from './button'
 import { useEffect, useState, useContext } from 'react'
 import MonthCalendarAdmin from './month-calendar-admin'
 import { alertContext } from '../contexts/alerts-context'
+import { toast } from 'react-toastify'
 
 export default function NoticeModal({ onClose }: { onClose: () => void }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -31,9 +32,21 @@ export default function NoticeModal({ onClose }: { onClose: () => void }) {
   }
 
   const handleSave = () => {
+    //trim antes de verificar se title e description estão vazios
+    const trimmedTitle = title.trim()
+    const trimmedDescription = description.trim()
+
+    if (!trimmedTitle || !trimmedDescription) {
+      toast.info('Por favor, preencha todos os campos.')
+      return
+    }
+    // title tem que começar com maiúscula
+    const realTitle =
+      trimmedTitle.charAt(0).toUpperCase() + trimmedTitle.slice(1)
+
     const data = {
-      title: title,
-      description: description,
+      title: realTitle,
+      description: trimmedDescription,
       start_date: selectedDate.getTime(),
       end_date:
         alertType === '24_hours'
