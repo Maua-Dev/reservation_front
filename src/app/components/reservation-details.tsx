@@ -13,9 +13,11 @@ type ReservationDetailsProps = {
   time: number
   isChecked: boolean[]
   onClose: () => void
-  bookingUserId?: string | number
-  bookingId?: string
+  bookingUserId?: string
+  bookingId: string
   //reload: () => void
+  name?: string
+  ra?: string
 }
 
 export const ReservationDetails = ({
@@ -26,9 +28,10 @@ export const ReservationDetails = ({
   bookingId,
   //isChecked,
   onClose,
-  bookingUserId
+  name,
+  ra
 }: ReservationDetailsProps) => {
-  const { deleteBookingMutation, getBookingsOfTheWeek } = useBookingsQuery()
+  const { deleteBookingMutation, getMyBookingsQuery } = useBookingsQuery()
   const date = new Date(time)
   const { user } = useUser()
   const formattedDate = date.toLocaleDateString('pt-BR', {
@@ -59,13 +62,10 @@ export const ReservationDetails = ({
   const handleCancel = async () => {
     if (bookingId) {
       try {
+        // o card sai da tela pelo cache que a mutation atualiza; um refetch
+        // aqui correria com o backend e podia trazer a reserva de volta
         await deleteBookingMutation.mutateAsync(bookingId)
-        getBookingsOfTheWeek.refetch()
         onClose()
-        // If you have a refetch function, call it here. Otherwise, remove this block.
-        // setTimeout(() => {
-        //   getBookingsOfTheWeek.refetch()
-        // }, 800)
       } catch (err) {
         toast.error('Erro ao cancelar reserva!')
         console.error(err)
@@ -85,6 +85,17 @@ export const ReservationDetails = ({
     )
   }
 
+  // Verificamos se a reserva atual consta na lista de reservas do próprio usuário ou bate com o RA/Nome dele
+  const userBookings = getMyBookingsQuery.data?.bookings || []
+
+  const isOwnReservation = userBookings.some((booking) => {
+    return bookingId === booking.booking_id
+  })
+
+  const shouldShowOwnerInfo =
+    (user.role === 'ADMIN' && !isOwnReservation) ||
+    (user.role != 'ADMIN' && isOwnReservation)
+
   return (
     <>
       <div
@@ -97,16 +108,28 @@ export const ReservationDetails = ({
               className="absolute right-2 top-2 h-8 w-8 cursor-pointer md:h-10 md:w-16"
               onClick={onClose}
             ></IoClose>
-            {bookingUserId?.toString() === user.userId?.toString() && (
-              <p className="mt-1 font-poppins text-2xl font-medium">
-                {user.name}
-              </p>
+            {shouldShowOwnerInfo && (name || ra) && (
+              <div className="mt-1 flex flex-col gap-1 font-poppins">
+                {name && name !== user.name && (
+                  <p className="text-2xl font-medium">{name}</p>
+                )}
+                {ra && name !== user.name && (
+                  <p className="text-lg font-medium text-slate-600">RA: {ra}</p>
+                )}
+              </div>
+            )}
+            {shouldShowOwnerInfo && user.role != 'ADMIN' && (
+              <div className="mt-1 flex flex-col gap-1 font-poppins">
+                <p className="text-2xl font-medium">{user.name}</p>
+                <p className="text-lg font-medium text-slate-600">
+                  RA: {user.ra}
+                </p>
+              </div>
             )}
             <p className="mt-1 font-poppins text-2xl font-medium">
               Data: {formattedDate}
             </p>
           </div>
-
           <div className="flex w-full flex-col justify-start gap-10 font-poppins text-xl font-medium text-white lg:flex-row">
             <h1 className="inline-flex h-16 items-center justify-center text-nowrap rounded-xl border border-b-4 border-yellow-secondary bg-yellow p-4">
               {location.split(' ')[1] === '0'

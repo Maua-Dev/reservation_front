@@ -1,23 +1,23 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Alert,
   alertContext,
   AlertsContextType
 } from '../contexts/alerts-context'
 import { AlertsService, CreateAlert } from '@/services/alerts-service'
-import { queryClient } from './use-booking'
 import { toast } from 'react-toastify'
 import { useContext } from 'react'
 
 export const useAlertsQuery = () => {
+  const queryClient = useQueryClient()
+
   const createAlert = useMutation({
     mutationFn: async (alert: CreateAlert): Promise<Alert> => {
       const response = await AlertsService.createAlert(alert)
       return response.data
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['alerts'] })
-      getAlerts.refetch()
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['alerts'] })
       toast.success('Alerta criado com sucesso!')
     },
     onError: (error) => {
@@ -46,8 +46,8 @@ export const useAlertsQuery = () => {
     mutationFn: async (alert_id: string): Promise<void> => {
       await AlertsService.deleteAlert(alert_id)
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['alerts'] })
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['alerts'] })
       toast.success('Alerta deletado com sucesso!')
     },
     onError: (error) => {
