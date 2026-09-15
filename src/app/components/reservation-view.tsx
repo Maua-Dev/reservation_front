@@ -30,6 +30,8 @@ interface ReservationCardProps {
   court?: string
   bookingId?: string
   sport?: string
+  ownerName?: string
+  ownerRa?: string
   reload: () => void
 }
 
@@ -39,6 +41,8 @@ export function ReservationCard({
   court,
   bookingId,
   sport,
+  ownerName,
+  ownerRa,
   reload
 }: ReservationCardProps) {
   const { deleteBookingMutation } = useBookingsQuery()
@@ -117,6 +121,20 @@ export function ReservationCard({
         }}
       />
       <div className="relative z-10 flex flex-col gap-1">
+        {(ownerName || ownerRa) && (
+          <div className="mb-1 flex flex-col gap-0.5 rounded-md bg-black/25 px-2 py-1 backdrop-blur-sm">
+            {ownerName && (
+              <p className="text-xs font-semibold uppercase tracking-wide text-white/90 md:text-sm">
+                {ownerName}
+              </p>
+            )}
+            {ownerRa && (
+              <p className="text-[11px] font-medium uppercase tracking-wide text-white/80 md:text-xs">
+                RA: {ownerRa}
+              </p>
+            )}
+          </div>
+        )}
         <p className="text-xl font-bold text-white md:text-2xl">
           {new Date(startDate).toLocaleDateString('pt-BR', {
             day: '2-digit',
@@ -136,7 +154,7 @@ export function ReservationCard({
           })}
         </p>
         <p className="text-xs font-normal text-white sm:text-base md:text-lg">
-          Quadra: {court}
+          Local: {court}
         </p>
         <p className="flex flex-row justify-between gap-3 text-xs font-normal text-white sm:text-base md:text-lg">
           <span className="flex items-center gap-2">

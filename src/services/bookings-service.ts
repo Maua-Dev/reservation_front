@@ -13,6 +13,7 @@ export const BookingsService = {
     const userId = await localStorage.getItem('user_id')
     const start_date = await localStorage.getItem('start_date')
     const end_date = await localStorage.getItem('end_date')
+    const token = await localStorage.getItem('accessToken')
     try {
       const response = await bookingsApi.get<MyBookingsResponse>(
         'get-bookings',
@@ -21,7 +22,12 @@ export const BookingsService = {
             user_id: userId,
             start_date: start_date,
             end_date: end_date
-          }
+          },
+          headers: token
+            ? {
+                Authorization: `Bearer ${token}`
+              }
+            : undefined
         }
       )
       return response.data
@@ -36,17 +42,63 @@ export const BookingsService = {
       throw new Error('Failed to fetch bookings')
     }
   },
-  getBookingsOfTheWeek: async (): Promise<MyBookingsResponse> => {
+
+  getBookingsOfTheWeekAdmin: async (): Promise<MyBookingsResponse> => {
     const start_date = await localStorage.getItem('start_date')
     const end_date = await localStorage.getItem('end_date')
+    const token = await localStorage.getItem('accessToken')
     try {
       const response = await bookingsApi.get<MyBookingsResponse>(
         'get-bookings',
         {
-          params: { start_date: start_date, end_date: end_date }
+          params: { start_date: start_date, end_date: end_date },
+          headers: token
+            ? {
+                Authorization: `Bearer ${token}`
+              }
+            : undefined
         }
       )
       return response.data
+    } catch (error) {
+      const axiosError = error as AxiosError
+      if (axiosError.response?.status === 404) {
+        return {
+          bookings: [],
+          message: 'No bookings found'
+        }
+      }
+      throw new Error('Failed to fetch bookings')
+    }
+  },
+
+  getBookingsOfTheWeek: async (): Promise<MyBookingsResponse> => {
+    const start_date = await localStorage.getItem('start_date')
+    const end_date = await localStorage.getItem('end_date')
+    const token = await localStorage.getItem('accessToken')
+    try {
+      if (token) {
+        const response = await bookingsApi.get<MyBookingsResponse>(
+          'get-bookings',
+          {
+            params: { start_date: start_date, end_date: end_date },
+            headers: token
+              ? {
+                  Authorization: `Bearer ${token}`
+                }
+              : undefined
+          }
+        )
+        return response.data
+      } else {
+        const response = await bookingsApi.get<MyBookingsResponse>(
+          'get-bookings',
+          {
+            params: { start_date: start_date, end_date: end_date }
+          }
+        )
+        return response.data
+      }
     } catch (error) {
       const axiosError = error as AxiosError
       if (axiosError.response?.status === 404) {

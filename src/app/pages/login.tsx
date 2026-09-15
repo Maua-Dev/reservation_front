@@ -6,59 +6,66 @@ import { useIsAuthenticated, useMsal } from '@azure/msal-react'
 import { useNavigate } from 'react-router-dom'
 import { loginRequest } from '../auth/auth-config'
 import { useUser } from '../hooks/use-user'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { UserService } from '@/services/user-service'
+import { AccountInfo } from '@azure/msal-browser'
+import { FiLoader } from 'react-icons/fi'
+import { toast } from 'react-toastify'
 
 export function Login() {
   const auth = useIsAuthenticated()
   const { instance } = useMsal()
   const navigate = useNavigate()
-  const [token, setToken] = useState<string | null>(null)
-  const { user, setUser } = useUser()
+  const [isSigningIn, setIsSigningIn] = useState(false)
+  const { setUser } = useUser()
 
+  // Busca o token e o usuário e já manda pra home certa. Antes isso era uma
+  // corrente de dois useEffect (auth -> token -> user -> navigate), e cada elo
+  // custava um render a mais parado na tela de login.
+  const finishLogin = useCallback(
+    async (account: AccountInfo) => {
+      const { accessToken } = await instance.acquireTokenSilent({
+        ...loginRequest,
+        account
+      })
+      localStorage.setItem('accessToken', accessToken)
+
+      const data = await UserService.getUser(accessToken)
+      localStorage.setItem('user_id', data.userId)
+      setUser(data)
+
+      // replace: o botão de voltar não deve trazer de volta pro login
+      navigate(data?.role === 'ADMIN' ? '/admin-home' : '/', { replace: true })
+    },
+    [instance, navigate, setUser]
+  )
+
+  // Já logado e caiu no /login (sessão do localStorage, link direto): redireciona.
   useEffect(() => {
-    const doLoginFlow = async () => {
-      if (auth) {
-        const accounts = instance.getAllAccounts()
-        if (accounts.length > 0) {
-          const accessToken = (
-            await instance.acquireTokenSilent({
-              ...loginRequest,
-              account: accounts[0]
-            })
-          ).accessToken
-          setToken(accessToken)
-        } else {
-          console.warn('[LOGIN] Nenhuma conta encontrada no MSAL.')
-        }
-      } else {
-        console.warn('[LOGIN] Usuário não autenticado (auth=false)')
-      }
-    }
-    doLoginFlow()
-  }, [auth])
+    if (!auth || isSigningIn) return
 
-  useEffect(() => {
-    if (token) {
-      const fetchUser = async () => {
-        const data = await UserService.getUser(token)
-        localStorage.setItem('accessToken', token)
-        localStorage.setItem('user_id', data.userId)
-        setUser(data)
-        if (data && data.role === 'ADMIN') {
-          navigate('/admin-home')
-        } else {
-          navigate('/')
-        }
-      }
-      fetchUser()
-    }
-  }, [user, token])
+    const account = instance.getActiveAccount() ?? instance.getAllAccounts()[0]
+    if (!account) return
 
-  const handleLogin = () => {
-    instance.loginPopup({ scopes: ['User.Read'] }).catch((error) => {
-      console.error('Login error:', error)
+    setIsSigningIn(true)
+    finishLogin(account).catch((error) => {
+      console.error('[LOGIN] Erro ao restaurar a sessão:', error)
+      setIsSigningIn(false)
     })
+  }, [auth, isSigningIn, instance, finishLogin])
+
+  const handleLogin = async () => {
+    if (isSigningIn) return
+    setIsSigningIn(true)
+    try {
+      const { account } = await instance.loginPopup(loginRequest)
+      instance.setActiveAccount(account)
+      await finishLogin(account)
+    } catch (error) {
+      console.error('Login error:', error)
+      toast.error('Não foi possível entrar. Tente novamente.')
+      setIsSigningIn(false)
+    }
   }
 
   return (
@@ -80,15 +87,20 @@ export function Login() {
             </p>
             <div className="flex justify-center">
               <Button
-                className="flex items-center gap-2 rounded-lg border bg-white p-4 text-center font-poppins text-base font-normal text-black md:text-xl"
+                className="flex items-center gap-2 rounded-lg border bg-white p-4 text-center font-poppins text-base font-normal text-black disabled:cursor-not-allowed disabled:opacity-70 md:text-xl"
                 onClick={handleLogin}
+                disabled={isSigningIn}
               >
-                <img
-                  src={baixados}
-                  alt="Logo da Microsoft"
-                  className="h-5 w-5 sm:h-6 sm:w-6"
-                />
-                Sign in with Microsoft
+                {isSigningIn ? (
+                  <FiLoader className="h-5 w-5 animate-spin sm:h-6 sm:w-6" />
+                ) : (
+                  <img
+                    src={baixados}
+                    alt="Logo da Microsoft"
+                    className="h-5 w-5 sm:h-6 sm:w-6"
+                  />
+                )}
+                {isSigningIn ? 'Entrando...' : 'Sign in with Microsoft'}
               </Button>
             </div>
           </div>

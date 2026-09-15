@@ -12,13 +12,13 @@ interface ViewProps {
   onClose: () => void
 }
 
-export function View({ onClose }: ViewProps) {
+export function MyBookingsAdmin({ onClose }: ViewProps) {
   const { user } = useUser()
   const isLogged = user !== null
   const isAdmin = user?.role === 'ADMIN'
   const [activeTab, setActiveTab] = useState<'ceaf' | 'others'>('ceaf')
 
-  const { getMyBookingsQuery } = useBookingsQuery()
+  const { getBookingsOfTheWeekAdmin } = useBookingsQuery()
   const { myBookings, setMyBookings } = useBookings()
 
   const sortedBookings = myBookings
@@ -50,13 +50,13 @@ export function View({ onClose }: ViewProps) {
   )
 
   const fetchBookings = async () => {
-    const bookings = await getMyBookingsQuery.refetch()
+    const bookings = await getBookingsOfTheWeekAdmin.refetch()
     setMyBookings(bookings.data?.bookings || [])
   }
 
   useEffect(() => {
-    setMyBookings(getMyBookingsQuery.data?.bookings || [])
-  }, [getMyBookingsQuery.data, setMyBookings])
+    setMyBookings(getBookingsOfTheWeekAdmin.data?.bookings || [])
+  }, [getBookingsOfTheWeekAdmin.data, setMyBookings])
 
   const handleClose = () => {
     onClose()
@@ -76,7 +76,7 @@ export function View({ onClose }: ViewProps) {
     }
   }, [onClose])
 
-  if (getMyBookingsQuery.isLoading) {
+  if (getBookingsOfTheWeekAdmin.isLoading) {
     return (
       <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
         <div className="relative max-h-[90vh] w-[70vw] max-w-[70vw] rounded-lg bg-white p-4 font-poppins">
@@ -87,8 +87,8 @@ export function View({ onClose }: ViewProps) {
   }
 
   if (
-    getMyBookingsQuery.isError &&
-    getMyBookingsQuery.error.message == 'User ID not found'
+    getBookingsOfTheWeekAdmin.isError &&
+    getBookingsOfTheWeekAdmin.error.message == 'User ID not found'
   ) {
     return (
       <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
@@ -102,11 +102,13 @@ export function View({ onClose }: ViewProps) {
     )
   }
 
-  if (getMyBookingsQuery.isError) {
+  if (getBookingsOfTheWeekAdmin.isError) {
     return (
       <div className="flex w-full justify-center bg-transparent p-4 md:p-8">
         <div className="relative max-h-[90vh] w-[70vw] max-w-[70vw] rounded-lg bg-white p-4 font-poppins">
-          <p>Erro ao carregar reservas: {getMyBookingsQuery.error.message}</p>
+          <p>
+            Erro ao carregar reservas: {getBookingsOfTheWeekAdmin.error.message}
+          </p>
         </div>
       </div>
     )
@@ -143,7 +145,7 @@ export function View({ onClose }: ViewProps) {
             </div>
             <hr className="border-t-4 border-black" />
           </div>
-          <div className="flex max-h-[70vh] flex-col gap-4 overflow-y-auto">
+          <div className="flex max-h-[70vh] flex-col gap-4 overflow-y-scroll">
             {isAdmin && (
               <div className="flex flex-wrap gap-3 border-b border-black/20 pb-3">
                 <button
@@ -162,7 +164,7 @@ export function View({ onClose }: ViewProps) {
                 </button>
               </div>
             )}
-            <div className="flex h-full max-h-[85%] min-h-[30vh] max-w-[70vw] flex-col items-center gap-4 overflow-y-auto">
+            <div className="flex h-full max-h-[85%] min-h-[30vh] max-w-[70vw] flex-col items-center gap-4 overflow-scroll">
               {displayedBookings.length === 0 ? (
                 <p className="text-center font-poppins text-sm font-medium text-black md:text-base">
                   Nenhuma reserva encontrada

@@ -27,12 +27,14 @@ export default function MaintenanceModal({
   const [selectedCourt, setSelectedCourt] = useState<number>(1)
   const [selectedSport, setSelectedSport] = useState<string>(sports[0])
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([])
+
   const [endHour, setEndHour] = useState<number>(
     new Date(timestamp || 0).getHours() + 1
   )
   const [endMinute, setEndMinute] = useState<number>(
     new Date(timestamp || 0).getMinutes()
   )
+
   const hour = new Date(timestamp || 0).getHours()
   const minute = new Date(timestamp || 0).getMinutes()
   const date = new Date(timestamp || 0).toLocaleDateString('pt-BR', {
@@ -117,9 +119,11 @@ export default function MaintenanceModal({
       ? selectedSport
       : currentAllowedSports[0]
   }, [selectedSport, currentAllowedSports])
+
   const weekData = getBookingsOfTheWeek.data
   const weekIsLoading = getBookingsOfTheWeek.isLoading
   const refetchWeek = getBookingsOfTheWeek.refetch
+
   useEffect(() => {
     if (isVisible) {
       setTimeout(() => {
@@ -136,7 +140,6 @@ export default function MaintenanceModal({
     }, 100)
   }
 
-  // Mapeamento de esporte para material
   const sportMaterials: Record<string, string[]> = useMemo(
     () => ({
       Football: ['Bola de futebol'],
@@ -158,7 +161,6 @@ export default function MaintenanceModal({
     []
   )
 
-  // Atualiza o material automaticamente ao selecionar o esporte
   useEffect(() => {
     if (validSelectedSport && sportMaterials[validSelectedSport]) {
       setSelectedMaterials(sportMaterials[validSelectedSport])
@@ -168,50 +170,69 @@ export default function MaintenanceModal({
   }, [validSelectedSport, sportMaterials])
 
   const handleBook = async () => {
-    // Calcula end_date baseado nos selects
-    const start = Number(timestamp)
-    const startDateObj = new Date(start)
+    // Normalização estrita para evitar quebras por milissegundos residuais
+    const startObj = new Date(Number(timestamp))
+    startObj.setSeconds(0, 0)
+    const start = startObj.getTime()
+
     const computedEnd = new Date(start)
     computedEnd.setHours(endHour)
     computedEnd.setMinutes(endMinute)
-    computedEnd.setSeconds(0)
-    computedEnd.setMilliseconds(0)
+    computedEnd.setSeconds(0, 0)
 
     const endDateMs =
-      computedEnd.getTime() <= startDateObj.getTime()
-        ? start + 3600000 // fallback mínimo 1h se usuário escolher algo inválido
-        : computedEnd.getTime()
+      computedEnd.getTime() <= start ? start + 3600000 : computedEnd.getTime()
 
-    //Se for manutenção e a quadra já está ocupada no horário selecionado, cancelar a reserva existente
-    if (!isMaintainance && selectedCourt === 4 && weekData?.bookings) {
-      const courtsToCancel = [1, 2, 3]
+    if (weekData?.bookings) {
+      // 1. Caso selecione a Quadra 4 (Completa) -> Cancela as sub-quadras 1, 2 e 3
+      if (selectedCourt === 4) {
+        const courtsToCancel = [1, 2, 3]
 
-      for (const courtNumber of courtsToCancel) {
-        const overlappingBooking = weekData.bookings.find(
+        const overlappingSubCourts = weekData.bookings.filter(
           (b) =>
-            b.court_number === courtNumber &&
-            b.start_date < endDateMs &&
-            b.end_date > start
+            courtsToCancel.includes(Number(b.court_number)) &&
+            Number(b.start_date) < endDateMs &&
+            Number(b.end_date) > start
         )
 
-        if (overlappingBooking?.booking_id) {
-          await deleteBookingMutation.mutateAsync(overlappingBooking.booking_id)
+        if (overlappingSubCourts.length > 0) {
+          const deletePromises = overlappingSubCourts.map((booking) => {
+            if (booking.booking_id) {
+              return deleteBookingMutation.mutateAsync(booking.booking_id)
+            }
+            return Promise.resolve()
+          })
+          await Promise.all(deletePromises)
         }
       }
-    }
 
-    if (isMaintainance && weekData?.bookings) {
-      const overlapping = weekData.bookings.find(
-        (b) =>
-          b.court_number === selectedCourt &&
-          b.start_date < endDateMs &&
-          b.end_date > start
-      )
-      if (overlapping?.booking_id) {
-        await deleteBookingMutation.mutateAsync(overlapping.booking_id)
-        getBookingsOfTheWeek.refetch()
-        handleClose()
-        return
+      // 2. Caso selecione sub-quadra (1, 2 ou 3) -> Cancela a Quadra 4 se houver sobreposição
+      if ([1, 2, 3].includes(selectedCourt)) {
+        const overlappingCourt4 = weekData.bookings.find(
+          (b) =>
+            Number(b.court_number) === 4 &&
+            Number(b.start_date) < endDateMs &&
+            Number(b.end_date) > start
+        )
+
+        if (overlappingCourt4?.booking_id) {
+          await deleteBookingMutation.mutateAsync(overlappingCourt4.booking_id)
+        }
+      }
+
+      // 3. Manutenção limpa reservas anteriores do mesmo local
+      if (isMaintainance) {
+        const overlappingSameCourt = weekData.bookings.find(
+          (b) =>
+            Number(b.court_number) === selectedCourt &&
+            Number(b.start_date) < endDateMs &&
+            Number(b.end_date) > start
+        )
+        if (overlappingSameCourt?.booking_id) {
+          await deleteBookingMutation.mutateAsync(
+            overlappingSameCourt.booking_id
+          )
+        }
       }
     }
 
@@ -223,13 +244,18 @@ export default function MaintenanceModal({
       materials: selectedMaterials,
       type: type
     }
-    await createBookingMutation.mutateAsync(bookingdata)
+
+    try {
+      await createBookingMutation.mutateAsync(bookingdata)
+    } catch (error) {
+      // toast de erro vem do onError da mutation; mantém o modal aberto
+      console.error('Erro ao criar reserva:', error)
+      return
+    }
 
     handleClose()
-    getBookingsOfTheWeek.refetch()
   }
 
-  // Courts list
   const courts = useMemo(
     () => [
       { value: 6, label: 'Beach Tenis' },
@@ -243,7 +269,6 @@ export default function MaintenanceModal({
     []
   )
 
-  // Courts ocupadas no horário selecionado (janela de 1h a partir do start)
   const { occupiedCourtsSet, occupiedCourtsToHide } = useMemo(() => {
     if (!weekData?.bookings || !timestamp)
       return {
@@ -253,12 +278,12 @@ export default function MaintenanceModal({
     const start = Number(timestamp)
     const end = start + 3600000
     const overlapping = weekData.bookings.filter(
-      (b) => b.start_date < end && b.end_date > start
+      (b) => Number(b.start_date) < end && Number(b.end_date) > start
     )
     const raw = new Set<number>()
-    overlapping.forEach((b) => raw.add(b.court_number))
+    overlapping.forEach((b) => raw.add(Number(b.court_number)))
     const toHide = new Set<number>(raw)
-    // Regra de esconder 1,2,3 quando 4 ocupada só para não manutenção
+
     if (toHide.has(4)) {
       toHide.add(1)
       toHide.add(2)
@@ -267,7 +292,6 @@ export default function MaintenanceModal({
     return { occupiedCourtsSet: raw, occupiedCourtsToHide: toHide }
   }, [weekData, timestamp])
 
-  // Lista de quadras disponíveis (ou todas se manutenção)
   const availableCourts = useMemo(
     () =>
       isMaintainance
@@ -276,7 +300,6 @@ export default function MaintenanceModal({
     [courts, occupiedCourtsToHide, isMaintainance]
   )
 
-  // Ensure selected court remains valid
   useEffect(() => {
     if (availableCourts.length > 0) {
       if (!availableCourts.some((c) => c.value === selectedCourt)) {
@@ -286,7 +309,15 @@ export default function MaintenanceModal({
       setSelectedCourt(-1)
     }
   }, [availableCourts, selectedCourt])
+
   if (!isVisible) return null
+
+  // Bloqueia cliques se a API estiver carregando os dados da semana atualizados
+  const isActionDisabled =
+    createBookingMutation.isPending ||
+    deleteBookingMutation.isPending ||
+    weekIsLoading
+
   return (
     <div className={`fixed inset-0 z-20 flex items-center justify-center`}>
       <div
@@ -307,15 +338,13 @@ export default function MaintenanceModal({
         >
           &times;
         </button>
-        <button
-          onClick={handleBook}
-          disabled={
-            createBookingMutation.isPending || deleteBookingMutation.isPending
-          }
-        >
-          <div className="absolute bottom-4 right-4 flex w-40 items-center justify-center rounded-md bg-blue-primary p-2 text-xl text-white hover:cursor-pointer hover:text-gray-200 disabled:opacity-70">
-            {createBookingMutation.isPending ||
-            deleteBookingMutation.isPending ? (
+
+        {/* Adicionado o atributo disabled nativo na tag button para travar cliques paralelos */}
+        <button onClick={handleBook} disabled={isActionDisabled}>
+          <div
+            className={`absolute bottom-4 right-4 flex w-40 items-center justify-center rounded-md bg-blue-primary p-2 text-xl text-white hover:cursor-pointer hover:text-gray-200 ${isActionDisabled ? 'cursor-not-allowed opacity-50' : ''}`}
+          >
+            {isActionDisabled ? (
               <FiLoader className="h-6 w-6 animate-spin" />
             ) : isMaintainance && occupiedCourtsSet.has(selectedCourt) ? (
               'Cancelar'
@@ -332,12 +361,10 @@ export default function MaintenanceModal({
         </header>
         <div className="flex h-[90%] items-start justify-start pt-8">
           <div className="flex h-full w-1/3 flex-col items-center justify-start gap-4 px-4 py-2">
-            {/* data */}
             <div className="flex h-12 w-full items-center justify-between gap-2 rounded-sm bg-yellow p-2">
               <h1>Data:</h1>
               <p>{date}</p>
             </div>
-            {/* Local */}
             <div className="flex w-full flex-col items-start justify-between gap-2 rounded-sm p-2">
               <h1 className="text-xl font-bold">Local</h1>
               {weekIsLoading ? (
@@ -367,7 +394,6 @@ export default function MaintenanceModal({
                 </select>
               )}
             </div>
-            {/* Modalidade */}
             {!isMaintainance && (
               <div className="flex w-full flex-col items-start justify-between gap-2 rounded-sm p-2">
                 <h1 className="text-xl font-bold">Modalidades</h1>
@@ -387,7 +413,6 @@ export default function MaintenanceModal({
           </div>
           <div className="flex w-2/3 flex-col items-start justify-start gap-4 py-2">
             <div className="flex w-full flex-col items-center justify-start gap-4 px-4 py-2">
-              {/* horario */}
               <h2 className="mb-4 w-full px-4 text-start text-2xl font-bold">
                 Horário
               </h2>
@@ -431,11 +456,9 @@ export default function MaintenanceModal({
                       {endHour === 22 ? (
                         <option value={0}>00</option>
                       ) : (
-                        <>
-                          <option value={0}>00</option>
-                          <option value={30}>30</option>
-                        </>
+                        <option value={0}>00</option>
                       )}
+                      {endHour !== 22 && <option value={30}>30</option>}
                     </select>
                   </div>
                 </div>
