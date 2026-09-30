@@ -163,13 +163,6 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
     return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
   }
 
-  const isOutsideCurrentMonth = (date: Date) => {
-    return (
-      date.getMonth() !== today.getMonth() ||
-      date.getFullYear() !== today.getFullYear()
-    )
-  }
-
   const handleCloseMyBookings = () => {
     setIsMyBookingsModalVisible(false)
     setTimeout(() => {
@@ -553,7 +546,6 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
               <div className="flex flex-1">
                 {weekDays.map((weekDay, dayIndex) => {
                   const weekDayKey = getDateKey(weekDay)
-                  const isOutsideMonth = isOutsideCurrentMonth(weekDay)
                   const passedTime = isPassed(weekDay, hour, minute)
                   const reserveBlocked = cannotReserve(weekDay, hour, minute)
                   const takenReason = unavailableReason(weekDay, hour, minute)
@@ -562,39 +554,33 @@ export function Court({ isField, isQuadra5 }: CourtProps) {
                     <div
                       key={dayIndex}
                       title={
-                        isOutsideMonth
-                          ? 'Dias fora do mês atual não estão disponíveis'
-                          : passedTime
-                            ? 'Esse horário já passou'
-                            : reserveBlocked
-                              ? 'Você não pode reservar dentro de uma hora de outra reserva sua'
-                              : (takenReason ?? '')
+                        passedTime
+                          ? 'Esse horário já passou'
+                          : reserveBlocked
+                            ? 'Você não pode reservar dentro de uma hora de outra reserva sua'
+                            : (takenReason ?? '')
                       }
                       onClick={() =>
                         !isAuth
                           ? toast.error(
                               'Você precisa estar logado para reservar'
                             )
-                          : isOutsideMonth
-                            ? toast.info(
-                                'Dias fora do mês atual não estão disponíveis'
-                              )
-                            : passedTime
-                              ? toast.info('Esse horário já passou')
-                              : reserveBlocked
+                          : passedTime
+                            ? toast.info('Esse horário já passou')
+                            : reserveBlocked
+                              ? toast.info(
+                                  'Você não pode reservar dentro de uma hora de outra reserva sua'
+                                )
+                              : isLastHalfHour(hour, minute)
                                 ? toast.info(
-                                    'Você não pode reservar dentro de uma hora de outra reserva sua'
+                                    'Esse horário não está disponível para reserva'
                                   )
-                                : isLastHalfHour(hour, minute)
-                                  ? toast.info(
-                                      'Esse horário não está disponível para reserva'
-                                    )
-                                  : takenReason
-                                    ? toast.info(takenReason)
-                                    : handleClickedTime(hour, minute, weekDay)
+                                : takenReason
+                                  ? toast.info(takenReason)
+                                  : handleClickedTime(hour, minute, weekDay)
                       }
                       style={{ height: `${SLOT_HEIGHT}px` }}
-                      className={`relative flex min-w-[120px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 sm:min-w-[90px] ${isOutsideMonth || passedTime || reserveBlocked || isLastHalfHour(hour, minute) || takenReason ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
+                      className={`relative flex min-w-[120px] max-w-xl flex-1 gap-2 border-b border-r border-gray-400 sm:min-w-[90px] ${passedTime || reserveBlocked || isLastHalfHour(hour, minute) || takenReason ? 'bg-gray-300' : 'bg-gray-200 hover:cursor-pointer hover:bg-blue-100'} p-2 last:border-r-0`}
                     >
                       {reservasConvertidas.map((reserva) => {
                         if (
