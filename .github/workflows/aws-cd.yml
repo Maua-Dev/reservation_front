@@ -46,7 +46,11 @@ jobs:
             echo "Invalid branch name!" && exit 1
           fi
 
-          echo "STACK_NAME=ReservationStackFront${{ github.ref_name }}" >> $GITHUB_ENV
+          if [[ "${{ github.ref_name }}" == "prod" ]]; then
+            echo "STACK_NAME=ReservationStackFront" >> $GITHUB_ENV
+          else
+            echo "STACK_NAME=ReservationStackFront${{ github.ref_name }}" >> $GITHUB_ENV
+          fi
           echo "ALTERNATIVE_DOMAIN_NAME=${{ vars.DOMAIN_NAME }}" >> $GITHUB_ENV
 
       - name: Setup AWS Credentials
