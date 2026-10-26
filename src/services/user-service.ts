@@ -95,9 +95,11 @@ export const UserService = {
   login: async (
     idToken: string
   ): Promise<{ accessToken: string; user: User; message: string }> => {
-    const response = await api.post<LoginResponse>('login', {
-      id_token: idToken
-    })
+    const response = await api.post<LoginResponse>(
+      'login',
+      { id_token: idToken },
+      { withCredentials: true }
+    )
     const data = response.data
     const u = data.user
 
