@@ -18,6 +18,8 @@ export function Login() {
   const { instance } = useMsal()
   const navigate = useNavigate()
   const [isSigningIn, setIsSigningIn] = useState(false)
+  // Evita retentar restore em loop: auth MSAL continua true após falha do /login.
+  const [restoreAttempted, setRestoreAttempted] = useState(false)
   const { setUser } = useUser()
 
   // Troca o id_token Microsoft pelo access_token da API; refresh vem em cookie HttpOnly.
@@ -57,22 +59,24 @@ export function Login() {
     setIsSigningIn(false)
   }
 
-  // Já logado e caiu no /login (sessão do localStorage, link direto): redireciona.
+  // Já logado e caiu no /login (sessão MSAL): tenta trocar id_token uma vez.
   useEffect(() => {
-    if (!auth || isSigningIn) return
+    if (!auth || isSigningIn || restoreAttempted) return
 
     const account = instance.getActiveAccount() ?? instance.getAllAccounts()[0]
     if (!account) return
 
     setIsSigningIn(true)
+    setRestoreAttempted(true)
     finishLogin(account).catch((error) => {
       handleLoginError(error, 'Erro ao restaurar a sessão')
     })
-  }, [auth, isSigningIn, instance, finishLogin])
+  }, [auth, isSigningIn, restoreAttempted, instance, finishLogin])
 
   const handleLogin = async () => {
     if (isSigningIn) return
     setIsSigningIn(true)
+    setRestoreAttempted(true)
     try {
       const { account } = await instance.loginPopup(loginRequest)
       instance.setActiveAccount(account)
