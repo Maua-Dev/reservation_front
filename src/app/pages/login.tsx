@@ -9,7 +9,6 @@ import { useUser } from '../hooks/use-user'
 import { useCallback, useEffect, useState } from 'react'
 import { UserService } from '@/services/user-service'
 import { AccountInfo } from '@azure/msal-browser'
-import { AxiosError } from 'axios'
 import { FiLoader } from 'react-icons/fi'
 import { toast } from 'react-toastify'
 
@@ -18,48 +17,30 @@ export function Login() {
   const { instance } = useMsal()
   const navigate = useNavigate()
   const [isSigningIn, setIsSigningIn] = useState(false)
-  // Evita retentar restore em loop: auth MSAL continua true após falha do /login.
+  // Evita retentar restore em loop: auth MSAL continua true após falha.
   const [restoreAttempted, setRestoreAttempted] = useState(false)
   const { setUser } = useUser()
 
-  // Troca o id_token Microsoft pelo access_token da API; refresh vem em cookie HttpOnly.
+  // Busca o token Graph e o usuário (auth-user) e já manda pra home certa.
   const finishLogin = useCallback(
     async (account: AccountInfo) => {
-      const { idToken } = await instance.acquireTokenSilent({
+      const { accessToken } = await instance.acquireTokenSilent({
         ...loginRequest,
         account
       })
-      if (!idToken) {
-        throw new Error('MSAL não retornou id_token')
-      }
-
-      const { accessToken, user } = await UserService.login(idToken)
       localStorage.setItem('accessToken', accessToken)
-      if (user.userId) {
-        localStorage.setItem('user_id', user.userId)
-      }
-      setUser(user)
+
+      const data = await UserService.getUser(accessToken)
+      localStorage.setItem('user_id', data.userId)
+      setUser(data)
 
       // replace: o botão de voltar não deve trazer de volta pro login
-      navigate(user.role === 'ADMIN' ? '/admin-home' : '/', { replace: true })
+      navigate(data?.role === 'ADMIN' ? '/admin-home' : '/', { replace: true })
     },
     [instance, navigate, setUser]
   )
 
-  const handleLoginError = (error: unknown, context: string) => {
-    console.error(`[LOGIN] ${context}:`, error)
-    const status = (error as AxiosError)?.response?.status
-    if (status === 400) {
-      toast.error('Token inválido. Tente entrar novamente.')
-    } else if (status === 404) {
-      toast.error('Usuário não encontrado.')
-    } else {
-      toast.error('Não foi possível entrar. Tente novamente.')
-    }
-    setIsSigningIn(false)
-  }
-
-  // Já logado e caiu no /login (sessão MSAL): tenta trocar id_token uma vez.
+  // Já logado e caiu no /login (sessão MSAL): restaura uma vez.
   useEffect(() => {
     if (!auth || isSigningIn || restoreAttempted) return
 
@@ -69,7 +50,8 @@ export function Login() {
     setIsSigningIn(true)
     setRestoreAttempted(true)
     finishLogin(account).catch((error) => {
-      handleLoginError(error, 'Erro ao restaurar a sessão')
+      console.error('[LOGIN] Erro ao restaurar a sessão:', error)
+      setIsSigningIn(false)
     })
   }, [auth, isSigningIn, restoreAttempted, instance, finishLogin])
 
@@ -82,7 +64,9 @@ export function Login() {
       instance.setActiveAccount(account)
       await finishLogin(account)
     } catch (error) {
-      handleLoginError(error, 'Login error')
+      console.error('Login error:', error)
+      toast.error('Não foi possível entrar. Tente novamente.')
+      setIsSigningIn(false)
     }
   }
 

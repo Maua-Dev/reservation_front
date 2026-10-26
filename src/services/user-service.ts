@@ -61,19 +61,6 @@ export interface UserResponse {
   message: string
 }
 
-export interface LoginResponse {
-  access_token: string
-  user: {
-    user_id?: string
-    name: string
-    ra?: string
-    email?: string
-    role: string
-    confirm_user?: boolean
-  }
-  message: string
-}
-
 // export const useAccessToken = () => {
 //   const { instance } = useMsal()
 
@@ -92,31 +79,6 @@ export interface LoginResponse {
 // }
 
 export const UserService = {
-  login: async (
-    idToken: string
-  ): Promise<{ accessToken: string; user: User; message: string }> => {
-    const response = await api.post<LoginResponse>(
-      'login',
-      { id_token: idToken },
-      { withCredentials: true }
-    )
-    const data = response.data
-    const u = data.user
-
-    return {
-      accessToken: data.access_token,
-      message: data.message,
-      user: {
-        userId: u.user_id ?? '',
-        name: u.name,
-        ra: u.ra ?? '',
-        email: u.email ?? '',
-        role: u.role,
-        confirmUser: u.confirm_user ?? false
-      }
-    }
-  },
-
   getUser: async (accessTokenParam?: string): Promise<User> => {
     const accessToken = localStorage.getItem('accessToken')
     const response = await api.get<UserResponse>('auth-user', {
