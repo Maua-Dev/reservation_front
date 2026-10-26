@@ -9,7 +9,6 @@ import ReserveOptionsModal from '@/app/components/admin/reserveOptionsModal'
 import { Booking, useBookings, useBookingsQuery } from '@/app/hooks/use-booking'
 import { CalendaryCard } from '@/app/components/calendary-card'
 import { sportToDisplay } from '@/utils/enums/sport'
-import { useMsal } from '@azure/msal-react'
 import { FiLoader } from 'react-icons/fi'
 import { ReservationDetails } from '@/app/components/reservation-details'
 //import { LuDownload } from 'react-icons/lu'
@@ -133,8 +132,6 @@ export default function AdminReserve() {
     return startOfWeek.getTime()
   }
 
-  const { instance } = useMsal()
-
   useEffect(() => {
     if (getBookingsOfTheWeek.data) {
       setAllBookings(getBookingsOfTheWeek.data.bookings)
@@ -142,26 +139,10 @@ export default function AdminReserve() {
   }, [getBookingsOfTheWeek.data, setAllBookings])
 
   useEffect(() => {
-    ;(async () => {
-      try {
-        const accounts = instance.getAllAccounts()
-        if (accounts.length > 0) {
-          const accessToken = (
-            await instance.acquireTokenSilent({
-              scopes: ['User.Read'],
-              account: accounts[0]
-            })
-          ).accessToken
-          localStorage.setItem('accessToken', accessToken)
-        }
-      } catch (e) {
-        // ignore token fetch errors
-      }
-
-      localStorage.setItem('end_date', endOfTheWeek().toString())
-      localStorage.setItem('start_date', startOfTheWeek().toString())
-    })()
-  }, [instance])
+    // accessToken da API vem do /login — não sobrescrever com MSAL/Graph
+    localStorage.setItem('end_date', endOfTheWeek().toString())
+    localStorage.setItem('start_date', startOfTheWeek().toString())
+  }, [])
 
   // A FUNÇÃO TA ERRADA EU ACHO CORRIGIR DPS
   function handleClickedTime(hour: number, minute: number, day: number) {
