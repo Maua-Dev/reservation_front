@@ -15,7 +15,7 @@ export const msalConfig = {
 }
 
 export const loginRequest = {
-  scopes: ['User.Read']
+  scopes: ['openid', 'profile']
 }
 
 export const msalInstance = new PublicClientApplication(msalConfig)
